@@ -11,6 +11,7 @@ public interface WorkFlowCreate {
 	 * @return String - 新建工作流的requestID
 	 */
 	public String createWorkflow();
+	
 	/**
 	 * 创建多个工作流
 	 * @return int - 新创建工作流的数量

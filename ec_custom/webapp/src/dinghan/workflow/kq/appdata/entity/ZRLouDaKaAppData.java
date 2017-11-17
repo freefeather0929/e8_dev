@@ -65,7 +65,7 @@ public class ZRLouDaKaAppData {
 	/**
 	 * 标准出勤时间
 	 */
-	private String kqStStartEndTime;
+	private int kqStStartEndTime;
 	/**
 	 * 补漏带卡时段
 	 */
@@ -183,11 +183,12 @@ public class ZRLouDaKaAppData {
 		this.fillCardDate = fillCardDate;
 	}
 
-	public String getKqStStartEndTime() {
+
+	public int getKqStStartEndTime() {
 		return kqStStartEndTime;
 	}
 
-	public void setKqStStartEndTime(String kqStStartEndTime) {
+	public void setKqStStartEndTime(int kqStStartEndTime) {
 		this.kqStStartEndTime = kqStStartEndTime;
 	}
 

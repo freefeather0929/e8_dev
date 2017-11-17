@@ -58,6 +58,7 @@ public class ZRLouDaKaCheckRepeatUtil implements CheckRepeatApp<ZRLouDaKaAppData
 		String sql = "select top 1 id from " + ZRLouDaKaAppDataDao.ZRLouDaKaAppDataFormName + ""
 				+ " where fillcarddate like '" + fillMonth + "%'"
 						+ " and fillcardtype = '1' and appno <> '' and appno <> '" +appno+ "' and apppsn = " + userid;
+		log.error("ZRLouDaKaAppData 检当月重复的补忘带卡单据  sql :: " + sql);
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		while(rs.next()){
@@ -79,9 +80,10 @@ public class ZRLouDaKaCheckRepeatUtil implements CheckRepeatApp<ZRLouDaKaAppData
 		//ZRLouDaKaAppData zrLouDaKaAppData = zrLouDaKaAppDataService.queryByID(id);
 		fillDaKaDate = fillCardDate;
 		
-		String sql = "select top 1 id from " + ZRLouDaKaAppDataDao.ZRLouDaKaAppDataFormName + ""
+		String sql = "select top 1 id from " + ZRLouDaKaAppDataDao.ZRLouDaKaAppDataFormName
 				+ " where fillcarddate = '" + fillDaKaDate + "'"
 						+ " and appno <> '' and appno <> '" +appno+ "' and apppsn = " + userid;
+		log.error("ZRLouDaKaAppData 检当是否已存在补卡日期是同一天的申请单  sql :: " + sql);
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		while(rs.next()){

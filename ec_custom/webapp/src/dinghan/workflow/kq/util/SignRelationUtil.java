@@ -85,7 +85,7 @@ public class SignRelationUtil {
 			}
 			json.append(",'error':'0'");
 		}else{
-			json.append(",'error':'未找到到部门矩阵信息'");
+			json.append("'error':'未找到到部门矩阵信息'");
 		}
 		json.append("}");
 		

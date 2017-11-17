@@ -8,7 +8,11 @@ import org.apache.commons.logging.LogFactory;
 
 import dinghan.common.outsys.midware.InnerMidware;
 import dinghan.common.util.HttpUtils;
-
+/**
+ * 中车借款单
+ * @author zhangxiaoyu / 10593
+ * 
+ */
 public class ZRLoanAppBill implements ERPBill {
 
 	private Log log = LogFactory.getLog(ZRLoanAppBill.class.getName());
@@ -32,10 +36,10 @@ public class ZRLoanAppBill implements ERPBill {
 	@Override
 	public String queryBillInfo(String docNo) {
 		parameters.clear();
-		String urltobill = url += ERPBOANBILLSVLNAME;
-		
+		String urltobill = url + ERPBOANBILLSVLNAME;
 		log.error("获取BillInfo :: url == " + urltobill);
 		parameters.put("DocNo", docNo);
+		log.error("ZRLoanAppBill parameters is empty ? :: " + parameters.isEmpty());
 		return HttpUtils.sendGet(urltobill, parameters);
 	}
 
@@ -48,10 +52,11 @@ public class ZRLoanAppBill implements ERPBill {
 	 */
 	@Override
 	public String queryAllBillInfo(Map<String,String> parameters) {
-		parameters.clear();
-		String urltobillList = url += ERPBOANBILL_LIST_SVLNAME;
+		//parameters.clear();
+		//this.parameters = parameters;
+		String urltobillList = url + ERPBOANBILL_LIST_SVLNAME;
 		//url += ERPBOANBILL_LIST_SVLNAME;
-		log.error("获取BillListInfo :: url == " + urltobillList);
+		//log.error("获取BillListInfo :: url == " + urltobillList);
 		return HttpUtils.sendGet(urltobillList, parameters);
 	}
 

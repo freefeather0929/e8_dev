@@ -366,7 +366,7 @@ public class JiaBan1 {
 	 */
 	private static JiaBan1 executeCheck(JiaBan1 jiaban_dt_1){
 		
-		String bz_Stime = "08:30";	//标准上班时间
+		String bz_Stime = "08:30";	//标准上班时间  - ** 应改为从主表中的标准上下班时间选项中获取
 		String bz_Etime = "18:00";	//标准下班时间
 		
 		String nowDate = null;
@@ -476,6 +476,7 @@ public class JiaBan1 {
 			
 			log.error("打卡记录：" + dakaList.toString());
 			
+			
 			//首末次打卡
 			if (dakaList.size() == 0) {
 				checkoutSet.setStartTime("");
@@ -515,7 +516,6 @@ public class JiaBan1 {
 			//*******************    获得加班系数  end   **********************************
 			
 			//*********************   获取节假日信息    start	*******************************************************
-			
 			
 			HashMap<String, String> map = dht.getJJR(String.valueOf(userInfo.getName()),jiaban_dt_1.getJbrq());
 			if (map != null && map.size() > 0) {

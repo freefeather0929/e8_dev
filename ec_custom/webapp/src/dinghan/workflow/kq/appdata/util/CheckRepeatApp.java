@@ -7,8 +7,9 @@ public interface CheckRepeatApp<T> {
 	 * <p>如果有重复申请，则返回重复的申请数据对象
 	 * @param t
 	 * @return
+	 * @throws Exception 
 	 */
-	T executeCheck(int id);
+	T executeCheck(int id) throws Exception;
 	
 	
 }

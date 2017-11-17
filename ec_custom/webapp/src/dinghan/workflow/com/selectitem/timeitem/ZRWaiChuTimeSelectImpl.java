@@ -26,7 +26,7 @@ public class ZRWaiChuTimeSelectImpl implements ZRWaiChuTimeSelect {
 
 	/**
 	 * 设置时间选项的字段名称
-	 * @param timeSelectItemFildName - 从dinghan.workflow.kq.appdata.dao.TimeSelect 接口中选择常量赋值
+	 * @param timeSelectItemFildName - 接口中选择常量赋值
 	 */
 	public void setTimeSelectItemFildName(String timeSelectItemFildName) {
 		this.timeSelectItemFildName = timeSelectItemFildName;

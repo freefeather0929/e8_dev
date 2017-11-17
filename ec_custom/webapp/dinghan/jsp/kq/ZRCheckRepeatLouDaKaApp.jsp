@@ -43,7 +43,7 @@
 			json.append("'appno':'"+zrLDKAppData.getAppno()+"',");
 			json.append("'info':'存在与当前填写补填日期相同的申请单，单号为："+zrLDKAppData.getAppno()+"，请检查！'");
 			json.append("}");
-		}else{
+		} else {
 			if("1".equals(fillCardType)){
 				zrLDKAppData = util.executeCheck(userid, billCardDate, appNo);
 				//out.print("zrLDKAppData for in month == null ? :: " + (zrLDKAppData == null));

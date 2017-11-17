@@ -2,6 +2,8 @@ package dinghan.workflow.action.financialaction;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,6 +12,7 @@ import dinghan.workflow.beans.ReceiptAccount;
 import dinghan.workflow.beans.ReceiptList;
 import weaver.conn.RecordSet;
 import weaver.formmode.setup.ModeRightInfo;
+import weaver.general.Util;
 import weaver.interfaces.workflow.action.Action;
 import weaver.soa.workflow.request.RequestInfo;
 import weaver.workflow.request.RequestManager;
@@ -17,7 +20,8 @@ import weaver.workflow.request.RequestManager;
 /**
  * 自动生成票据明细接口（发票、收据）
  * @author zhangxiaoyu - 10593
- * 
+ * 修改：
+ * 	1. 增加赋值申请人邮箱、电话字段
  */
 public class AutoCreateReceiptAccountAction implements Action {
 
@@ -38,6 +42,9 @@ public class AutoCreateReceiptAccountAction implements Action {
 	
 	public void createReceiptList(String requestid,int formid,int workFlowId,String lastOperatorId){
 		//log.error("当前流程类型ID为：" + workFlowId);
+		
+		Map<String,String> userInfoMap;
+		
 		RecordSet rs = new RecordSet();
 		String sql = "";
 		if(workFlowId != 117){	// 117  - 鼎汉检测发票申请流程类别ID
@@ -52,9 +59,12 @@ public class AutoCreateReceiptAccountAction implements Action {
 		//获取当前流程中要向发票模块写入的主表信息
 		while(rs.next()){
 			wfMainId = rs.getInt("id");
-			System.out.println(rs.getString("appno"));
+			//System.out.println(rs.getString("appno"));
 			ra.setAppno(rs.getString("appno"));
 			ra.setApppsn(rs.getInt("apppsn"));
+			
+			userInfoMap = getAppPsnInfo(rs.getInt("apppsn"));
+			
 			if(workFlowId != 117){
 				ra.setContraType(rs.getInt("contratype"));
 			}
@@ -64,6 +74,8 @@ public class AutoCreateReceiptAccountAction implements Action {
 			ra.setKptotal(rs.getDouble("apptotal"));
 			ra.setKpUnit(rs.getString("unitname"));
 			ra.setPjType(rs.getInt("pjtype"));
+			ra.setApppsnmobile(userInfoMap.get("mobile"));
+			ra.setApppsnmail(userInfoMap.get("email"));
 			ra.setRequestId(Integer.parseInt(requestid));
 		}
 		//获取
@@ -105,11 +117,11 @@ public class AutoCreateReceiptAccountAction implements Action {
 		}
 		//插入新的开票台账信息
 		if(workFlowId != 117){
-			sql = "insert into "+receiptFormName+" (requestId, appno, apppsn, kpdate, pjtype, kppsn, hkdate, contratype, kpunit, kptotal, formmodeid, modedatacreater, modedatacreatertype, modedatacreatedate, modedatacreatetime)" +
-					" values('"+requestid+"','"+ra.getAppno()+"','"+ra.getApppsn()+"','"+ra.getKpDate()+"','"+ra.getPjType()+"','"+lastOperatorId+"','"+ra.getHkDate()+"','"+ra.getContraType()+"','"+ra.getKpUnit()+"','"+ra.getKptotal()+"','32','"+lastOperatorId+"','0','"+this.requestManager.getCurrentDate()+"','"+this.requestManager.getCurrentTime()+"')";
+			sql = "insert into "+receiptFormName+" (requestId, appno, apppsn, apppsnmail,apppsnmobile, kpdate, pjtype, kppsn, hkdate, contratype, kpunit, kptotal, formmodeid, modedatacreater, modedatacreatertype, modedatacreatedate, modedatacreatetime)" +
+					" values('"+requestid+"','"+ra.getAppno()+"','"+ra.getApppsn()+"','"+ra.getApppsnmail()+"','"+ra.getApppsnmobile()+"','"+ra.getKpDate()+"','"+ra.getPjType()+"','"+lastOperatorId+"','"+ra.getHkDate()+"','"+ra.getContraType()+"','"+ra.getKpUnit()+"','"+ra.getKptotal()+"','32','"+lastOperatorId+"','0','"+this.requestManager.getCurrentDate()+"','"+this.requestManager.getCurrentTime()+"')";
 		}else{
-			sql = "insert into "+receiptFormName+" (requestId, appno, apppsn, kpdate, pjtype, kppsn, hkdate, kpunit, kptotal, formmodeid, modedatacreater, modedatacreatertype, modedatacreatedate, modedatacreatetime)" +
-					" values('"+requestid+"','"+ra.getAppno()+"','"+ra.getApppsn()+"','"+ra.getKpDate()+"','"+ra.getPjType()+"','"+lastOperatorId+"','"+ra.getHkDate()+"','"+ra.getKpUnit()+"','"+ra.getKptotal()+"','18','"+lastOperatorId+"','0','"+this.requestManager.getCurrentDate()+"','"+this.requestManager.getCurrentTime()+"')";
+			sql = "insert into "+receiptFormName+" (requestId, appno, apppsn, apppsnmail,apppsnmobile, kpdate, pjtype, kppsn, hkdate, kpunit, kptotal, formmodeid, modedatacreater, modedatacreatertype, modedatacreatedate, modedatacreatetime)" +
+					" values('"+requestid+"','"+ra.getAppno()+"','"+ra.getApppsn()+"','"+ra.getApppsnmail()+"','"+ra.getApppsnmobile()+"','"+ra.getKpDate()+"','"+ra.getPjType()+"','"+lastOperatorId+"','"+ra.getHkDate()+"','"+ra.getKpUnit()+"','"+ra.getKptotal()+"','18','"+lastOperatorId+"','0','"+this.requestManager.getCurrentDate()+"','"+this.requestManager.getCurrentTime()+"')";
 		}
 		
 		//log.error("执行：" + sql);
@@ -136,5 +148,18 @@ public class AutoCreateReceiptAccountAction implements Action {
 		//重置权限
 		ModeRightInfo modeRightInfo = new ModeRightInfo();
 		modeRightInfo.rebuildModeDataShareByEdit(Integer.parseInt(lastOperatorId), modeId, receiptAccountId);
+	}
+	
+	private Map<String,String> getAppPsnInfo(int psnid){
+		Map<String,String> userInfoMap = new HashMap<String, String>();
+		String sql = "select top 1 id,lastname,mobile,email from HrmResource where id = " + psnid;
+		RecordSet rs = new RecordSet();
+		
+		rs.executeSql(sql);
+		while(rs.next()){
+			userInfoMap.put("mobile", Util.null2String(rs.getString("mobile")));
+			userInfoMap.put("email", Util.null2String(rs.getString("email")));
+		}
+		return userInfoMap;
 	}
 }

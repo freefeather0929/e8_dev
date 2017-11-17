@@ -146,4 +146,5 @@ public class QingJiaDaoImpl extends KQDetailBaseImpl<QingJia> implements QingJia
 		
 		return qingjia_dt3_List;
 	}
+
 }

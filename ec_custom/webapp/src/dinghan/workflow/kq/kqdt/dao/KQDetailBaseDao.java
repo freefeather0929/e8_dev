@@ -44,4 +44,5 @@ public interface KQDetailBaseDao<T> {
 	 */
 	List<T> queryListBySEDate(String startDate, String endDate);
 	
+	
 }

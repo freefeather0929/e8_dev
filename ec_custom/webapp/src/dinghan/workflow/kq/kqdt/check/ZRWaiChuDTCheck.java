@@ -8,7 +8,14 @@ import dinghan.workflow.kq.kqdt.service.ZRWaiChuCheckDTService;
 import dinghan.workflow.kq.kqdt.service.impl.ZRWaiChuCheckDTServiceImpl;
 /**
  * 中车外出公干流程核定类
+ * <p>核定状态值说明： 0 - 未核定；1 - 已核定； 2 - 已确认
+ * 
+ * <p>
+ * <i> 核定规则：
+ * <p> 外出公干的申请时间即为核定时间；
+ * 
  * @author zhangxiaoyu / 10593 - 2017-10-24
+ * 
  * 
  */
 public class ZRWaiChuDTCheck implements KQDTCheck<ZRWaiChuCheckDTData> {

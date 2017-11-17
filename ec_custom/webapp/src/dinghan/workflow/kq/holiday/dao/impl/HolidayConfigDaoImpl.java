@@ -34,7 +34,7 @@ public class HolidayConfigDaoImpl implements HolidayConfigDao {
 			holidayConfig.setKssj(rs.getString("kssj"));
 			holidayConfig.setJssj(rs.getString("jssj"));
 			holidayConfig.setPerson(rs.getString("Person"));
-			
+			holidayConfig.setOvernum(rs.getDouble("OverNum"));
 			String[] personids = holidayConfig.getPerson().split(",");
 			for(String id : personids){
 				userIdList.add(id);

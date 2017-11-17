@@ -14,7 +14,15 @@ import weaver.workflow.request.RequestManager;
 
 public class UpdateNEEMonthTargetDataAction implements Action {
 
-	private NeeCheckTargetUtil util;
+	private NeeCheckTargetUtil util_month_1 = new NeeCheckTargetUtil(new NEECheckTarget_Month_ServiceImpl(
+			new NEECheckTarget_1STMonth_DaoImpl()));
+	
+	private NeeCheckTargetUtil util_month_2 = new NeeCheckTargetUtil(new NEECheckTarget_Month_ServiceImpl(
+			new NEECheckTarget_2NDMonth_DaoImpl()));
+			
+	private NeeCheckTargetUtil util_month_3 = new NeeCheckTargetUtil(new NEECheckTarget_Month_ServiceImpl(
+			new NEECheckTarget_3RDMonth_DaoImpl()));
+	
 	private RequestManager requestManager;
 	
 	private String requsetName;
@@ -43,17 +51,11 @@ public class UpdateNEEMonthTargetDataAction implements Action {
 		
 		log.error("开始更新 标题 为  " + requsetName + " 流程 的月度考核目标");
 		
-		util = new NeeCheckTargetUtil(new NEECheckTarget_Month_ServiceImpl(
-				new NEECheckTarget_1STMonth_DaoImpl()));
-		util.updateAllNEECheckTargetMonthDTData(billId);
-		
-		util = new NeeCheckTargetUtil(new NEECheckTarget_Month_ServiceImpl(
-				new NEECheckTarget_2NDMonth_DaoImpl()));
-		util.updateAllNEECheckTargetMonthDTData(billId);
-		
-		util = new NeeCheckTargetUtil(new NEECheckTarget_Month_ServiceImpl(
-				new NEECheckTarget_3RDMonth_DaoImpl()));
-		util.updateAllNEECheckTargetMonthDTData(billId);
+		util_month_1.updateAllNEECheckTargetMonthDTData(billId);
+
+		util_month_2.updateAllNEECheckTargetMonthDTData(billId);
+
+		util_month_3.updateAllNEECheckTargetMonthDTData(billId);
 		
 	}
 	

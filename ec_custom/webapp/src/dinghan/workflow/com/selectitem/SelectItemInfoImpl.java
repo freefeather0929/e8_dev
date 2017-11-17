@@ -3,7 +3,6 @@ package dinghan.workflow.com.selectitem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import dinghan.workflow.beans.QingJia;
 import weaver.conn.RecordSet;
 
 public class SelectItemInfoImpl implements SelectItemInfo{
