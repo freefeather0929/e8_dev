@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /activex/
 /addressbook/
 /admincenter/
@@ -60,6 +61,50 @@
 /messager/
 /middlecenter/
 /mobilemode/
+=======
+/classbean/
+/workflowversionadd.jsp
+/ActionIni.jsp
+/ApXPDropDown.jsp
+/checkdone.jsp
+/Clock.jsp
+/data.jsp
+/DebugBottom.html
+/Debugger.html
+/DebugTop.html
+/EimClientOpen.jsp
+/favicon.ico
+/FlowPad.exe
+/frameleft.jsp
+/frameleftXML.jsp
+/framemiddle.jsp
+/index.htm
+/index.login
+/infoBar.jsp
+/left.jsp
+/leftFrame.jsp
+/log4j.properties
+/main.jsp
+/mainbottom.jsp
+/mainlabel.jsp
+/mainleft.jsp
+/mainPDA.jsp
+/maintop.jsp
+/portal.htm
+/portal.jsp
+/Refresh.jsp
+/RTXClientOpen.jsp
+/showCol.jsp
+/SystemRightGroup.jsp
+/test2.jsp
+/times.jsp
+/tom_magazine.jsp
+/top.jsp
+/updateRules.jsp
+/vssver2.scc
+/mobilemode/
+/moudles/
+>>>>>>> master
 /muser/
 /newportal/
 /notice/
@@ -75,6 +120,10 @@
 /rdeploy/
 /report/
 /resource/
+<<<<<<< HEAD
+=======
+/reviseTemp/
+>>>>>>> master
 /rte/
 /RTX/
 /RTXAPISVR/
@@ -88,11 +137,19 @@
 /sms/
 /social/
 /source/
+<<<<<<< HEAD
+=======
+/sqlupgrade/
+>>>>>>> master
 /synergy/
 /system/
 /systeminfo/
 /tempfile/
 /test/
+<<<<<<< HEAD
+=======
+/tmpfile/
+>>>>>>> master
 /tools/
 /ueditor/
 /upgrade/
@@ -110,6 +167,7 @@
 /worktask/
 /wui/
 /wxinterface/
+<<<<<<< HEAD
 /ActionIni.jsp
 /ApXPDropDown.jsp
 /checkdone.jsp
@@ -154,3 +212,70 @@
 /urltime.jsp
 /vssver2.scc
 /workflowversionadd.jsp
+=======
+/discuss/
+/docs/
+/email/
+/express/
+/favourite/
+/FCKEditor/
+/filesystem/
+/fna/
+/font/
+/formmode/
+/fullsearch/
+/FusionChartsFree/
+/help/
+/homepage/
+/hrm/
+/htc/
+/images/
+/images_face/
+/images_frame/
+/integration/
+/interface/
+/join/
+/js/
+/jsp/
+/keygenerator/
+/keyupgrade/
+/kindeditor/
+/ldap/
+/LeftMenu/
+/lgc/
+/license/
+/log/
+/login/
+/m_img/
+/manageplat/
+/matrixmanage/
+/meeting/
+/messager/
+/middlecenter/
+/cloudstore/
+/companygroup/
+/CompnayGroup-FlexSrc/
+/cowork/
+/cpcompanyinfo/
+/cpt/
+/CRM/
+/css/
+/data/
+/datacenter/
+/debug/
+/activex/
+/addressbook/
+/admincenter/
+/album/
+/appres/
+/base/
+/blog/
+/calendar/
+/car/
+/ceuser/
+/cpu.jsp
+/fgc.jsp
+/pool.jsp
+/poolOperation.jsp
+/urltime.jsp
+>>>>>>> master
