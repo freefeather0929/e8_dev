@@ -1,5 +1,7 @@
 package dinghan.workflow.kq.kqdt.service;
 
+import java.util.List;
+
 import dinghan.workflow.kq.kqdt.entity.zrentity.ZRWaiChuCheckDTData;
 
 /**
@@ -8,5 +10,9 @@ import dinghan.workflow.kq.kqdt.entity.zrentity.ZRWaiChuCheckDTData;
  *
  */
 public interface ZRWaiChuCheckDTService extends KQDetailBaseService<ZRWaiChuCheckDTData> {
-	
+	/**
+	 * 根据员工ID和日期获取外出核定明细集合
+	 * @return
+	 */
+	List<ZRWaiChuCheckDTData> queryByUserIDAndDate(int UserID,String waichuDate);
 }

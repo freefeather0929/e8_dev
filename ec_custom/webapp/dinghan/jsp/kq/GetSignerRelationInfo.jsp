@@ -9,7 +9,7 @@
 
 <%
 	/*
-	 * 功能：根据用户ID获取部门和公司权签人
+	 * 功能：根据用户ID获取权签人
 	 * 编写人：张肖宇
 	 * 编写时间：2017-06-19
 	 */
@@ -24,7 +24,6 @@
 		int userid = Integer.valueOf(request.getParameter("userid"));
 		
 		SignRelationUtil util = new SignRelationUtil();
-		
 		
 		out.print(util.getSignRelation(userid));
 		out.flush();

@@ -41,7 +41,7 @@ public class UserInfoDaoImpl implements UserInfoDao {
 			userInfo.setSYNianXiuJia(rs.getDouble("SYNianXiuJia"));
 			userInfo.setSYTiaoXiuJia(rs.getDouble("SYTiaoXiuJia"));
 			userInfo.setRest(rs.getDouble("rest"));
-			userInfo.setAllowovertime(rs.getInt("allowovertime"));
+			userInfo.setAllowovertime(rs.getInt("allowovertime"));	//是否允许加班
 		}
 		
 		return userInfo;

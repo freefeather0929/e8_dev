@@ -61,7 +61,8 @@ public class toCollect extends BaseCronJob {
 
 	public void getJump(String zt, String hrid, String dayB, String dayE) {
 		log.error("开始进行考勤明细计算：帐套 -- "+zt+"；人员ID -- " + hrid + " 开始日期   -- "+dayB + "；结束日期 -- "+ dayE);
-		getHrmCusData();// 人员信息
+		getHrmCusData();	// 人员信息
+		
 		flag = "1";
 		String[] hid = new String[] { "0" };
 		if (!"".equals(Util.null2String(hrid))) {
@@ -134,8 +135,8 @@ public class toCollect extends BaseCronJob {
 			 * 增加日期判断：如果当前计算的日期早于入职日期，则将当前计算日期改为入职日期；
 			 * 如果当前计算的日期晚于离职日期，则将当前计算日期改为离职日期； 修改时间：2017-03-05 by zhangxiaoyu
 			 */
-			String joinDate = cus_Map.get(hid + "_rzrq");
-			String leaveDate = cus_Map.get(hid + "_lzrq");
+			String joinDate = cus_Map.get(hid + "_rzrq");	//入职日期
+			String leaveDate = cus_Map.get(hid + "_lzrq");		//离职日期
 
 			if (!"".equals(joinDate)
 					&& (int) DateHelper.getDisDays(this.currentDay, joinDate) - 1 > 0) { // 如果当前日期早于入职日期，跳至下一循环
@@ -214,6 +215,7 @@ public class toCollect extends BaseCronJob {
 			}
 			// long bz_sbTime =
 			// DateHelper.getMinutesBetween(bz_Stime,bz_Etime);//分数
+			
 			String scdksj = Util.null2String(DkMap.get(workcode + "_S"));// 首次打卡时间
 			String mcdksj = Util.null2String(DkMap.get(workcode + "_E"));// 末次打卡时间
 			String exists = Util.null2String(mxhz_Map.get(hid));

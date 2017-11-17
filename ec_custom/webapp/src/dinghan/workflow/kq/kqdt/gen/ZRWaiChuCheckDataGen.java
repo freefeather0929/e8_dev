@@ -37,6 +37,7 @@ public class ZRWaiChuCheckDataGen extends KQCheckDataGen<ZRWaiChuCheckDTData> {
 	private UserInfoDao userInfodao = new UserInfoDaoImpl();
 	
 	private ZRWaiChuAppDataDao zrWaiChuAppDataDao = new ZRWaiChuAppDataDaoImpl();
+	//private ZRWaiChuCheckDTService zrWaiChuCheckDTService = new ZRWaiChuCheckDTServiceImpl();
 	
 	private ZRWaiChuTimeSelect zrWCTimeSelect_start = 
 			new ZRWaiChuTimeSelectImpl(ZRWaiChuTimeSelect.ZRWaiChuStartTimeFieldName);

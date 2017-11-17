@@ -34,8 +34,8 @@ public class UserInfo {
 	private String modedatacreatedate;
 	private String modedatacreatetime;  
 	private String NameCN;	// 中文姓名  
-	private String AmStartWorkTime;	// 上午下班时间  
-	private String PmEndWorkTime;	// 下午上班时间
+	private String AmStartWorkTime;	// 休息开始时间  
+	private String PmEndWorkTime;	// 休息结束时间
 	private int MobileAtten;	// 移动考勤
 	private String Obode;	// 常驻地
 	private int allowovertime; //是否允许加班

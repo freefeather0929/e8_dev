@@ -47,7 +47,7 @@ public class ZRLouDaKaAppDataDaoImpl implements ZRLouDaKaAppDataDao {
 			louDakaAppData.setFillTime4th(rs.getString("filltime4th"));
 			louDakaAppData.setBillTimeNum(rs.getInt("billtimenum"));
 			louDakaAppData.setFillCardDate(rs.getString("fillcarddate"));
-			louDakaAppData.setKqStStartEndTime(rs.getString("kqststartendtime"));
+			louDakaAppData.setKqStStartEndTime(rs.getInt("kqststartendtime"));
 			louDakaAppData.setForgetTimes(rs.getInt("forgettimes"));
 		}
 		

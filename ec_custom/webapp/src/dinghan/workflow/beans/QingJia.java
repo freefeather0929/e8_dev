@@ -625,8 +625,9 @@ public class QingJia {
 		} else {
 			UserInfo userInfo = new UserInfo(qj_three.getUserid(),userCode);	//得到考勤系统人员信息
 			
-			qj_three.setAppnom(qj_main.getAppnom());
+			qj_three.setAppnom(qj_main.getAppnom());	//流水号
 			qj_three.setGh(userInfo.getCode());	//工号
+			
 			if (qj_three.getRq().compareTo(nowDate) < 0) {
 				boolean flag = false;	//用于标记是否按照自然日计算
 				

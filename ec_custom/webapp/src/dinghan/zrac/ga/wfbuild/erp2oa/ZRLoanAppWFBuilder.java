@@ -3,8 +3,12 @@ package dinghan.zrac.ga.wfbuild.erp2oa;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dinghan.common.util.CalendarUtil;
 import dinghan.common.wfbuilder.WorkFlowCreator;
+import dinghan.workflow.kq.kqdt.check.ZRJiaBanDTCheck;
 import dinghan.workflow.kq.util.DepartmentInfoUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -17,13 +21,18 @@ import weaver.workflow.webservices.WorkflowRequestTableRecord;
 import weaver.workflow.webservices.WorkflowService;
 import weaver.workflow.webservices.WorkflowServiceImpl;
 
-public class ZRLoanAppWFBuilder extends WorkFlowCreator{
-	
+/**
+ * 中车借款申请流程构建者
+ * @author zhangxiaoyu / 10593 - 2017-10-27
+ * 
+ */
+public class ZRLoanAppWFBuilder extends WorkFlowCreator{ 
+	private Log log = LogFactory.getLog(ZRLoanAppWFBuilder.class.getName());
 	private static final String WORKFLOW_NAME = "借款申请";
-	private static final String WORKFLOW_TYPE_ID = "183";
+	private static final String WORKFLOW_TYPE_ID = "183";  //workflowid=236???
 	private static final String FORM_NAME = "formtable_main_215";
 
-	private ERPBill ZRLoanAppBill = new ZRLoanAppBill();
+	private ERPBill ZRLoanAppBill = new ZRLoanAppBill();  
 	
 	private DepartmentInfoUtil departmentUitl = new DepartmentInfoUtil();
 	
@@ -46,15 +55,17 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 		String requestId = "-1";
 		if(this.loanDocNo != null){
 			String respones = ZRLoanAppBill.queryBillInfo(loanDocNo);
+			log.error("respones :: " +respones);
 			JSONObject json = JSONObject.fromObject(respones);
-			if(!("0".equals(json.getString("error")))){
+			if("0".equals(json.getString("error"))){
 				initCreatorInfo(json.get("LoanPersonCode").toString());	//获取借款单中的借款人信息
 				
-				if(this.creatorId != -1){
-				
+				log.error("ZRLoanAppWFBuilder :: creatorId");
+				if(this.creatorId > -1){
+					
 					//主表字段
 					WorkflowRequestTableField[] wrti = new WorkflowRequestTableField[19]; //字段信息
-					//审批流程单号
+					//借款单号
 				   wrti[0]=new WorkflowRequestTableField();
 				   wrti[0].setFieldName("borrowordernumber");
 				   wrti[0].setFieldValue(json.get("DocNo").toString());
@@ -92,95 +103,89 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 				   wrti[5].setFieldValue(json.get("LoanUse").toString());
 				   wrti[5].setView(true);
 				   wrti[5].setEdit(true);
-				   //借款单号
+				   //预计还款日期
 				   wrti[6]=new WorkflowRequestTableField();
-				   wrti[6].setFieldName("borrowordernumber");
-				   wrti[6].setFieldValue(json.get("ID").toString());
+				   wrti[6].setFieldName("planrepaymentdate");
+				   wrti[6].setFieldValue(json.get("ExpectPayDate").toString());
 				   wrti[6].setView(true);
 				   wrti[6].setEdit(true);
-				   //预计还款日期
+				   //借款部门
 				   wrti[7]=new WorkflowRequestTableField();
-				   wrti[7].setFieldName("planrepaymentdate");
-				   wrti[7].setFieldValue(json.get("ExpectPayDate").toString());
+				   wrti[7].setFieldName("borrowdepartment");
+				   wrti[7].setFieldValue(json.get("LoanDept").toString());
 				   wrti[7].setView(true);
 				   wrti[7].setEdit(true);
-				   //借款部门
+				   //借款人组织
 				   wrti[8]=new WorkflowRequestTableField();
-				   wrti[8].setFieldName("borrowdepartment");
-				   wrti[8].setFieldValue(json.get("LoanDept").toString());
+				   wrti[8].setFieldName("borrowerorganization");
+				   wrti[8].setFieldValue(json.get("LoanPersonOrg").toString());
 				   wrti[8].setView(true);
 				   wrti[8].setEdit(true);
-				   //借款人组织
+				   //借款人工号
 				   wrti[9]=new WorkflowRequestTableField();
-				   wrti[9].setFieldName("borrowerorganization");
-				   wrti[9].setFieldValue(json.get("LoanPersonOrg").toString());
+				   wrti[9].setFieldName("borrowernumber");
+				   wrti[9].setFieldValue(json.get("LoanPersonCode").toString());
 				   wrti[9].setView(true);
 				   wrti[9].setEdit(true);
-				   //借款人工号
+				   //借款币种
 				   wrti[10]=new WorkflowRequestTableField();
-				   wrti[10].setFieldName("borrowernumber");
-				   wrti[10].setFieldValue(json.get("LoanPersonCode").toString());
+				   wrti[10].setFieldName("loancurrent");
+				   wrti[10].setFieldValue(json.get("LoanCurrency").toString());
 				   wrti[10].setView(true);
 				   wrti[10].setEdit(true);
-				   //借款币种
+				   //借款金额
 				   wrti[11]=new WorkflowRequestTableField();
-				   wrti[11].setFieldName("loancurrent");
-				   wrti[11].setFieldValue(json.get("LoanCurrency").toString());
+				   wrti[11].setFieldName("loanamount");
+				   wrti[11].setFieldValue(json.get("LoanMoney").toString());
 				   wrti[11].setView(true);
 				   wrti[11].setEdit(true);
-				   //借款金额
+				   //状态
 				   wrti[12]=new WorkflowRequestTableField();
-				   wrti[12].setFieldName("loanamount");
-				   wrti[12].setFieldValue(json.get("LoanMoney").toString());
+				   wrti[12].setFieldName("status");
+				   //wrti[13].setFieldValue(json.get("DocStatus").toString());
+				   wrti[12].setFieldValue(json.getString("DocStatus"));
 				   wrti[12].setView(true);
 				   wrti[12].setEdit(true);
-				   //状态
+				   //创建人
 				   wrti[13]=new WorkflowRequestTableField();
-				   wrti[13].setFieldName("status");
-				   //wrti[13].setFieldValue(json.get("DocStatus").toString());
-				   wrti[13].setFieldValue(json.getString("DocStatus"));
+				   wrti[13].setFieldName("founder");
+				   wrti[13].setFieldValue(json.get("CreatedBy").toString());
 				   wrti[13].setView(true);
 				   wrti[13].setEdit(true);
-				   //创建人
+				   //创建时间
 				   wrti[14]=new WorkflowRequestTableField();
-				   wrti[14].setFieldName("founder");
-				   wrti[14].setFieldValue(json.get("CreatedBy").toString());
+				   wrti[14].setFieldName("createdate");
+				   wrti[14].setFieldValue(json.get("CreatedOn").toString());
 				   wrti[14].setView(true);
 				   wrti[14].setEdit(true);
-				   //创建时间
+				   //项目
 				   wrti[15]=new WorkflowRequestTableField();
-				   wrti[15].setFieldName("createdate");
-				   wrti[15].setFieldValue(json.get("CreatedOn").toString());
+				   wrti[15].setFieldName("projectname");
+				   wrti[15].setFieldValue(json.get("Project").toString());
 				   wrti[15].setView(true);
 				   wrti[15].setEdit(true);
-				   //项目
+				   
+				   //借款人姓名
 				   wrti[16]=new WorkflowRequestTableField();
-				   wrti[16].setFieldName("projectname");
-				   wrti[16].setFieldValue(json.get("Project").toString());
+				   wrti[16].setFieldName("borrowername");
+				   wrti[16].setFieldValue(this.creatorId+"");
 				   wrti[16].setView(true);
 				   wrti[16].setEdit(true);
 				   
-				   //借款人姓名
+				   //借款人一级部门
 				   wrti[17]=new WorkflowRequestTableField();
-				   wrti[17].setFieldName("borrowername");
-				   wrti[17].setFieldValue(this.creatorId+"");
+				   wrti[17].setFieldName("borrowerfirstdepartment");
+				   //wrti[18].setFieldValue(firstDeptId);
+				   wrti[17].setFieldValue(this._1st_departmentid+"");
 				   wrti[17].setView(true);
 				   wrti[17].setEdit(true);
-				   
-				   //借款人一级部门
+				   //借款人行政部门
 				   wrti[18]=new WorkflowRequestTableField();
-				   wrti[18].setFieldName("borrowerfirstdepartment");
-				   //wrti[18].setFieldValue(firstDeptId);
-				   wrti[18].setFieldValue(this._1st_departmentid+"");
+				   wrti[18].setFieldName("borroweradministration");
+				  // wrti[19].setFieldValue(borrowerInfo.getBorrowerAdministration());
+				   wrti[18].setFieldValue(this.departmentid+"");
 				   wrti[18].setView(true);
 				   wrti[18].setEdit(true);
-				   //借款人行政部门
-				   wrti[19]=new WorkflowRequestTableField();
-				   wrti[19].setFieldName("borroweradministration");
-				  // wrti[19].setFieldValue(borrowerInfo.getBorrowerAdministration());
-				   wrti[19].setFieldValue(this.departmentid+"");
-				   wrti[19].setView(true);
-				   wrti[19].setEdit(true);
 				   
 				   WorkflowRequestTableRecord[] wrtri=new WorkflowRequestTableRecord[1];
 			       wrtri[0]=new WorkflowRequestTableRecord();
@@ -196,7 +201,8 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 			       this.workflowRequestInfo.setRequestName(WORKFLOW_NAME + json.getString("LoanPerson") + "-" + CalendarUtil.getCurDate());	//流程标题
 			       this.workflowRequestInfo.setWorkflowMainTableInfo(wmi);	//添加主字段数据
 			       this.workflowRequestInfo.setWorkflowBaseInfo(workflowBaseInfo);
-			       requestId = this.workflowService.doCreateWorkflowRequest(this.workflowRequestInfo, this.creatorId); 
+			       requestId = this.workflowService.doCreateWorkflowRequest(this.workflowRequestInfo, this.creatorId);
+			       
 				}else{
 					//人员信息未在OA中获取或者ERP中的人员工号和OA中的工号不一致到 写入到异构系统单据创建流程错误记录表中
 					//json.get("LoanPersonCode").toString()
@@ -213,21 +219,25 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 	public int createMultiWorkflow() {
 		int num = 0;
 		String requstID;
+		log.error("parameters is empty ? :: " + this.parameters.isEmpty());
 		if(!parameters.isEmpty()){
 			String respones = ZRLoanAppBill.queryAllBillInfo(parameters);
 			JSONObject json = JSONObject.fromObject(respones);
 			JSONArray jsonArray =json.getJSONArray("list");
-			
+			log.error("LoanJsonArray :: " + jsonArray.toString());
 			if(jsonArray.size()>0){      
 				for(int i=0;i<jsonArray.size();i++){
 					JSONObject job = jsonArray.getJSONObject(i); 
 					this.loanDocNo = job.get("DocNo").toString();
+					log.error("loanDocNo :: " + this.loanDocNo);
 					if(hasCreated(this.loanDocNo) == true){
+						
 						continue;
 					}
 					//判断此流程是否被创建
 					try {
 						requstID = this.createWorkflow();
+						log.error("requstID ::: ZRLoanAppWFBuilder " + requstID);
 						num ++;
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -244,7 +254,7 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 	 */
 	private void initCreatorInfo(String workcode){
 		this.creatorId = -1;
-		String sql = "select id,deparmentid from Hrmresourse where workcode = '" + workcode + "'";
+		String sql = "select id,departmentid from HrmResource where workcode = '" + workcode + "'";
 		RecordSet rs = new RecordSet();
 		
 		rs.executeSql(sql);
@@ -295,7 +305,5 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 	public void setParameters(Map<String, String> parameters) {
 		this.parameters = parameters;
 	}
-
-	
 	
 }

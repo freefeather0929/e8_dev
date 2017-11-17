@@ -8,6 +8,22 @@ import java.util.List;
  * 
  */
 public interface KQDTCheck<T> {
+	/**
+	 * 核定状态 - 0 - 待核定
+	 */
+	int PRE_TO_CHECK = 0;
+	/**
+	 * 核定状态 - 1 - 已核定
+	 */
+	int CHECKED = 1;
+	/**
+	 * 核定状态 - 2 - 已确定
+	 */
+	int CHECK_COMFIRMED = 2;
+	/**
+	 * 人工复核
+	 */
+	int CHECK_MANCHECK = 3;
 	
 	/**
 	 * 核定指定的明细行

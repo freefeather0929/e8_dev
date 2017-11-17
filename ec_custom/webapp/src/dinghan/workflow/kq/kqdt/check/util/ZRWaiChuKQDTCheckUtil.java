@@ -2,6 +2,9 @@ package dinghan.workflow.kq.kqdt.check.util;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dinghan.common.util.CalendarUtil;
 import dinghan.workflow.kq.kqdt.check.ZRWaiChuDTCheck;
 import dinghan.workflow.kq.kqdt.dao.ZRWaiChuCheckDTDao;
@@ -15,7 +18,7 @@ import weaver.conn.RecordSet;
  *
  */
 public class ZRWaiChuKQDTCheckUtil implements KQDTCheckUtil<ZRWaiChuCheckDTData>{
-
+	private Log log = LogFactory.getLog(ZRChuChaiKQDTCheckUtil.class.getName());
 	private ZRWaiChuDTCheck kqDTCheck = new ZRWaiChuDTCheck();
 	private ZRWaiChuCheckDTService zrWCCheckDTService = new ZRWaiChuCheckDTServiceImpl();
 	
@@ -38,12 +41,13 @@ public class ZRWaiChuKQDTCheckUtil implements KQDTCheckUtil<ZRWaiChuCheckDTData>
 		
 		String curDate = CalendarUtil.getCurDate();	//当前日期
 		String preMonthDate = CalendarUtil.moveDate(curDate, 0, -1, 0);	//当前日期前一个月的日期
-		
+		log.error("curDate :: " + curDate);
+		log.error("preMonthDate :: " + preMonthDate);
 		String sql = "select id from " + ZRWaiChuCheckDTDao.ZRWaiChuCheckDTDataFormName + ""
-				+ " where checked = '0' or checked = '1'"
+				+ " where (checked = '0' or checked = '1')"
 				+ "	and checkeddate > '" + preMonthDate +"'"
-						+ "and checkeddate < '" + curDate + "'";
-		
+						+ " and checkeddate < '" + curDate + "'";
+		log.error("WaiChuKQDTChec sql :: " + sql);
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		while(rs.next()){

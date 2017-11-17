@@ -5,7 +5,7 @@ import dinghan.workflow.com.selectitem.SelectItemInfoBean;
 /**
  * 节假日选择框信息DAO
  * @author zhangxiaoyu/10593 - 2107-07-17
- *
+ * 
  */
 public interface HolidaySelectDao{
 	/**

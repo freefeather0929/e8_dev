@@ -35,8 +35,8 @@ public class NEECheckTarget_1STMonth_DaoImpl implements NEECheckTarget_Month_Dao
 			target_1STMonth_Data.setCheckbasis(Util.null2String(rs.getString("checkbasisone")));
 			target_1STMonth_Data.setCheckfinishstate(Util.null2String(rs.getString("checkfinishstateone")));
 			target_1STMonth_Data.setRemark(Util.null2String(rs.getString("remarkone")));
-			target_1STMonth_Data.setMonthevaluation(Util.null2String(rs.getString("assessormonthevaluationone")));
-			target_1STMonth_Data.setMonthassess(rs.getInt("assessormonthassessone"));
+			/*target_1STMonth_Data.setMonthevaluation(Util.null2String(rs.getString("assessormonthevaluationone")));
+			target_1STMonth_Data.setMonthassess(rs.getInt("assessormonthassessone"));*/
 			target_1STMonth_Data.setTargetDataID(rs.getInt("targetdataid"));
 		}
 		
@@ -52,8 +52,8 @@ public class NEECheckTarget_1STMonth_DaoImpl implements NEECheckTarget_Month_Dao
 							+ "checkbasisone,"
 								//+ "checkfinishstateone,"
 									+ "remarkone,"
-										+ "assessormonthevaluationone,"
-											+ "assessormonthassessone,"
+										/*+ "assessormonthevaluationone,"
+											+ "assessormonthassessone,"*/
 												+ "targetdataid"
 				+ ")"
 				+ " values("
@@ -63,8 +63,8 @@ public class NEECheckTarget_1STMonth_DaoImpl implements NEECheckTarget_Month_Dao
 								+ "'" + target_month.getCheckbasis() + "',"
 									//+ "'" + target_month.getCheckfinishstate()+ "',"
 										+ "'" + target_month.getRemark()+"',"
-											+ "'" + target_month.getMonthevaluation() + "',"
-												+ "NULL,"
+											/*+ "'" + target_month.getMonthevaluation() + "',"
+												+ "NULL,"*/
 													+ "'" + target_month.getTargetDataID()+"'"
 				+ ")";
 		
@@ -75,14 +75,14 @@ public class NEECheckTarget_1STMonth_DaoImpl implements NEECheckTarget_Month_Dao
 	@Override
 	public boolean update(NEECheckTargetDTData_Month target_month) {
 		String sql = "update " + this.monthTargetFormName + " set "
-					+ "mainid = " + target_month.getId()
+					+ "mainid = " + target_month.getMainid()
 						+ ",checkgoalone = '" + target_month.getCheckgoal()+"'"
 							+ ",breakdownworkone = '" + target_month.getBreakdownwork()+"'"
 								+ ",checkbasisone = '" + target_month.getCheckbasis()+"'"
 									//+ ",checkfinishstateone = '" + target_month.getCheckfinishstate()+"'"
 										+ ",remarkone = '" + target_month.getRemark()+"'"
-											+ ",assessormonthevaluationone = '" + target_month.getMonthevaluation()+"'"
-												+ ",assessormonthassessone = '" + target_month.getMonthassess()+"'"
+											/*+ ",assessormonthevaluationone = '" + target_month.getMonthevaluation()+"'"
+												+ ",assessormonthassessone = '" + target_month.getMonthassess()+"'"*/
 													+ ",targetdataid = '" + target_month.getTargetDataID()+"'"
 					+ " where id = " + target_month.getId();
 		RecordSet rs = new RecordSet();
@@ -91,7 +91,7 @@ public class NEECheckTarget_1STMonth_DaoImpl implements NEECheckTarget_Month_Dao
 
 	@Override
 	public boolean delete(int id) {
-		String sql = "delete from " + this.monthTargetFormName + "where id = " + id;
+		String sql = "delete from " + this.monthTargetFormName + " where id = " + id;
 		RecordSet rs = new RecordSet();
 		return rs.executeSql(sql);
 	}
@@ -115,8 +115,8 @@ public class NEECheckTarget_1STMonth_DaoImpl implements NEECheckTarget_Month_Dao
 			target_1STMonth_Data.setCheckbasis(rs.getString("checkbasisone"));
 			target_1STMonth_Data.setCheckfinishstate("checkfinishstateone");
 			target_1STMonth_Data.setRemark(rs.getString("remarkone"));
-			target_1STMonth_Data.setMonthevaluation(rs.getString("assessormonthevaluationone"));
-			target_1STMonth_Data.setMonthassess(rs.getInt("assessormonthassessone"));
+			/*target_1STMonth_Data.setMonthevaluation(rs.getString("assessormonthevaluationone"));
+			target_1STMonth_Data.setMonthassess(rs.getInt("assessormonthassessone"));*/
 			target_1STMonth_Data.setTargetDataID(rs.getInt("targetdataid"));
 		}
 		

@@ -19,7 +19,11 @@ public interface ZRWaiChuTimeSelect {
 	String ZRWaiChuEndTimeFieldName = "preendtime";
 	
 	String ZRWaiChuAppFormID = "-213";
-	
+	/**
+	 * 查询select字段信息
+	 * @param selectValue
+	 * @return
+	 */
 	SelectItemInfoBean queryTimeSelectItem(int selectValue);
 	
 }
