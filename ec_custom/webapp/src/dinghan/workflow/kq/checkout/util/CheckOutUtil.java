@@ -22,7 +22,9 @@ import dinghan.workflow.kq.checkout.service.impl.CheckOutServiceImpl;
  */
 public class CheckOutUtil {
 	private static Log log = LogFactory.getLog(CheckOutUtil.class.getName());
+	private String forwordDayCheckOutNode = "05:00:00";
 	private CheckOutService checkOutSercie;
+	
 	public CheckOutUtil(){
 		this.checkOutSercie = new CheckOutServiceImpl(new CheckOutImp());
 	}
@@ -91,8 +93,6 @@ public class CheckOutUtil {
 		//后一天的打卡记录
 		List<CheckOutRecord> checkOutRecordList_NextDate  = checkOutSercie.queryCheckOutList(userWorkCode, nextDate, hasMobile);
 		
-		String forwordDayCheckOutNode = "05:00:00";
-		
 		if(!checkOutRecordList_NextDate.isEmpty()){
 			if(checkOutRecordList_NextDate.get(0).getTime().compareTo(forwordDayCheckOutNode) < 0){
 				checkOutRecord_NextDate = checkOutRecordList_NextDate.get(0);
@@ -101,4 +101,17 @@ public class CheckOutUtil {
 		}
 		return checkOutRecord_NextDate;
 	}
+
+	public String getForwordDayCheckOutNode() {
+		return forwordDayCheckOutNode;
+	}
+	/**
+	 * 设置 计算前一天 打卡记录 节点 
+	 *  在此节点前的打卡记录算做前一天打卡记录，不算做当天打卡记录
+	 * @param forwordDayCheckOutNode
+	 */
+	public void setForwordDayCheckOutNode(String forwordDayCheckOutNode) {
+		this.forwordDayCheckOutNode = forwordDayCheckOutNode;
+	}
+	
 }

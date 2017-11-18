@@ -326,6 +326,7 @@ public class ZRJiaBanDTCheck implements KQDTCheck<ZRJiaBanCheckDTData> {
 			allowMobileAttend = userInfo.getMobileAtten();
 		}
 		// **** 获取加班日期打卡时间集合
+		checkoutUitl.setForwordDayCheckOutNode("02:00:00");
 		CheckOutRecordSet checkOutSet = checkoutUitl.getPersonalCheckOutSetByDay(workCode, overTimeDate, allowMobileAttend);	//获取打卡记录集合
 		List<CheckOutRecord> checkOutRecordList = checkOutSet.getCheckOutRecordList();
 		log.error("checkOutRecordList :: size - " + checkOutRecordList.size());

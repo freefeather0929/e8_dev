@@ -18,7 +18,8 @@ import weaver.conn.RecordSet;
 /**
  * 用于获取加班明细
  *  -- 当前仅用于计算晚餐补助时判断当天是否申请了加班
- * @author freef
+ *  -- 用于获取额员工剩余调休假时，获取加班明细
+ * @author zhangxiaoyu - 2017-02-10
  * 
  */
 public class JiaBanService {

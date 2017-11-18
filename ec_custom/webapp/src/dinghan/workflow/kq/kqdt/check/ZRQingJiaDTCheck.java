@@ -418,6 +418,7 @@ public class ZRQingJiaDTCheck implements KQDTCheck<ZRQingJiaCheckDTData> {
 			allowMobileAttend = userInfo.getMobileAtten();
 		}
 		// **** 获取请假日期打卡时间集合
+		checkoutUitl.setForwordDayCheckOutNode("02:00:00");
 		CheckOutRecordSet checkOutSet = checkoutUitl.getPersonalCheckOutSetByDay(workCode, leaveDate, allowMobileAttend);	//获取打卡记录集合
 		List<CheckOutRecord> checkOutRecordList = checkOutSet.getCheckOutRecordList();
 		log.error("checkOutRecordList :: size - " + checkOutRecordList.size());
