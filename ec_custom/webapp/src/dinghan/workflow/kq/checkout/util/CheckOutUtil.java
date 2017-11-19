@@ -92,7 +92,6 @@ public class CheckOutUtil {
 		String nextDate = getNextDate(checkOutDate);
 		//后一天的打卡记录
 		List<CheckOutRecord> checkOutRecordList_NextDate  = checkOutSercie.queryCheckOutList(userWorkCode, nextDate, hasMobile);
-		
 		if(!checkOutRecordList_NextDate.isEmpty()){
 			if(checkOutRecordList_NextDate.get(0).getTime().compareTo(forwordDayCheckOutNode) < 0){
 				checkOutRecord_NextDate = checkOutRecordList_NextDate.get(0);
