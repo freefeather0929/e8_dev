@@ -10,13 +10,13 @@ import dinghan.common.outsys.midware.InnerMidware;
 import dinghan.common.util.HttpUtils;
 
 /**
- * @title 中车费用报销申请单
+ * @title 中车差旅费用报销申请单
  * @author hsf 
- * @date  2017年11月7日  
+ * @date  2017年11月19日  
  */
-public class ZRReiAppBill   implements ERPReiBill {     
+public class ZRTraExpReiAppBill   implements ERPTraExpReiBill {     
   
-	private Log log = LogFactory.getLog(ZRReiAppBill.class.getName());
+	private Log log = LogFactory.getLog(ZRTraExpReiAppBill.class.getName());
 	
 	private String url = InnerMidware.PROTOCOL + "://" 
 			+ InnerMidware.IP + ":"
@@ -26,24 +26,24 @@ public class ZRReiAppBill   implements ERPReiBill {
 	private Map<String,String> parameters = new HashMap<String,String>();
 	
 	/**
-	* 获取单个费用报销单的Servlet名称
+	* 获取单个差旅费用报销单的Servlet名称
 	*/
-	private static final String ERPREIBILLSVLNAME = "ReimburseBillHeadSvl";
+	private static final String ERPTRAEXPREIBILLSVLNAME = "ReimburseBillHeadSvl";
 	/**
-	* 获取费用报销单集合的Servlet名称
+	* 获取单个差旅费用报销单集合的Servlet名称
 	*/
-	private static final String ERPREIBILL_LIST_SVLNAME = "ReimburseBillHeadListSvl";
+	private static final String ERPTRAEXPREIBILL_LIST_SVLNAME = "ReimburseBillHeadListSvl";
 
 	/**   
-	 * @title  获取单个费用报销单据 
+	 * @title  获取单个差旅费用报销单据 
 	 * @author hsf
-	 * @date   2017年11月7日
+	 * @date   2017年11月19日
 	 * @param  
 	 * @return 
 	 */
-	public String queryReiBillInfo(String docNo) {  
+	public String queryTraExpReiBillInfo(String docNo) {   
 		parameters.clear();
-		String urltobill = url += ERPREIBILLSVLNAME;
+		String urltobill = url += ERPTRAEXPREIBILLSVLNAME;
 		
 		log.error("获取BillInfo :: url == " + urltobill); 
 		parameters.put("DocNo", docNo);
@@ -53,14 +53,14 @@ public class ZRReiAppBill   implements ERPReiBill {
 
 
 	/**
-	 * @title   获取费用报销单集合数据
+	 * @title   获取差旅费用报销单集合数据
 	 * @author  hsf
-	 * @date    2017年11月7日
+	 * @date    2017年11月19日
 	 * @return  String
 	 */
-	public String queryReiAllBillInfo(Map<String,String> parameters) {
+	public String queryTraExpReiAllBillInfo(Map<String,String> parameters) {  
 		parameters.clear(); 
-		String urltobillList = url += ERPREIBILL_LIST_SVLNAME; 
+		String urltobillList = url += ERPTRAEXPREIBILL_LIST_SVLNAME; 
 		//url += ERPREIBILL_LIST_SVLNAME; 
 		log.error("获取BillListInfo :: url == " + urltobillList);
 		return HttpUtils.sendGet(urltobillList, parameters);

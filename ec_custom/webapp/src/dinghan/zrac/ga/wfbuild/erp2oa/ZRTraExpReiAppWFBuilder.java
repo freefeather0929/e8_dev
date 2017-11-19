@@ -19,18 +19,18 @@ import weaver.workflow.webservices.WorkflowService;
 import weaver.workflow.webservices.WorkflowServiceImpl;
 
 /**
- * 中车报销单申请流程构建者
+ * 中车差旅费用报销单申请流程构建者
  * @author hsf
- * 2017-11-7  
+ * 2017-11-19  
  *
  */
-public class ZRReiAppWFBuilder extends WorkFlowCreator{
+public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 	
-	private static final String WORKFLOW_NAME = "费用报销申请";
-	private static final String WORKFLOW_TYPE_ID = "213";
-	private static final String FORM_NAME = "formtable_main_254";  
+	private static final String WORKFLOW_NAME = "差旅费用报销申请";
+	private static final String WORKFLOW_TYPE_ID = "214";
+	private static final String FORM_NAME = "formtable_main_255";  
 
-	private ZRReiAppBill ZRReiAppBill = new ZRReiAppBill();  
+	private ZRTraExpReiAppBill zRTraExpReiAppBill = new ZRTraExpReiAppBill();  
 	
 	private DepartmentInfoUtil departmentUitl = new DepartmentInfoUtil();
 	
@@ -55,7 +55,7 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 		String requestId = "-1";
 		
 		if(this.ReiDocNo != null){
-			String respones = ZRReiAppBill.queryReiBillInfo(ReiDocNo);
+			String respones = zRTraExpReiAppBill.queryTraExpReiBillInfo(ReiDocNo);
 			JSONObject json = JSONObject.fromObject(respones);//解析JSON字符串
 			JSONArray  jsonArr_reiBillDetail1 ;//用来接收JSON对象里的数组1
 			JSONArray  jsonArr_reiBillDetail2 ;//用来接收JSON对象里的数组2
@@ -120,14 +120,14 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 					
 			        //报销人1
 				    wrti[7]=new WorkflowRequestTableField();
-					wrti[7].setFieldName("Reiper1");  
+					wrti[7].setFieldName("reiper1");  
 					wrti[7].setFieldValue(String.valueOf(this.creatorId));
 					wrti[7].setView(true);
 					wrti[7].setEdit(true);							
 										
 			        //报销人2
 				    wrti[8]=new WorkflowRequestTableField();
-					wrti[8].setFieldName("Reiper2");  
+					wrti[8].setFieldName("reiper2");  
 					wrti[8].setFieldValue(String.valueOf(this.creatorId));
 					wrti[8].setView(true);
 					wrti[8].setEdit(true);	
@@ -176,7 +176,9 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 					for (int i = 0; i < detailrows1; i++) {
 						JSONObject object = (JSONObject) jsonArr_reiBillDetail1.get(i);
 						// 每行明细对应的字段
-						wrti = new WorkflowRequestTableField[10]; // 字段信息
+						wrti = new WorkflowRequestTableField[16]; // 字段信息
+						
+						
 						
 						//行号
 						wrti[0] = new WorkflowRequestTableField();
@@ -185,77 +187,116 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 						wrti[0].setView(true);// 字段是否可见
 						wrti[0].setEdit(true);// 字段是否可编辑
 						
-						
-						//事由
+
+						//出发日期
 						wrti[1] = new WorkflowRequestTableField();
-						wrti[1].setFieldName("reason");
-						wrti[1].setFieldValue(object.getString("Reason"));
+						wrti[1].setFieldName("startdate");
+						wrti[1].setFieldValue(object.getString("FromDate"));
 						wrti[1].setView(true);// 字段是否可见
 						wrti[1].setEdit(true);// 字段是否可编辑
 
-						//费用项目
+						//到达日期
 						wrti[2] = new WorkflowRequestTableField();
-						wrti[2].setFieldName("expenseitem");
-						wrti[2].setFieldValue(object.getString("ExpenseItem"));
+						wrti[2].setFieldName("reachdate");
+						wrti[2].setFieldValue(object.getString("ToDate"));
 						wrti[2].setView(true);// 字段是否可见
 						wrti[2].setEdit(true);// 字段是否可编辑						
 						
+						//出发城市
+						wrti[3] = new WorkflowRequestTableField();
+						wrti[3].setFieldName("startcity");
+						wrti[3].setFieldValue(object.getString("FromCity"));
+						wrti[3].setView(true);// 字段是否可见
+						wrti[3].setEdit(true);// 字段是否可编辑							
+
+						//到达城市
+						wrti[4] = new WorkflowRequestTableField();
+						wrti[4].setFieldName("reachcity");
+						wrti[4].setFieldValue(object.getString("ToCity"));
+						wrti[4].setView(true);// 字段是否可见
+						wrti[4].setEdit(true);// 字段是否可编辑							
+
+						//事由
+						wrti[5] = new WorkflowRequestTableField();
+						wrti[5].setFieldName("reason");
+						wrti[5].setFieldValue(object.getString("Reason"));
+						wrti[5].setView(true);// 字段是否可见
+						wrti[5].setEdit(true);// 字段是否可编辑						
+						
+						
+						//费用项目
+						wrti[6] = new WorkflowRequestTableField();
+						wrti[6].setFieldName("expenseitem");
+						wrti[6].setFieldValue(object.getString("ExpenseItem"));
+						wrti[6].setView(true);// 字段是否可见
+						wrti[6].setEdit(true);// 字段是否可编辑						
+
+						//住宿天数
+						wrti[7] = new WorkflowRequestTableField();
+						wrti[7].setFieldName("beddaysnum");
+						wrti[7].setFieldValue(object.getString("AccommodationDays"));
+						wrti[7].setView(true);// 字段是否可见
+						wrti[7].setEdit(true);// 字段是否可编辑							
+
+						//补助天数
+						wrti[8] = new WorkflowRequestTableField();
+						wrti[8].setFieldName("subsidydaysnum");
+						wrti[8].setFieldValue(object.getString("SubsidyDays"));
+						wrti[8].setView(true);// 字段是否可见
+						wrti[8].setEdit(true);// 字段是否可编辑	
+						
 						
 						//列支部门
-						wrti[3] = new WorkflowRequestTableField();
-						wrti[3].setFieldName("expensepaydept");
-						wrti[3].setFieldValue(object.getString("ExpensePayDept"));
-						wrti[3].setView(true);// 字段是否可见
-						wrti[3].setEdit(true);// 字段是否可编辑	
+						wrti[9] = new WorkflowRequestTableField();
+						wrti[9].setFieldName("expensepaydept");
+						wrti[9].setFieldValue(object.getString("ExpensePayDept"));
+						wrti[9].setView(true);// 字段是否可见
+						wrti[9].setEdit(true);// 字段是否可编辑	
 						
 						//列支人员
-						wrti[4] = new WorkflowRequestTableField();
-						wrti[4].setFieldName("expensepayby");
-						wrti[4].setFieldValue(object.getString("ExpensePayBy"));
-						wrti[4].setView(true);// 字段是否可见
-						wrti[4].setEdit(true);// 字段是否可编辑	
+						wrti[10] = new WorkflowRequestTableField();
+						wrti[10].setFieldName("expensepayby");
+						wrti[10].setFieldValue(object.getString("ExpensePayBy"));
+						wrti[10].setView(true);// 字段是否可见
+						wrti[10].setEdit(true);// 字段是否可编辑	
 						
 
 						//项目
-						wrti[5] = new WorkflowRequestTableField();
-						wrti[5].setFieldName("project");
-						wrti[5].setFieldValue(object.getString("Project"));
-						wrti[5].setView(true);// 字段是否可见
-						wrti[5].setEdit(true);// 字段是否可编辑							
+						wrti[11] = new WorkflowRequestTableField();
+						wrti[11].setFieldName("project");
+						wrti[11].setFieldValue(object.getString("Project"));
+						wrti[11].setView(true);// 字段是否可见
+						wrti[11].setEdit(true);// 字段是否可编辑							
 
-						
-						
 						//税率
-						wrti[6] = new WorkflowRequestTableField();
-						wrti[6].setFieldName("taxrate");
-						wrti[6].setFieldValue(object.getString("TaxRate"));
-						wrti[6].setView(true);// 字段是否可见
-						wrti[6].setEdit(true);// 字段是否可编辑	
-						
+						wrti[12] = new WorkflowRequestTableField();
+						wrti[12].setFieldName("taxrate");
+						wrti[12].setFieldValue(object.getString("TaxRate"));
+						wrti[12].setView(true);// 字段是否可见
+						wrti[12].setEdit(true);// 字段是否可编辑								
+
 						//未税金额
-						wrti[7] = new WorkflowRequestTableField();
-						wrti[7].setFieldName("nontaxamo");
-						wrti[7].setFieldValue(object.getString("NonTaxMoney"));
-						wrti[7].setView(true);// 字段是否可见
-						wrti[7].setEdit(true);// 字段是否可编辑	
-						
+						wrti[13] = new WorkflowRequestTableField();
+						wrti[13].setFieldName("nontaxamo");
+						wrti[13].setFieldValue(object.getString("NonTaxMoney"));
+						wrti[13].setView(true);// 字段是否可见
+						wrti[13].setEdit(true);// 字段是否可编辑							
 
 						//税额
-						wrti[8] = new WorkflowRequestTableField();
-						wrti[8].setFieldName("taxamo");
-						wrti[8].setFieldValue(object.getString("TotalTax"));
-						wrti[8].setView(true);// 字段是否可见
-						wrti[8].setEdit(true);// 字段是否可编辑							
-	 											
-						
-						
+						wrti[14] = new WorkflowRequestTableField();
+						wrti[14].setFieldName("taxamo");
+						wrti[14].setFieldValue(object.getString("TotalTax"));
+						wrti[14].setView(true);// 字段是否可见
+						wrti[14].setEdit(true);// 字段是否可编辑								
+
+								
 						
 						//报销金额
-						wrti[9] = new WorkflowRequestTableField();
-						wrti[9].setFieldName("reimburesemoney");
-						wrti[9].setFieldValue(object.getString("ReimburseMoney"));
-						wrti[9].setView(true);// 字段是否可见
-						wrti[9].setEdit(true);// 字段是否可编辑							
+						wrti[15] = new WorkflowRequestTableField();
+						wrti[15].setFieldName("reimburesemoney");
+						wrti[15].setFieldValue(object.getString("ReimburseMoney"));
+						wrti[15].setView(true);// 字段是否可见
+						wrti[15].setEdit(true);// 字段是否可编辑							
 						
 
 						wrtri[i] = new WorkflowRequestTableRecord();
@@ -276,7 +317,7 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 					for (int i = 0; i < detailrows2; i++) {
 						JSONObject object = (JSONObject) jsonArr_reiBillDetail2.get(i);
 						// 每行明细对应的字段
-						wrti = new WorkflowRequestTableField[5]; // 字段信息
+						wrti = new WorkflowRequestTableField[2]; // 字段信息
 						
 						//借款单
 						wrti[0] = new WorkflowRequestTableField();
@@ -291,6 +332,8 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 						wrti[1].setFieldValue(object.getString("ApplyMoney"));
 						wrti[1].setView(true);// 字段是否可见
 						wrti[1].setEdit(true);// 字段是否可编辑						
+						
+					
  
 						wrtri[i] = new WorkflowRequestTableRecord();
 						wrtri[i].setWorkflowRequestTableFields(wrti);
@@ -327,7 +370,7 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 		int num = 0;
 		String requstID;
 		if(!parameters.isEmpty()){
-			String respones = ZRReiAppBill.queryReiAllBillInfo(parameters);
+			String respones = zRTraExpReiAppBill.queryTraExpReiAllBillInfo(parameters);
 			JSONObject json = JSONObject.fromObject(respones);
 			JSONArray jsonArray =json.getJSONArray("list");
 			
