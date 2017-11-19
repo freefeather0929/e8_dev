@@ -1,11 +1,11 @@
 package dinghan.workflow.kq.kqtype;
 
 /**
- * 考勤系统中的请假类别
- * @author - zhangxiaoyu / 10593 - 20170909
+ * 考勤系统中中车请假类别
+ * @author - zhangxiaoyu / 10593 - 2017-11-17
  * 
  */
-public interface LeaveType {
+public interface ZRLeaveType {
 	/**
 	 * 事假
 	 */

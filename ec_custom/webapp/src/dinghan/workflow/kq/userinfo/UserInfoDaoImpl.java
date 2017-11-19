@@ -2,6 +2,7 @@ package dinghan.workflow.kq.userinfo;
 
 import dinghan.workflow.kq.userinfo.entity.UserInfo;
 import weaver.conn.RecordSet;
+import weaver.general.Util;
 /**
  * 人员信息DAO实现类
  * @author zhangxiaoyu / 10593 - 20171023
@@ -42,6 +43,9 @@ public class UserInfoDaoImpl implements UserInfoDao {
 			userInfo.setSYTiaoXiuJia(rs.getDouble("SYTiaoXiuJia"));
 			userInfo.setRest(rs.getDouble("rest"));
 			userInfo.setAllowovertime(rs.getInt("allowovertime"));	//是否允许加班
+			userInfo.setDeptOneNameText( Util.null2String(rs.getString("DeptOneNameText")) );
+			userInfo.setDeptTwoNameText( Util.null2String(rs.getString("DeptTwoNameText")) );
+			userInfo.setDeptThreeNameText( Util.null2String(rs.getString("DeptThreeNameText")) );
 		}
 		
 		return userInfo;

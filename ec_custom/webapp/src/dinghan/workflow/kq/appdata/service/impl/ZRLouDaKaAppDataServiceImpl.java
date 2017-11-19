@@ -4,6 +4,7 @@ import dinghan.workflow.kq.appdata.dao.ZRLouDaKaAppDataDao;
 import dinghan.workflow.kq.appdata.dao.impl.ZRLouDaKaAppDataDaoImpl;
 import dinghan.workflow.kq.appdata.entity.ZRLouDaKaAppData;
 import dinghan.workflow.kq.appdata.service.ZRLouDaKaAppDataService;
+import weaver.conn.RecordSet;
 
 /**
  * 中车外出公干流程申请流程数据Service实现类
@@ -18,13 +19,22 @@ public class ZRLouDaKaAppDataServiceImpl implements ZRLouDaKaAppDataService {
 	public ZRLouDaKaAppData queryByID(int id) {
 		return zrLouDaKaAppDataDao.queryByID(id);
 	}
-
-	public ZRLouDaKaAppDataDao getZrLouDaKaAppDataDao() {
-		return zrLouDaKaAppDataDao;
-	}
-
-	public void setZrLouDaKaAppDataDao(ZRLouDaKaAppDataDao zrLouDaKaAppDataDao) {
-		this.zrLouDaKaAppDataDao = zrLouDaKaAppDataDao;
+	
+	@Override
+	public ZRLouDaKaAppData queryByUserIDAndDate(int userId, String fillcardDate){
+		ZRLouDaKaAppData zrLouDakaAppData = null;
+		String sql = "select id from " 
+				+ ZRLouDaKaAppDataDao.ZRLouDaKaAppDataFormName
+					+ " where apppsn = " + userId
+						+ " and fillcarddate = '"+fillcardDate+"'";
+		
+		RecordSet rs = new RecordSet();
+		rs.executeSql(sql);
+		while(rs.next()){
+			zrLouDakaAppData = this.queryByID(rs.getInt("id"));
+		}
+		
+		return zrLouDakaAppData;
 	}
 
 }

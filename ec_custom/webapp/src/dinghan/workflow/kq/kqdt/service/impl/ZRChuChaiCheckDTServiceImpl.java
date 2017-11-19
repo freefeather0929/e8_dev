@@ -79,7 +79,4 @@ public class ZRChuChaiCheckDTServiceImpl implements ZRChuChaiCheckDTService {
 		
 		return zrChuChaiDTList;
 	}
-
-	
-
 }

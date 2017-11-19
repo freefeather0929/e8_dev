@@ -51,4 +51,11 @@ public interface KQDetailBaseService<T> {
 	 */
 	List<T> queryListBySEDate(String startDate, String endDate);
 	
+	/**
+	 * 根据人员ID和日期查询明细集合
+	 * @param userID
+	 * @param kqDate
+	 * @return
+	 */
+	List<T> queryByUserIDAndDate(int userID,String kqDate);
 }

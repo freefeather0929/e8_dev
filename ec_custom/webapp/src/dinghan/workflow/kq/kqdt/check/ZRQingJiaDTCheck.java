@@ -23,7 +23,7 @@ import dinghan.workflow.kq.holiday.entity.HolidayConfig;
 import dinghan.workflow.kq.kqdt.entity.zrentity.ZRQingJiaCheckDTData;
 import dinghan.workflow.kq.kqdt.service.ZRQingJiaCheckDTService;
 import dinghan.workflow.kq.kqdt.service.impl.ZRQingJiaCheckDTServiceImpl;
-import dinghan.workflow.kq.kqtype.LeaveType;
+import dinghan.workflow.kq.kqtype.ZRLeaveType;
 import dinghan.workflow.kq.stworktime.StandardWorkTime;
 import dinghan.workflow.kq.stworktime.StandardWorkTimeImpl;
 import dinghan.workflow.kq.stworktime.StandardWorkTimeInfo;
@@ -45,7 +45,11 @@ import dinghan.workflow.kq.userinfo.UserInfoDao;
 import dinghan.workflow.kq.userinfo.UserInfoDaoImpl;
 import dinghan.workflow.kq.userinfo.entity.UserInfo;
 import weaver.conn.RecordSet;
-
+/**
+ * 中车请假申请明细核定类
+ * @author zhangxiaoyu / 10593 - 2017-11-17
+ *
+ */
 public class ZRQingJiaDTCheck implements KQDTCheck<ZRQingJiaCheckDTData> {
 	
 	private Log log = LogFactory.getLog(ZRQingJiaDTCheck.class.getName());
@@ -82,14 +86,6 @@ public class ZRQingJiaDTCheck implements KQDTCheck<ZRQingJiaCheckDTData> {
 	 * 临时结束时间，用于获取核定结束时间
 	 */
 	private String endTime_forCheck = "";
-	/**
-	 * 核定开始时间
-	 */
-	private String startTime_checked;
-	/**
-	 * 核定结束时间
-	 */
-	private String endTime_checked;
 	/**
 	 * 申请结束时间前30分钟时间点
 	 */
@@ -167,16 +163,16 @@ public class ZRQingJiaDTCheck implements KQDTCheck<ZRQingJiaCheckDTData> {
 				if(("星期六".equals(weekDay) || "星期日".equals(weekDay)) && "上班调整".equals(weekDay) == false){
 					isExecuteCheck = false;
 					switch(leaveType){
-						case LeaveType.SICK_LEAVE:
-						case LeaveType.ANNUAL_LEAVE:
-						case LeaveType.MARRIAGE_HOLIDAY:
-						case LeaveType.FUNERAL_LEAVE:
-						case LeaveType.MATENITY_LEAVE:
-						case LeaveType.ACCOMP_DELIVERY_LEAVE:
-						case LeaveType.ABORTION_LEAVE:
-						case LeaveType.PLANNED_BIRTH_LEAVE:
-						case LeaveType.INJUNY_LEAVE_FOR_OTHER:
-						case LeaveType.INJUNY_LEAVE_PERSONAL:
+						case ZRLeaveType.SICK_LEAVE:
+						case ZRLeaveType.ANNUAL_LEAVE:
+						case ZRLeaveType.MARRIAGE_HOLIDAY:
+						case ZRLeaveType.FUNERAL_LEAVE:
+						case ZRLeaveType.MATENITY_LEAVE:
+						case ZRLeaveType.ACCOMP_DELIVERY_LEAVE:
+						case ZRLeaveType.ABORTION_LEAVE:
+						case ZRLeaveType.PLANNED_BIRTH_LEAVE:
+						case ZRLeaveType.INJUNY_LEAVE_FOR_OTHER:
+						case ZRLeaveType.INJUNY_LEAVE_PERSONAL:
 							isExecuteCheck = true;
 							break;
 						default:
@@ -227,14 +223,14 @@ public class ZRQingJiaDTCheck implements KQDTCheck<ZRQingJiaCheckDTData> {
 					 * 年休假、调休假、婚假、产检、产检假、哺乳假、婚检假、陪产假
 					 */
 					switch(leaveType){
-						case LeaveType.ANNUAL_LEAVE:
-						case LeaveType.BALANCE_LEAVE:
-						case LeaveType.MARRIAGE_HOLIDAY:
-						case LeaveType.MATENITY_LEAVE:
-						case LeaveType.PREGNANCY_CHECK_LEAVE:
-						case LeaveType.BREASTFEEDING_LEAVE:
-						case LeaveType.PRE_MARITAL_LEAVE:
-						case LeaveType.ACCOMP_DELIVERY_LEAVE:
+						case ZRLeaveType.ANNUAL_LEAVE:
+						case ZRLeaveType.BALANCE_LEAVE:
+						case ZRLeaveType.MARRIAGE_HOLIDAY:
+						case ZRLeaveType.MATENITY_LEAVE:
+						case ZRLeaveType.PREGNANCY_CHECK_LEAVE:
+						case ZRLeaveType.BREASTFEEDING_LEAVE:
+						case ZRLeaveType.PRE_MARITAL_LEAVE:
+						case ZRLeaveType.ACCOMP_DELIVERY_LEAVE:
 							isAllowXiaoJia = false;
 							break;
 						default :

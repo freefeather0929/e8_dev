@@ -39,6 +39,9 @@ public class UserInfo {
 	private int MobileAtten;	// 移动考勤
 	private String Obode;	// 常驻地
 	private int allowovertime; //是否允许加班
+	private String deptOneNameText;	//一级部门名称
+	private String deptTwoNameText;		//二级部门名称
+	private String DeptThreeNameText;		//三级部门名称
 	
 	public int getAllowovertime() {
 		return allowovertime;
@@ -232,6 +235,24 @@ public class UserInfo {
 	}
 	public void setSYTiaoXiuJia(double sYTiaoXiuJia) {
 		SYTiaoXiuJia = sYTiaoXiuJia;
+	}
+	public String getDeptOneNameText() {
+		return deptOneNameText;
+	}
+	public void setDeptOneNameText(String deptOneNameText) {
+		this.deptOneNameText = deptOneNameText;
+	}
+	public String getDeptTwoNameText() {
+		return deptTwoNameText;
+	}
+	public void setDeptTwoNameText(String deptTwoNameText) {
+		this.deptTwoNameText = deptTwoNameText;
+	}
+	public String getDeptThreeNameText() {
+		return DeptThreeNameText;
+	}
+	public void setDeptThreeNameText(String deptThreeNameText) {
+		DeptThreeNameText = deptThreeNameText;
 	}
 	
 	

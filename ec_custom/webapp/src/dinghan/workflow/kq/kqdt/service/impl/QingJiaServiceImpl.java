@@ -45,8 +45,13 @@ public class QingJiaServiceImpl extends KQDetailBaseServiceImpl<QingJia> impleme
 
 	@Override
 	public boolean add(QingJia t) {
-		// TODO Auto-generated method stub
 		return qingjiaDao.add(t);
+	}
+
+	@Override
+	public List<QingJia> queryByUserIDAndDate(int userID, String kqDate) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
