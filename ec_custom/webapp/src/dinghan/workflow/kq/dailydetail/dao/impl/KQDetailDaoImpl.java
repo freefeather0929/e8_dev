@@ -6,7 +6,11 @@ import java.util.List;
 import dinghan.workflow.kq.dailydetail.dao.KQDetailDao;
 import dinghan.workflow.kq.dailydetail.entity.KQDetailData;
 import weaver.conn.RecordSet;
-
+/**
+ * 考勤明细Dao实现类
+ * @author zhangxiaoyu / 10593 - 2017-11-20
+ *	
+ */
 public class KQDetailDaoImpl implements KQDetailDao {
 
 	@Override
@@ -49,7 +53,8 @@ public class KQDetailDaoImpl implements KQDetailDao {
 													+ "yjbm_n, "
 														+ "ejbm_n, "
 															+ "jbztx, "
-																+ "pcj"
+																+ "pcj, "
+																	+ "hjj "
 				+ ") values ("
 				+ "NULL,"
 					+ " '"+detailData.getKqrq()+"',"
@@ -88,7 +93,8 @@ public class KQDetailDaoImpl implements KQDetailDao {
 		        																		+ " '"+detailData.getYjbm_n()+"',"
 		        																				+ " '"+detailData.getEjbm_n()+"',"
 		        																						+ " '"+detailData.getJbztx()+"',"
-		        																								+ " '"+detailData.getPcj()+"'"
+		        																								+ " '"+detailData.getPcj()+"',"
+		        																										+ " '"+detailData.getHjj()+"' "
 				
 				+ ")";
 		
@@ -137,7 +143,8 @@ public class KQDetailDaoImpl implements KQDetailDao {
 							+ " yjbm_n='"+detailData.getYjbm_n()+"',"
 								+ " ejbm_n='"+detailData.getEjbm_n()+"',"
 									+ " jbztx='"+detailData.getJbztx()+"',"
-										+ " pcj='"+detailData.getPcj()+"'"
+										+ " pcj='"+detailData.getPcj()+"',"
+											+ " hjj='"+detailData.getHjj()+"'"
 				+ " where id = " + detailData.getId();
 		RecordSet rs = new RecordSet();
 		return rs.executeSql(sql);
@@ -184,7 +191,8 @@ public class KQDetailDaoImpl implements KQDetailDao {
 							+ " yjbm_n,"
 								+ " ejbm_n,"
 									+ " jbztx,"
-										+ " pcj"
+										+ " pcj,"
+											+ " hjj"
 				+ " from " + KQDetailFormName + " where id = " + kqDetailId;
 		
 		RecordSet rs = new RecordSet();
@@ -230,6 +238,7 @@ public class KQDetailDaoImpl implements KQDetailDao {
 			kqDetailData.setEjbm_n(rs.getString("ejbm_n"));
 			kqDetailData.setJbztx(rs.getDouble("jbztx"));
 			kqDetailData.setPcj(rs.getDouble("pcj"));
+			kqDetailData.setHjj(rs.getDouble("hjj"));
 		}
 		
 		return kqDetailData;

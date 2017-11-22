@@ -42,7 +42,8 @@
 		JSONObject jsonTmp = null;
 		JSONArray jsonArrTmp = null;
 		JSONArray jsonArray_Res = new JSONArray();
-		
+		//List<String> appNoList = new ArrayList<String>();
+		Set<String> appNoSet = new HashSet<String>();
 		JSONObject row = null;
 		for(int k = 0; k< jarray.size();k++){
 			jsonTmp = new JSONObject();
@@ -56,7 +57,11 @@
 			repeatList = util.executeCheck(userid, preStartDate, preEndDate, preStartTime, preEndTime, appno);
 			if(repeatList != null){
 				for(int i = 0;i< repeatList.size();i++){
-					jsonArrTmp.add(repeatList.get(i).getOddnum());
+					appNoSet.add(repeatList.get(i).getOddnum().trim());
+				}
+				Iterator<String> appNoIter = appNoSet.iterator();
+				while(appNoIter.hasNext()){
+					jsonArrTmp.add(appNoIter.next());
 				}
 			}
 			jsonTmp.put("rowindex", rowIndex);

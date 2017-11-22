@@ -292,8 +292,8 @@ public class ZRQingJiaDTCheck implements KQDTCheck<ZRQingJiaCheckDTData> {
 					if(endTime_forCheck.compareTo(this.stEndTime) > 0){
 						endTime_forCheck = this.stEndTime;
 					}
-					log.error("核定开始时间 :: " + startTime_forCheck);
-					log.error("核定结束时间 :: " + endTime_forCheck);
+					//log.error("核定开始时间 :: " + startTime_forCheck);
+					//log.error("核定结束时间 :: " + endTime_forCheck);
 					this.validHour = countValidLeaveHour(startTime_forCheck,endTime_forCheck,restHour);
 					qingjiaCheckData.setWeekday(weekDay);
 					qingjiaCheckData.setStarttimechecked(startTime_forCheck);

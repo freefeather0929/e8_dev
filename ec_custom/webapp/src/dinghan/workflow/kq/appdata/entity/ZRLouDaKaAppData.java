@@ -35,7 +35,7 @@ public class ZRLouDaKaAppData {
 	 */
 	private int appDept;
 	/**
-	 * 不漏刷卡类型
+	 * 补漏刷卡类型 0 - 忘打卡 ，1 - 忘带卡
 	 */
 	private int fillCardType;
 	/**

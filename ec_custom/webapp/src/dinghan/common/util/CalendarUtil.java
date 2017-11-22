@@ -27,6 +27,7 @@ public class CalendarUtil {
 		curdate += calendar.get(GregorianCalendar.DAY_OF_MONTH)>9?calendar.get(GregorianCalendar.DAY_OF_MONTH):("0"+calendar.get(GregorianCalendar.DAY_OF_MONTH));
 		return curdate;
 	}
+	
 	/**
 	 * 获取当前时间
 	 * @return
@@ -45,9 +46,11 @@ public class CalendarUtil {
 	
 	/**
 	 * 日期加减
+	 * @param curDate - 需要移动的日期
 	 * @param yearAmount - 年
 	 * @param monthAmount - 月
 	 * @param dateAmount - 日
+	 * @return 
 	 */
 	public static String moveDate (String curDate,int yearAmount,int monthAmount,int dateAmount) {
 		
@@ -81,13 +84,10 @@ public class CalendarUtil {
 	 * @return
 	 */
 	public static String moveTime (String curTime,int hourAmount,int minuteAmount,int secondAmount) {
-		
-		//String _curTime = "2017-07-01 " + curTime + ":00"; 
-		String _curTime = curTime+ ":00"; 
+		//String _curTime = "2017-07-01 " + curTime + ":00";
+		String _curTime = curTime+ ":00";
 		String movedDate = null;
-		
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		
 		Calendar calendar = Calendar.getInstance();
 		
 		try {
@@ -96,7 +96,6 @@ public class CalendarUtil {
 			calendar.add(Calendar.MINUTE, minuteAmount);
 			calendar.add(Calendar.SECOND, secondAmount);
 			movedDate = sdf.format(calendar.getTime());
-			
 		} catch (ParseException e) {
 			movedDate = null;
 			e.printStackTrace();
@@ -143,8 +142,29 @@ public class CalendarUtil {
 			default :
 				weekDay = "";
 		}	
-		
 		return weekDay;
 	}
 	
+	/**
+	 * 计算两个时间的差值毫秒数
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static long timeBetween(String startTime, String endTime){
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		Calendar cs = GregorianCalendar.getInstance();
+		Calendar ce = GregorianCalendar.getInstance();
+		try {
+			cs.setTime(sdf.parse(startTime));
+			ce.setTime(sdf.parse(endTime));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return -1;
+		}
+		long sTimeM = cs.getTimeInMillis();
+		long eTimeM = ce.getTimeInMillis();
+		return eTimeM - sTimeM;
+	}
 }

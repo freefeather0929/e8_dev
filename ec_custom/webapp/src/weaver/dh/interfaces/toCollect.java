@@ -656,7 +656,7 @@ public class toCollect extends BaseCronJob {
 																		// ??
 			String yjbm = Util.null2String(cus_Map.get(hid + "_DEPT1"));// 一级部门
 			String ejbm = Util.null2String(cus_Map.get(hid + "_DEPT2"));// 二级部门
-			String sjbm = Util.null2String(cus_Map.get(hid + "_DEPT3"));// 三级部门
+			//String sjbm = Util.null2String(cus_Map.get(hid + "_DEPT3"));// 三级部门
 			String zt = Util.null2String(cus_Map.get(hid + "_RZZT"));// 状态
 
 			if ("0".equals(zt)) {
@@ -677,11 +677,12 @@ public class toCollect extends BaseCronJob {
 
 			// if("".equals(exists)){//不存在
 
-			excSql = "insert into uf_kqhzmx(kqrq,trgs,brj,gh,wdk,kg,xm,cd,kqlb_n,zaot,ssgs,yjbm_n,ejbm_n,zt,gw,"
-					+ "scdksj,mcdksj,jbgs,sj,bj,nxj,txj,hj,sangj,cj,pcj,cjj,lcj,jyj,jsj,grgs,"
-					+ "formmodeid,modedatacreater,modedatacreatedate,modedatacreatetime) values ('"
-					+ currentDay
-					+ "',"
+			excSql = "insert into uf_kqhzmx("
+					+ "kqrq,trgs,brj,gh,wdk,kg,xm,cd,kqlb_n,zaot,ssgs,yjbm_n,ejbm_n,zt,gw,"
+						+ "scdksj,mcdksj,jbgs,sj,bj,nxj,txj,hj,sangj,cj,pcj,cjj,lcj,jyj,jsj,grgs,"
+							+ "formmodeid,modedatacreater,modedatacreatedate,modedatacreatetime"
+					+ ") values ("
+						+ "'"+currentDay+"',"
 					+ "'"
 					+ trgs
 					+ "','"

@@ -1,5 +1,7 @@
 package dinghan.workflow.kq.userinfo;
 
+import java.util.List;
+
 import dinghan.workflow.kq.userinfo.entity.UserInfo;
 /**
  * 考勤系统人员信息
@@ -21,4 +23,10 @@ public interface UserInfoDao {
 	 */
 	UserInfo queryByCode(String code);
 	
+	/**
+	 * 获取考勤系统单个账套的人员信息集合
+	 * @param accountID - 账套ID
+	 * @return
+	 */
+	List<UserInfo> queryUserListByAccount(int accountID);
 }

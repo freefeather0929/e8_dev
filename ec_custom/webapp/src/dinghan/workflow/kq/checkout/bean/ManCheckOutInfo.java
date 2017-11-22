@@ -1,6 +1,10 @@
 package dinghan.workflow.kq.checkout.bean;
-
-public class ManCheckOut {
+/**
+ * 手工考勤
+ * @author zhangxiaoyu / 10593 - 2017-11-19
+ *
+ */
+public class ManCheckOutInfo {
 	/**
 	 * ID
 	 */
@@ -9,19 +13,21 @@ public class ManCheckOut {
 	 * 工号
 	 */
 	private String workcode;
-	
+	/**
+	 * 用户ID
+	 */
 	private int userid;
-	
+	/**
+	 * 打卡日期
+	 */
 	private String dakadate;
-	
-	private String dakatime1st;
-	
-	private String dakatime2nd;
-	
-	private String dakatime3rd;
-	
-	private String dakatime4th;
-	
+	/**
+	 * 打卡时间
+	 */
+	private String dakatime;
+	/**
+	 * 打卡类型 0 - 手工考勤 ； 1- 忘打卡
+	 */
 	private int dakatype;
 
 	public int getId() {
@@ -55,37 +61,14 @@ public class ManCheckOut {
 	public void setDakadate(String dakadate) {
 		this.dakadate = dakadate;
 	}
+	
 
-	public String getDakatime1st() {
-		return dakatime1st;
+	public String getDakatime() {
+		return dakatime;
 	}
 
-	public void setDakatime1st(String dakatime1st) {
-		this.dakatime1st = dakatime1st;
-	}
-
-	public String getDakatime2nd() {
-		return dakatime2nd;
-	}
-
-	public void setDakatime2nd(String dakatime2nd) {
-		this.dakatime2nd = dakatime2nd;
-	}
-
-	public String getDakatime3rd() {
-		return dakatime3rd;
-	}
-
-	public void setDakatime3rd(String dakatime3rd) {
-		this.dakatime3rd = dakatime3rd;
-	}
-
-	public String getDakatime4th() {
-		return dakatime4th;
-	}
-
-	public void setDakatime4th(String dakatime4th) {
-		this.dakatime4th = dakatime4th;
+	public void setDakatime(String dakatime) {
+		this.dakatime = dakatime;
 	}
 
 	public int getDakatype() {
@@ -95,6 +78,5 @@ public class ManCheckOut {
 	public void setDakatype(int dakatype) {
 		this.dakatype = dakatype;
 	}
-	
 	
 }

@@ -101,7 +101,7 @@ public class ZRQingJiaCheckRepeatUtil {
 			}else{
 				repeatZRQingJiaAppData = zrQJAppDataService.queryByID(rs.getInt("mainid"));
 				if(repeatZRQingJiaAppData != null){
-					if(repeatQingJiaList.indexOf(repeatZRQingJiaAppData) < 0){
+					if(!repeatQingJiaList.contains(repeatZRQingJiaAppData)){
 						repeatQingJiaList.add(repeatZRQingJiaAppData);
 					}
 				}

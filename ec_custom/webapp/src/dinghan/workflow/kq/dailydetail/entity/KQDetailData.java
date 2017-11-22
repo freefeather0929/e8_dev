@@ -76,6 +76,12 @@ public class KQDetailData {
 	 * 婚嫁
 	 */
 	private double hj;
+	
+	/**
+	 * 婚检假
+	 */
+	private double hjj;
+	
 	/**
 	 * 产假
 	 */
@@ -191,8 +197,8 @@ public class KQDetailData {
 		return xm;
 	}
 	/**
-	 * 设置工号
-	 * @param gh
+	 * 设置人员ID
+	 * @param xm
 	 */
 	public void setXm(int xm) {
 		this.xm = xm;
@@ -205,8 +211,8 @@ public class KQDetailData {
 		return kqrq;
 	}
 	/**
-	 * 设置工号
-	 * @param gh
+	 * 设置考勤日期
+	 * @param kqrq
 	 */
 	public void setKqrq(String kqrq) {
 		this.kqrq = kqrq;
@@ -247,8 +253,8 @@ public class KQDetailData {
 		return cd;
 	}
 	/**
-	 * 设置工号
-	 * @param gh
+	 * 设置迟到分数
+	 * @param cd
 	 */
 	public void setCd(double cd) {
 		this.cd = cd;
@@ -664,6 +670,12 @@ public class KQDetailData {
 	}
 	public void setModedatacreatetime(String modedatacreatetime) {
 		this.modedatacreatetime = modedatacreatetime;
+	}
+	public double getHjj() {
+		return hjj;
+	}
+	public void setHjj(double hjj) {
+		this.hjj = hjj;
 	}
 	
 	
