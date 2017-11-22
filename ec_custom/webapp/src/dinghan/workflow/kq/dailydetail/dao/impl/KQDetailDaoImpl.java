@@ -132,7 +132,7 @@ public class KQDetailDaoImpl implements KQDetailDao {
 												+ " trgs='"+detailData.getTrgs()+"',"
 													+ " brj='"+detailData.getBrj()+"',"
 														+ " kg='"+detailData.getKg()+"',"
-				+ " formmodeid='"+KQDetailFormModeID+"',"
+				+ " formmodeid='"+detailData.getFormmodeid()+"',"
 					+ " modedatacreater='"+detailData.getModedatacreater()+"',"
 						+ " modedatacreatertype='"+detailData.getModedatacreatertype()+"',"
 							+ " modedatacreatedate='"+detailData.getModedatacreatedate()+"',"

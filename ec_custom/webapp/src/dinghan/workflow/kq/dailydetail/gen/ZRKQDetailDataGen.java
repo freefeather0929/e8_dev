@@ -105,7 +105,7 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 		 * 1 . 免打卡 仅统计 请假
 		 * 2 . 长期驻外 仅 统计 请假 、加班
 		 */
-		this.soluteQingJiaDTData(userInfo.getName(), kqDate , kqDetailData);	//处理请假明细数据
+		kqDetailData = this.soluteQingJiaDTData(userInfo.getName(), kqDate , kqDetailData);	//处理请假明细数据
 		
 		if(userInfo.getKaoQinType() != UserKQType.ATTENDANCE_FREE){	//免打卡类型判断
 			kqDetailData = this.soluteJiaBanDTData(userInfo.getName(), _kqDate, kqDetailData);		//处理加班数据
