@@ -421,13 +421,18 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 	
 	@Override
 	public boolean hasCreated(String erpBillDocNo) { 
-		String sql = "select id,requestId from " + FORM_NAME + " where reibillno = '" + erpBillDocNo + "'";
+		String sql = "select f.id as id,f.requestId as requestId,w.Lastoperatedate as Lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		if(rs.getCounts() > 0){
-			return true;
+			if( null == rs.getDate("Lastoperatedate") ){   
+				return true; //有数据但不属于退回的单据
+			}   
+			return false ;   //有数据但属于退回的单据
 		}   
 		return false;
 	}
+	
+
 	
 }
