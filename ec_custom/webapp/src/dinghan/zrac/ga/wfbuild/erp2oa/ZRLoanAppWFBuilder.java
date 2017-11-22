@@ -3,12 +3,8 @@ package dinghan.zrac.ga.wfbuild.erp2oa;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import dinghan.common.util.CalendarUtil;
 import dinghan.common.wfbuilder.WorkFlowCreator;
-import dinghan.workflow.kq.kqdt.check.ZRJiaBanDTCheck;
 import dinghan.workflow.kq.util.DepartmentInfoUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -27,9 +23,9 @@ import weaver.workflow.webservices.WorkflowServiceImpl;
  * 
  */
 public class ZRLoanAppWFBuilder extends WorkFlowCreator{ 
-	private Log log = LogFactory.getLog(ZRLoanAppWFBuilder.class.getName());
+	
 	private static final String WORKFLOW_NAME = "借款申请";
-	private static final String WORKFLOW_TYPE_ID = "183";  //workflowid=236???
+	private static final String WORKFLOW_TYPE_ID = "183"; 
 	private static final String FORM_NAME = "formtable_main_215";
 
 	private ERPBill ZRLoanAppBill = new ZRLoanAppBill();  
@@ -55,16 +51,14 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 		String requestId = "-1";
 		if(this.loanDocNo != null){
 			String respones = ZRLoanAppBill.queryBillInfo(loanDocNo);
-			log.error("respones :: " +respones);
 			JSONObject json = JSONObject.fromObject(respones);
-			if("0".equals(json.getString("error"))){
+			if(!("0".equals(json.getString("error")))){
 				initCreatorInfo(json.get("LoanPersonCode").toString());	//获取借款单中的借款人信息
 				
-				log.error("ZRLoanAppWFBuilder :: creatorId");
-				if(this.creatorId > -1){
-					
+				if(this.creatorId != -1){
+				
 					//主表字段
-					WorkflowRequestTableField[] wrti = new WorkflowRequestTableField[19]; //字段信息
+					WorkflowRequestTableField[] wrti = new WorkflowRequestTableField[19]; //字段信息 
 					//借款单号
 				   wrti[0]=new WorkflowRequestTableField();
 				   wrti[0].setFieldName("borrowordernumber");
@@ -201,8 +195,7 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 			       this.workflowRequestInfo.setRequestName(WORKFLOW_NAME + json.getString("LoanPerson") + "-" + CalendarUtil.getCurDate());	//流程标题
 			       this.workflowRequestInfo.setWorkflowMainTableInfo(wmi);	//添加主字段数据
 			       this.workflowRequestInfo.setWorkflowBaseInfo(workflowBaseInfo);
-			       requestId = this.workflowService.doCreateWorkflowRequest(this.workflowRequestInfo, this.creatorId);
-			       
+			       requestId = this.workflowService.doCreateWorkflowRequest(this.workflowRequestInfo, this.creatorId); 
 				}else{
 					//人员信息未在OA中获取或者ERP中的人员工号和OA中的工号不一致到 写入到异构系统单据创建流程错误记录表中
 					//json.get("LoanPersonCode").toString()
@@ -219,25 +212,21 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 	public int createMultiWorkflow() {
 		int num = 0;
 		String requstID;
-		log.error("parameters is empty ? :: " + this.parameters.isEmpty());
 		if(!parameters.isEmpty()){
 			String respones = ZRLoanAppBill.queryAllBillInfo(parameters);
 			JSONObject json = JSONObject.fromObject(respones);
 			JSONArray jsonArray =json.getJSONArray("list");
-			log.error("LoanJsonArray :: " + jsonArray.toString());
+			
 			if(jsonArray.size()>0){      
 				for(int i=0;i<jsonArray.size();i++){
 					JSONObject job = jsonArray.getJSONObject(i); 
 					this.loanDocNo = job.get("DocNo").toString();
-					log.error("loanDocNo :: " + this.loanDocNo);
 					if(hasCreated(this.loanDocNo) == true){
-						
 						continue;
 					}
 					//判断此流程是否被创建
 					try {
 						requstID = this.createWorkflow();
-						log.error("requstID ::: ZRLoanAppWFBuilder " + requstID);
 						num ++;
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -254,7 +243,7 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 	 */
 	private void initCreatorInfo(String workcode){
 		this.creatorId = -1;
-		String sql = "select id,departmentid from HrmResource where workcode = '" + workcode + "'";
+		String sql = "select id,deparmentid from Hrmresourse where workcode = '" + workcode + "'";
 		RecordSet rs = new RecordSet();
 		
 		rs.executeSql(sql);
@@ -269,15 +258,16 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 	}
 	
 	@Override
-	public boolean hasCreated(String erpBillDocNo) {
-		String sql = "select id,requestId,approveprocessnumber from " + FORM_NAME + " where borrowordernumber = '" + erpBillDocNo + "'";
+	public boolean hasCreated(String erpBillDocNo) { 
+		String sql = "select f.id as id,f.requestId as requestId,w.Lastoperatedate as Lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
-		
 		if(rs.getCounts() > 0){
-			return true;
-		}
-		
+			if( null == rs.getDate("Lastoperatedate") ){   
+				return true; //有数据但不属于退回的单据
+			}   
+			return false ;   //有数据但属于退回的单据
+		}   
 		return false;
 	}
 	
