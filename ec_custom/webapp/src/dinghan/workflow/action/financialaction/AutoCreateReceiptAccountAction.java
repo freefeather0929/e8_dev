@@ -1,6 +1,7 @@
 package dinghan.workflow.action.financialaction;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class AutoCreateReceiptAccountAction implements Action {
 	
 	public void createReceiptList(String requestid,int formid,int workFlowId,String lastOperatorId){
 		//log.error("当前流程类型ID为：" + workFlowId);
-		
+		DecimalFormat df = new DecimalFormat("0.00");
 		Map<String,String> userInfoMap;
 		
 		RecordSet rs = new RecordSet();
@@ -78,7 +79,7 @@ public class AutoCreateReceiptAccountAction implements Action {
 			ra.setApppsnmail(userInfoMap.get("email"));
 			ra.setRequestId(Integer.parseInt(requestid));
 		}
-		//获取
+		//获取发票明细集合
 		sql = "select * from formtable_main_" + Math.abs(formid) + "_dt2 where mainid = " +wfMainId;
 		rs.executeSql(sql);
 		ArrayList<ReceiptList> rList = new ArrayList<ReceiptList>();
@@ -91,6 +92,8 @@ public class AutoCreateReceiptAccountAction implements Action {
 			r.setMoney(rs.getDouble("d_kpmoney"));
 			r.setStatue(0);
 			r.setMark(rs.getString("d_mark"));
+			log.error("r.getContraMoney :: "+new BigDecimal(r.getMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
+			log.error("r.getMoney :: "+new BigDecimal(r.getContraMoney()).setScale(2,BigDecimal.ROUND_HALF_UP));
 			rList.add(r);
 		}
 		ra.setReceiptList(rList);
@@ -118,10 +121,10 @@ public class AutoCreateReceiptAccountAction implements Action {
 		//插入新的开票台账信息
 		if(workFlowId != 117){
 			sql = "insert into "+receiptFormName+" (requestId, appno, apppsn, apppsnmail,apppsnmobile, kpdate, pjtype, kppsn, hkdate, contratype, kpunit, kptotal, formmodeid, modedatacreater, modedatacreatertype, modedatacreatedate, modedatacreatetime)" +
-					" values('"+requestid+"','"+ra.getAppno()+"','"+ra.getApppsn()+"','"+ra.getApppsnmail()+"','"+ra.getApppsnmobile()+"','"+ra.getKpDate()+"','"+ra.getPjType()+"','"+lastOperatorId+"','"+ra.getHkDate()+"','"+ra.getContraType()+"','"+ra.getKpUnit()+"','"+ra.getKptotal()+"','32','"+lastOperatorId+"','0','"+this.requestManager.getCurrentDate()+"','"+this.requestManager.getCurrentTime()+"')";
+					" values('"+requestid+"','"+ra.getAppno()+"','"+ra.getApppsn()+"','"+ra.getApppsnmail()+"','"+ra.getApppsnmobile()+"','"+ra.getKpDate()+"','"+ra.getPjType()+"','"+lastOperatorId+"','"+ra.getHkDate()+"','"+ra.getContraType()+"','"+ra.getKpUnit()+"','"+new BigDecimal(ra.getKptotal()).setScale(2,BigDecimal.ROUND_HALF_UP)+"','32','"+lastOperatorId+"','0','"+this.requestManager.getCurrentDate()+"','"+this.requestManager.getCurrentTime()+"')";
 		}else{
 			sql = "insert into "+receiptFormName+" (requestId, appno, apppsn, apppsnmail,apppsnmobile, kpdate, pjtype, kppsn, hkdate, kpunit, kptotal, formmodeid, modedatacreater, modedatacreatertype, modedatacreatedate, modedatacreatetime)" +
-					" values('"+requestid+"','"+ra.getAppno()+"','"+ra.getApppsn()+"','"+ra.getApppsnmail()+"','"+ra.getApppsnmobile()+"','"+ra.getKpDate()+"','"+ra.getPjType()+"','"+lastOperatorId+"','"+ra.getHkDate()+"','"+ra.getKpUnit()+"','"+ra.getKptotal()+"','18','"+lastOperatorId+"','0','"+this.requestManager.getCurrentDate()+"','"+this.requestManager.getCurrentTime()+"')";
+					" values('"+requestid+"','"+ra.getAppno()+"','"+ra.getApppsn()+"','"+ra.getApppsnmail()+"','"+ra.getApppsnmobile()+"','"+ra.getKpDate()+"','"+ra.getPjType()+"','"+lastOperatorId+"','"+ra.getHkDate()+"','"+ra.getKpUnit()+"','"+new BigDecimal(ra.getKptotal()).setScale(2,BigDecimal.ROUND_HALF_UP)+"','18','"+lastOperatorId+"','0','"+this.requestManager.getCurrentDate()+"','"+this.requestManager.getCurrentTime()+"')";
 		}
 		
 		//log.error("执行：" + sql);
@@ -134,13 +137,18 @@ public class AutoCreateReceiptAccountAction implements Action {
 		while(rs.next()){
 			receiptAccountId = rs.getInt("id");
 		}
-		
+		double contraMenoy = 0.0d;
+		double money = 0.0d;
 		for(int i=0;i<ra.getReceiptList().size();i++){
+			contraMenoy = ra.getReceiptList().get(i).getContraMoney();
+			money = ra.getReceiptList().get(i).getMoney();
 			sql = "insert into "+receiptFormName+"_dt1 (mainid, d_contracode, d_contramoney, d_code, d_kpmoney, d_kpstatus, d_mark)" +
 					" values ('"+receiptAccountId+"','"+ra.getReceiptList().get(i).getContraNo()+"',"
-							+ BigDecimal.valueOf(ra.getReceiptList().get(i).getContraMoney()).setScale(2, BigDecimal.ROUND_HALF_UP) +","
-									+ "'"+ra.getReceiptList().get(i).getCode()+"',"
-											+ BigDecimal.valueOf(ra.getReceiptList().get(i).getMoney()).setScale(2, BigDecimal.ROUND_HALF_UP)+","
+							+ new BigDecimal(contraMenoy).setScale(2, BigDecimal.ROUND_HALF_UP) +","
+								//+ "'" + df.format(ra.getReceiptList().get(i).getContraMoney()) +"',"
+									+ "'" +ra.getReceiptList().get(i).getCode()+ "',"
+											+ new BigDecimal(money).setScale(2, BigDecimal.ROUND_HALF_UP)+","
+												//+ df.format(ra.getReceiptList().get(i).getMoney())+","
 													+ "'"+ra.getReceiptList().get(i).getStatue()+"',"
 															+ "'"+ra.getReceiptList().get(i).getMark()+"')"; 
 			rs.executeSql(sql);

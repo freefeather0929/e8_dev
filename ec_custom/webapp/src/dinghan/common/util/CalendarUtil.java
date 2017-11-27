@@ -106,7 +106,7 @@ public class CalendarUtil {
 	/**
 	 * 获取星期
 	 * @param dateStr - 日期字符串 [yyyy-MM-dd]
-	 * @return
+	 * @return - 星期日、星期一 ...
 	 */
 	public static String judgeWeekDay(String dateStr){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

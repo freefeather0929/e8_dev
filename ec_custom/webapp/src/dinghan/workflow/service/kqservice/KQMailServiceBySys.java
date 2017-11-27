@@ -50,7 +50,7 @@ public class KQMailServiceBySys {
 		String mailtoName = "";
 		
 		String Sql = "select top 1 h.Code,h.NameCN,h.Mail,h.Company,h.KaoQinType,h.DeptOneNameText,h.DeptTwoNameText,h.DeptThreeNameText,h.InCompany,h.Post,"
-				+ "k.hzyf,k.ycqts,k.jbgs,k.jbztx,k.sj,k.bj,k.hj,k.sangj,k.cj,k.cjj,k.lcj,k.jyj,k.jsj,k.grgs,k.kg,k.trgs,k.wdk,k.cd,k.zt,k.brj,k.nxj,k.txj,k.synx,k.sytx"
+				+ "k.hzyf,k.ycqts,k.jbgs,k.jbztx,k.sj,k.bj,k.hj,k.sangj,k.cj,k.cjj,k.lcj,k.jyj,k.jsj,k.grgs,k.kg,k.trgs,k.wdk,k.cd,k.zt,k.brj,k.nxj,k.txj,k.synx,k.sytx,k.jjc"
 				+ " from uf_kqhz k,uf_hr_userinfo1 h where h.Code = k.gh and h.Code = '" +_userCode+ "' and k.hzyf = '"+ _month +"' order by ";
 		
 		hrrs.executeSql(Sql);
@@ -225,6 +225,9 @@ public class KQMailServiceBySys {
 				break;	
 			case 3 :
 				type = "长期驻外";
+				break;
+			case 4 :
+				type = "计时制";
 				break;
 		}
 		

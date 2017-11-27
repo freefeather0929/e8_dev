@@ -14,7 +14,7 @@ public interface NEECheckTargetDao {
 	/**
 	 * 试用期考核目标明细表名
 	 */
-	String NeeCheckTargetDTFormName = "formtable_main_244_dt2";
+	String NeeCheckTargetDTFormName = "formtable_main_266_dt2";
 	
 	/**
 	 * 获取试用期考核目标明细单行数据

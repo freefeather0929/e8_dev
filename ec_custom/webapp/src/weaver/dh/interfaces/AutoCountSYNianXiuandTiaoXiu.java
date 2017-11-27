@@ -1,7 +1,10 @@
 package weaver.dh.interfaces;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import dinghan.workflow.beans.UserInfo;
@@ -42,11 +45,44 @@ public class AutoCountSYNianXiuandTiaoXiu extends BaseCronJob {
 				lastTiaoXiu = qingjiaServier.countLastTiaoXiuorNianXiuHour(userInfo.getName(), QingJiaService.TiaoXiu, "", curMonth);
 				lastNianXiu = qingjiaServier.countLastTiaoXiuorNianXiuHour(userInfo.getName(), QingJiaService.NianXiu, "", curMonth);
 				
+				if(curMonth == 12){
+					
+					double syNXHour = 0;
+					int curYear = calendar.get(Calendar.YEAR);
+					int joinYear = Integer.parseInt(userInfo.getJoinDate().substring(0, 7));
+					int yearIn = curYear - joinYear;
+					//double nianXiu_neo = 0;
+					if(yearIn >= 20){
+						syNXHour = 120;
+					}else if(yearIn >= 10){
+						syNXHour = 80;
+					}else if(yearIn>0){
+						syNXHour = 40;
+					}else{	
+						Calendar _curMonth = GregorianCalendar.getInstance();
+						Calendar _joinMonth = GregorianCalendar.getInstance();
+						//SimpleDateFormat sdf = ;
+						try {
+							_curMonth.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(curYear+"-"+curMonth+"-31"));
+							_joinMonth.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(userInfo.getJoinDate()));
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						
+						long betwean = _curMonth.getTimeInMillis() - _joinMonth.getTimeInMillis();
+						double daysForCount = (double)betwean/1000/60/60/24/365*5;
+						daysForCount = new BigDecimal(daysForCount).setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue();
+						syNXHour = 8*daysForCount;
+					}
+					lastTiaoXiu += lastNianXiu;
+					lastNianXiu = syNXHour;
+				}
+				
 				sql = "update uf_hr_userinfo1 set SYTiaoXiuJia = '"+lastTiaoXiu+"',"
 						+ "SYNianXiuJia = '"+lastNianXiu+"' where Name = " + userInfo.getName();
 				
 				recordSet.executeSql(sql);
-
+				
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

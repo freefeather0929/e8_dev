@@ -11,11 +11,11 @@ import dinghan.zrac.hr.entity.neeentity.NEECheckTargetDTData_Month;
  */
 public interface NEECheckTarget_Month_Dao{
 	
-	String NEETARGET_1ST_MONTH_DTFORM_NAME = "formtable_main_244_dt3";
+	String NEETARGET_1ST_MONTH_DTFORM_NAME = "formtable_main_266_dt3";
 	
-	String NEETARGET_2ND_MONTH_DTFORM_NAME = "formtable_main_244_dt4";
+	String NEETARGET_2ND_MONTH_DTFORM_NAME = "formtable_main_266_dt4";
 	
-	String NEETARGET_3RD_MONTH_DTFORM_NAME = "formtable_main_244_dt5";
+	String NEETARGET_3RD_MONTH_DTFORM_NAME = "formtable_main_266_dt5";
 	
 	/**
 	 * 查询新员工月度考核目标明细表记录

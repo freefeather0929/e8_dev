@@ -14,7 +14,7 @@ public interface KQSummaryDataGen {
 	/**
 	 * 创建考勤汇总
 	 * @param userInfo - 考勤人员信息
-	 * @param kqkqMonth - 考勤月份 格式[yyyy-MM]
+	 * @param kqkqMonth - 考勤月份[yyyy-MM]
 	 * @return
 	 */
 	KQSummaryData createSummaryData(UserInfo userInfo, String kqMonth);

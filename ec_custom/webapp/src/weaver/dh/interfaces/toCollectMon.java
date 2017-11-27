@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
@@ -251,6 +252,39 @@ public class toCollectMon extends BaseCronJob{
 				lastMonthTiaoXiu = qingjiaService.countLastTiaoXiuorNianXiuHour(Integer.parseInt(hid), QingJiaService.TiaoXiu, "", curMonth);
 				lastMonthNianXiu = qingjiaService.countLastTiaoXiuorNianXiuHour(Integer.parseInt(hid), QingJiaService.NianXiu, "", curMonth);
 				
+				if(curMonth == 12){
+					
+					double syNXHour = 0;
+					int curYear = calendar.get(Calendar.YEAR);
+					int joinYear = Integer.parseInt(join.substring(0, 7));
+					int yearIn = curYear - joinYear;
+					//double nianXiu_neo = 0;
+					if(yearIn >= 20){
+						syNXHour = 120;
+					}else if(yearIn >= 10){
+						syNXHour = 80;
+					}else if(yearIn>0){
+						syNXHour = 40;
+					}else{	
+						Calendar _curMonth = GregorianCalendar.getInstance();
+						Calendar _joinMonth = GregorianCalendar.getInstance();
+						//SimpleDateFormat sdf = ;
+						try {
+							_curMonth.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(curYear+"-"+curMonth+"-31"));
+							_joinMonth.setTime(new SimpleDateFormat("yyyy-MM-dd").parse(join));
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						
+						long betwean = _curMonth.getTimeInMillis() - _joinMonth.getTimeInMillis();
+						double daysForCount = (double)betwean/1000/60/60/24/365*5;
+						daysForCount = new BigDecimal(daysForCount).setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue();
+						syNXHour = 8*daysForCount;
+					}
+					lastMonthTiaoXiu += lastMonthNianXiu;
+					lastMonthNianXiu = syNXHour;
+				}
+				
 				sql = "update uf_hr_userinfo1 set SYTiaoXiuJia = '"+lastMonthTiaoXiu+"',"
 						+ "SYNianXiuJia = '"+lastMonthNianXiu+"' where Name = " + hid;
 				
@@ -294,7 +328,7 @@ public class toCollectMon extends BaseCronJob{
 			rs_ResetRight.executeSql(sqlAllCurMonthRecord);
 			
 			while(rs_ResetRight.next()){
-				
+				modeRightInfo = new ModeRightInfo();
 				modeRightInfo.rebuildModeDataShareByEdit(OperatorId, 61, rs_ResetRight.getInt("id"));
 			}
 		}

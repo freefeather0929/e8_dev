@@ -1,7 +1,11 @@
 package dinghan.workflow.kq.summary.dao.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dinghan.workflow.kq.summary.dao.KQSummaryDataDao;
 import dinghan.workflow.kq.summary.entity.KQSummaryData;
+import dinghan.workflow.kq.userinfo.offdays.AnnualDaysHaddle;
 import weaver.conn.RecordSet;
 import weaver.general.Util;
 /**
@@ -10,12 +14,12 @@ import weaver.general.Util;
  * 
  */
 public class KQSummaryDataDaoImpl implements KQSummaryDataDao {
-
+	private Log log = LogFactory.getLog(KQSummaryDataDaoImpl.class.getName());
 	@Override
 	public KQSummaryData queryByUserIDAndMonth(int userId, String month) {
 		KQSummaryData kqSummaryData = null;
 		String sql = "select id from " + KQSummaryFormName + " where xm = " + userId + " and hzyf = '"+month+"'";
-		
+		log.error("获取月考勤汇总  sql :: " + sql);
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		
@@ -76,7 +80,10 @@ public class KQSummaryDataDaoImpl implements KQSummaryDataDao {
 				+ " ssgs,"
 					+ " gw,"
 						+ " hjj"
-				+ " form "+ KQSummaryFormName + " where id = " + id;
+				+ " from "+ KQSummaryFormName + " where id = " + id;
+		
+		
+		log.error("获取月考勤汇总  By ID sql :: " + sql);
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		
@@ -263,7 +270,7 @@ public class KQSummaryDataDaoImpl implements KQSummaryDataDao {
 															+ "synx='"+kqSummaryData.getSynx()+"', "
 																+ "sytx='"+kqSummaryData.getSytx()+"', "
 																	+ "kqrq='"+kqSummaryData.getKqrq()+"', "
-																		+ "kqlb='"+kqSummaryData.getKqrq()+"', "
+																		+ "kqlb='"+kqSummaryData.getKqlb()+"', "
 																			+ "hzyf='"+kqSummaryData.getHzyf()+"', "
 																				+ "cdTime='"+kqSummaryData.getCdTime()+"', "
 																					+ "ztTime='"+kqSummaryData.getZtTime()+"', "

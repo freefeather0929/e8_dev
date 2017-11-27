@@ -47,7 +47,7 @@ import weaver.hrm.User;
 /**
  * 中车考勤系统 考勤 明细 
  * @author zhangxiaoyu / 10593 - 2017-11-21
- *
+ * 
  */
 public class ZRKQDetailDataGen implements KQDetailDataGen{
 	private Log log = LogFactory.getLog(ZRKQDetailDataGen.class.getName());
@@ -231,11 +231,11 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 					}
 					//log.error("计算迟到StartTime :: " + _startTime_forCount);
 					//log.error("计算迟到EndTime :: " + _endTime_forCount);
-					cd_or_zt_Minute = countMunuteBetween(_startTime_forCount, _endTime_forCount);
+					cd_or_zt_Minute = countMunuteBetween(_startTime_forCount.substring(0, 5)+":00", _endTime_forCount);
 					//log.error("计算迟到的时间::" + cd_or_zt_Minute);
 					if(cd_or_zt_Minute<1) {cd_or_zt_Minute = 1.0d;}
 					if(cd_or_zt_Minute > 60){	//迟到超过60分钟计算旷工
-						kuanggongHour += countHoursBetween(_startTime_forCount, _endTime_forCount) - restHour;
+						kuanggongHour += countHoursBetween(_startTime_forCount.substring(0, 5)+":00", _endTime_forCount) - restHour;
 					}else{
 						this.chidaoMinute = (int)cd_or_zt_Minute;
 					}
@@ -689,7 +689,10 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 		}
 		return _kqDetailData;
 	}
-
+	/**
+	 * 设置明细数据创建人用户ID
+	 * @param dataCreator
+	 */
 	public void setDataCreator(int dataCreator) {
 		this.dataCreator = dataCreator;
 	}
