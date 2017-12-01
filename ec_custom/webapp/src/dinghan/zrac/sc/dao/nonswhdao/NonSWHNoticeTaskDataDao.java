@@ -8,7 +8,7 @@ import dinghan.zrac.sc.entity.nonswhentity.NonSWHNoticTaskData;
  * 
  */
 public interface NonSWHNoticeTaskDataDao {
-	String NonSWHNoticeTaskDataFromName = "formtable_main_259_dt3";
+	String NonSWHNoticeTaskDataFromName = "formtable_main_282_dt3";
 	
 	/**
 	 * 查询非标工时通知任务执行流程

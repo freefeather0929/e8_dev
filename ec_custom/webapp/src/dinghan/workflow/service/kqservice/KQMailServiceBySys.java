@@ -50,8 +50,8 @@ public class KQMailServiceBySys {
 		String mailtoName = "";
 		
 		String Sql = "select top 1 h.Code,h.NameCN,h.Mail,h.Company,h.KaoQinType,h.DeptOneNameText,h.DeptTwoNameText,h.DeptThreeNameText,h.InCompany,h.Post,"
-				+ "k.hzyf,k.ycqts,k.jbgs,k.jbztx,k.sj,k.bj,k.hj,k.sangj,k.cj,k.cjj,k.lcj,k.jyj,k.jsj,k.grgs,k.kg,k.trgs,k.wdk,k.cd,k.zt,k.brj,k.nxj,k.txj,k.synx,k.sytx,k.jjc"
-				+ " from uf_kqhz k,uf_hr_userinfo1 h where h.Code = k.gh and h.Code = '" +_userCode+ "' and k.hzyf = '"+ _month +"' order by ";
+				+ "k.hzyf,k.ycqts,k.jbgs,k.jbztx,k.sj,k.bj,k.hj,k.hjj,k.sangj,k.cj,k.cjj,k.lcj,k.jyj,k.jsj,k.grgs,k.kg,k.trgs,k.wdk,k.cd,k.zt,k.brj,k.nxj,k.txj,k.synx,k.sytx"
+				+ " from uf_kqhz k,uf_hr_userinfo1 h where h.Code = k.gh and h.Code = '" +_userCode+ "' and k.hzyf = '"+ _month +"' order by h.Code";
 		
 		hrrs.executeSql(Sql);
 
@@ -123,6 +123,13 @@ public class KQMailServiceBySys {
 			mailContent += "<td style=\"width:30%;\">"+(hrrs.getDouble("hj")<0?0.00:hrrs.getDouble("hj"))+"</td>";
 			mailContent += "<td style=\"width:20%;\">丧假工时：</td>";
 			mailContent += "<td style=\"width:30%;\">"+(hrrs.getDouble("sangj")<0?0.00:hrrs.getDouble("sangj"))+"</td>";
+			mailContent += "</tr>";
+			
+			mailContent += "<tr>";
+			mailContent += "<td style=\"width:20%;\">婚检假：</td>";
+			mailContent += "<td style=\"width:30%;\">"+(hrrs.getDouble("hjj")<0?0.00:hrrs.getDouble("hjj"))+"</td>";
+			mailContent += "<td style=\"width:20%;\"></td>";
+			mailContent += "<td style=\"width:30%;\"></td>";
 			mailContent += "</tr>";
 			
 			mailContent += "<tr>";

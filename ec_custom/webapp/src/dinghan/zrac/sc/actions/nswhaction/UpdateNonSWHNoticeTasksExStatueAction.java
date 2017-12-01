@@ -1,8 +1,5 @@
 package dinghan.zrac.sc.actions.nswhaction;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import dinghan.zrac.sc.util.nonswhutil.NonSWHTaskAppUtil;
 import weaver.interfaces.workflow.action.Action;
 import weaver.soa.workflow.request.RequestInfo;
@@ -14,7 +11,7 @@ import weaver.workflow.request.RequestManager;
  * 
  */
 public class UpdateNonSWHNoticeTasksExStatueAction implements Action {
-	private Log log = LogFactory.getLog(UpdateNonSWHNoticeTasksExStatueAction.class.getName());
+	//private Log log = LogFactory.getLog(UpdateNonSWHNoticeTasksExStatueAction.class.getName());
 	private NonSWHTaskAppUtil util = new NonSWHTaskAppUtil();
 	private RequestManager requestManager;
 	@Override
@@ -30,7 +27,7 @@ public class UpdateNonSWHNoticeTasksExStatueAction implements Action {
 	 * @param billId - 非标工时任务执行流程的ID
 	 */
 	private void updateTaskExStatues(int billId){
-		log.error("");
+		//log.error("");
 		util.updateMainWFTaskDTData(billId);
 	}
 

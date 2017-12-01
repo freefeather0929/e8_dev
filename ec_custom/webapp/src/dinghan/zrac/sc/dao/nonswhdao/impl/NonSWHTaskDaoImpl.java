@@ -47,7 +47,7 @@ public class NonSWHTaskDaoImpl implements NonSWHTaskDao {
 																										+ "mainwfno, "
 																											+ "mainwfid "
 				+ " from " + NonSWHTaskFromName + " where id = " + id;
-		log.error("NonSWHTaskAppData sql :: " + sql);
+		//log.error("NonSWHTaskAppData sql :: " + sql);
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		while(rs.next()){
