@@ -36,7 +36,7 @@ public class CreateZRWaiChuCheckDataAction implements Action {
 		List<ZRWaiChuCheckDTData> zrWCCheckDTlist =	zrWCCheckDTService.queryListByMainID(appId);
 		
 		if(zrWCCheckDTlist!=null){
-			log.error("生成外出明细：： 找到外出申请单明细 条目数：："+zrWCCheckDTlist.size());
+			//log.error("生成外出明细：： 找到外出申请单明细 条目数：："+zrWCCheckDTlist.size());
 			for(ZRWaiChuCheckDTData data : zrWCCheckDTlist){
 				zrWCCheckDTService.deleteById(data.getId());
 			}
@@ -44,7 +44,7 @@ public class CreateZRWaiChuCheckDataAction implements Action {
 		
 		zrWCCheckDTlist = zrWCCheckDataGen.createCheckData(appId);
 		
-		log.error("生成外出明细：： 生成外出核定明细 条目数：："+zrWCCheckDTlist.size());
+		//log.error("生成外出明细：： 生成外出核定明细 条目数：："+zrWCCheckDTlist.size());
 		
 		for(ZRWaiChuCheckDTData data : zrWCCheckDTlist){
 			zrWCCheckDTService.add(data);

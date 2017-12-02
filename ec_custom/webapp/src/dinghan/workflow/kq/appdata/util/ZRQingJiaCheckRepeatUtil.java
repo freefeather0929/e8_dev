@@ -73,7 +73,7 @@ public class ZRQingJiaCheckRepeatUtil {
 								" AND m.applicant = '" + _userid +"' "+
 									" AND m.oddnum <> ''" +
 										" AND m.oddnum <> '"+_appNo+"'";
-		log.error("检测请假重复 sql ：： " + sql);
+		//log.error("检测请假重复 sql ：： " + sql);
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		
@@ -92,9 +92,9 @@ public class ZRQingJiaCheckRepeatUtil {
 			if(!"".equals(Util.null2String(rs.getString("endtimechecked")))){
 				tmpEndTime = rs.getString("endtimechecked");
 			}
-			log.error("_appStartTime :: " + _appStartTime);
-			log.error("tmpEndTime :: " + tmpEndTime);
-			log.error("_appStartTime.compareTo(tmpEndTime) ::" + _appStartTime.compareTo(tmpEndTime));
+			//log.error("_appStartTime :: " + _appStartTime);
+			//log.error("tmpEndTime :: " + tmpEndTime);
+			//log.error("_appStartTime.compareTo(tmpEndTime) ::" + _appStartTime.compareTo(tmpEndTime));
 			if(( _checkedDateTmp.equals(_preStartDate) && _appStartTime.compareTo(tmpEndTime)>=0) || 
 					( _checkedDateTmp.equals(_preEndDate) && _appEndTime.compareTo(tmpStartTime)<=0 )){
 				continue;

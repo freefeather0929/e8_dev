@@ -37,7 +37,10 @@ public class AutoCountSYNianXiuandTiaoXiu extends BaseCronJob {
 		String sql = "";
 		
 		for(UserInfo userInfo : userInfoList){
-			
+				//考勤账套属于中车轨道的，不进行更新
+			if("20".equals(userInfo.getCompany()) || "21".equals(userInfo.getCompany()) || "22".equals(userInfo.getCompany())){
+				continue;
+			}
 			try {
 				lastTiaoXiu = qingjiaServier.countLastTiaoXiuorNianXiuHour(userInfo.getName(), QingJiaService.TiaoXiu, "", curMonth);
 				lastNianXiu = qingjiaServier.countLastTiaoXiuorNianXiuHour(userInfo.getName(), QingJiaService.NianXiu, "", curMonth);

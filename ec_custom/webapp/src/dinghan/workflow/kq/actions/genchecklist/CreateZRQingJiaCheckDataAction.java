@@ -47,7 +47,7 @@ public class CreateZRQingJiaCheckDataAction implements Action {
 		}*/
 		
 		List<ZRQingJiaCheckDTData> zrQJCheckDTlist = zrQJCheckDataGen.createCheckData(appId);
-		log.error("生成请假明细：： 生成请假核定明细 条目数：："+zrQJCheckDTlist.size());
+		//log.error("生成请假明细：： 生成请假核定明细 条目数：："+zrQJCheckDTlist.size());
 		for(ZRQingJiaCheckDTData data : zrQJCheckDTlist){
 			zrQJCheckDTService.add(data);
 		}

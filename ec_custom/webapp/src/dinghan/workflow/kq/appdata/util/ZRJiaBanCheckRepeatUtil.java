@@ -7,7 +7,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import dinghan.workflow.kq.appdata.dao.ZRJiaBanAppDataDao;
-import dinghan.workflow.kq.appdata.dtdao.ZRJiaBanAppDTDataDao;
 import dinghan.workflow.kq.appdata.entity.ZRJiaBanAppData;
 import dinghan.workflow.kq.appdata.service.ZRJiaBanAppDataService;
 import dinghan.workflow.kq.appdata.service.impl.ZRJiaBanAppDataServiceImpl;

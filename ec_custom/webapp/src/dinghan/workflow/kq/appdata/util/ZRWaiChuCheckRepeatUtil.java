@@ -77,7 +77,7 @@ public class ZRWaiChuCheckRepeatUtil implements CheckRepeatApp<ZRWaiChuAppData>{
 				+ " and preenddate >= '" + _appStartDate +"' and prestartdate <= '" +_appEndDate + "'"
 					+ " and appno <> '' and appno <> '" + _appNo + "'";
 		
-		log.error("检测外出重复 sql ：： " + sql);
+		//log.error("检测外出重复 sql ：： " + sql);
 		
 		RecordSet rs = new RecordSet();
 		
@@ -98,7 +98,7 @@ public class ZRWaiChuCheckRepeatUtil implements CheckRepeatApp<ZRWaiChuAppData>{
 				}
 			}
 		}
-		log.error("检测外出重复 repeatZRWaiChuAppData ：：isNull " + repeatZRWaiChuAppData == null);
+		//log.error("检测外出重复 repeatZRWaiChuAppData ：：isNull " + repeatZRWaiChuAppData == null);
 		
 		return repeatZRWaiChuAppData;
 		

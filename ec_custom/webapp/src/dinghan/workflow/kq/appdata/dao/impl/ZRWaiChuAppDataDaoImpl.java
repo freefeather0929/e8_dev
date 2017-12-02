@@ -21,7 +21,7 @@ public class ZRWaiChuAppDataDaoImpl implements ZRWaiChuAppDataDao {
 					+ "prestarttime,preendtime"
 				    + " from " +ZRWaiChuAppDataFormName+ " where id =" + id;
 		
-		log.error("查询外出公干申请单 sql :: " + sql);
+		//log.error("查询外出公干申请单 sql :: " + sql);
 		
 		RecordSet rs = new RecordSet();
 		

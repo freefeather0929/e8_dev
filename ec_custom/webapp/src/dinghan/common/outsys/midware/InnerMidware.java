@@ -10,8 +10,8 @@ package dinghan.common.outsys.midware;
  */
 public interface InnerMidware {
 	String PROTOCOL = "http";
-	String IP = "10.10.66.246";
-	String PORT = "8080";
+	String IP = "txl.dinghantech.com";
+	String PORT = "8081";
 	
 	String PATH_TO_U9 = "OA2ERP/U9";
 }
