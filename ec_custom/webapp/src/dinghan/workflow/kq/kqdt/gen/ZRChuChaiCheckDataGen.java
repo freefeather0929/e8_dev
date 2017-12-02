@@ -99,11 +99,8 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 			endTime = zrCCTimeSelect_end.queryTimeSelectItem(
 										zrChuChaiAppData.getRealEndTime()
 																		).getSelectName();;
-			
-																		log.error("startTime :: " +startTime);
-																		log.error("endTime :: " +endTime);
 			String tmpDate = startDate;
-			log.error("KQDTCheck.PRE_TO_CHECK :: " + KQDTCheck.PRE_TO_CHECK);
+			//log.error("KQDTCheck.PRE_TO_CHECK :: " + KQDTCheck.PRE_TO_CHECK);
 			while(tmpDate.compareTo(endDate) < 1){
 				zrChuChaiCheckDTData = new ZRChuChaiCheckDTData();
 				zrChuChaiCheckDTData.setChecked(KQDTCheck.PRE_TO_CHECK);
@@ -114,7 +111,7 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 				holidayConfig = holidayConfigDao.query(tmpDate, zrChuChaiAppData.getAppPsn());
 				if(holidayConfig != null){
 					zrChuChaiCheckDTData.setWeekday(holidaySelectDao.queryHolidaySelectItemInfo(holidayConfig.getJrmc()).getSelectName());
-					log.error("holidayConfig :: " + holidaySelectDao.queryHolidaySelectItemInfo(holidayConfig.getJrmc()).getSelectName());
+					//log.error("holidayConfig :: " + holidaySelectDao.queryHolidaySelectItemInfo(holidayConfig.getJrmc()).getSelectName());
 				}
 				
 				zrChuChaiCheckDTData.setStartTime(stStartTime);

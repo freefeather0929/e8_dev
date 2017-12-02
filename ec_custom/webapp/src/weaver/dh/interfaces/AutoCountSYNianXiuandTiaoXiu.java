@@ -40,7 +40,9 @@ public class AutoCountSYNianXiuandTiaoXiu extends BaseCronJob {
 		String sql = "";
 		
 		for(UserInfo userInfo : userInfoList){
-			
+			if("20".equals(userInfo.getCompany()) || "21".equals(userInfo.getCompany()) || "22".equals(userInfo.getCompany())){
+				continue;
+			}
 			try {
 				lastTiaoXiu = qingjiaServier.countLastTiaoXiuorNianXiuHour(userInfo.getName(), QingJiaService.TiaoXiu, "", curMonth);
 				lastNianXiu = qingjiaServier.countLastTiaoXiuorNianXiuHour(userInfo.getName(), QingJiaService.NianXiu, "", curMonth);
