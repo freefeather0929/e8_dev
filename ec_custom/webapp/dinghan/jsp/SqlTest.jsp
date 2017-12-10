@@ -1,4 +1,3 @@
-<%@page import="dinghan.zrac.ga.LoanApplication"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 <%@ page import="java.security.*,weaver.general.Util,weaver.hrm.settings.RemindSettings,weaver.file.Prop,weaver.rtx.RTXConfig" %>
 <%@ page import="java.util.*" %>
@@ -14,9 +13,7 @@
 		return;
 	}
 	
-	LoanApplication l = new LoanApplication();
 	
-	l.execute();
 	
 	//out.close();
 %>
