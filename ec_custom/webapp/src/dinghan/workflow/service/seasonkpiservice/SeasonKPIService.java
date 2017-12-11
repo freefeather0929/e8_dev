@@ -75,9 +75,7 @@ public class SeasonKPIService {
 		}else if(seasonStr.equals("二")){
 			tmpSeasonIndex = 1;
 		}
-		
 		return tmpSeasonIndex;
-		
 	}
 			
 	/**
@@ -174,7 +172,7 @@ public class SeasonKPIService {
 					   + " where m.id = d.mainid and m.cfgyear = "+curYear+" and cfgseason = "+seasonIndex
 			   				+ " and cfgdept1 = " + dept1Id;
 		}
-		log.error("kpi获取sql :: " + sql);
+		//log.error("kpi获取sql :: " + sql);
 		recordSet.execute(sql);
 		
         json.append("{'kpicount':'"+recordSet.getCounts()+"','kpis':[");
@@ -336,7 +334,7 @@ public class SeasonKPIService {
 					   + " where m.id = d.mainid and m.cfgyear = "+year+" and cfgseason = "+_seasonIndex
 			   				+ " and cfgdept1 = " + dept1Id;
 		}
-		log.error("kpi获取sql :: " + sql);
+		//log.error("kpi获取sql :: " + sql);
 		recordSet.execute(sql);
         json.append("'kpicount':'"+recordSet.getCounts()+"','kpis':[");
         int i = 0;
@@ -364,7 +362,7 @@ public class SeasonKPIService {
 	 * @param - curYear
 	 */
 	public String getExamRelationShip(User user, String seasonStr, int curYear){
-		log.error("季度绩效考核 :: " + seasonStr);
+		//log.error("季度绩效考核 :: " + seasonStr);
 		//int deptId = user.getUserDepartment();	//用户所在的分公司（分部）;
 		//int tLevel = -1;
 		//int dept1Id = -1;
@@ -587,7 +585,7 @@ public class SeasonKPIService {
 				for(PersonSeasonKPIResult result : kpiResultList){
 					result_Level = -1;
 					result_Level = result.getReviewResult();
-					log.error("获取 result_Level :: " + result.getAppPsnName() + " :: " + result_Level);
+					//log.error("获取 result_Level :: " + result.getAppPsnName() + " :: " + result_Level);
 					
 					if(result_Level == -1){
 						result_Level = result.getMeasureResult();
@@ -674,7 +672,7 @@ public class SeasonKPIService {
 		while(rs.next()){
 			tLevel = rs.getInt("tlevel");
 		}
-		log.error("获取到部门等级为   ::  " + tLevel);
+		//log.error("获取到部门等级为   ::  " + tLevel);
 		return tLevel;
 	}
 	

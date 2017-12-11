@@ -52,7 +52,6 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 	 * 2. 开始日期 至 结束日期，进行循环，每个日期创建一个核定明细
 	 * 
 	 */
-	
 	@Override
 	public List<ZRChuChaiCheckDTData> createCheckData(int mainid) {
 		
@@ -87,7 +86,7 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 																		).getSelectName();
 			endTime = zrCCTimeSelect_end.queryTimeSelectItem(
 										zrChuChaiAppData.getRealEndTime()
-																		).getSelectName();;
+																		).getSelectName();
 			String tmpDate = startDate;
 			//log.error("KQDTCheck.PRE_TO_CHECK :: " + KQDTCheck.PRE_TO_CHECK);
 			while(tmpDate.compareTo(endDate) < 1){
@@ -106,9 +105,9 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 				zrChuChaiCheckDTData.setStartTime(stStartTime);
 				zrChuChaiCheckDTData.setEndTime(stEndTime);
 				
-				if(tmpDate.equals(startDate)){
+				if(tmpDate.equals(startDate)){	//处理第一天的开始时间：取填写的预计开始时间
 					zrChuChaiCheckDTData.setStartTime(startTime);
-				}else if(tmpDate.equals(endDate)){
+				}else if(tmpDate.equals(endDate)){	//处理最后一天的结束时间：取填写的预计结束时间
 					zrChuChaiCheckDTData.setEndTime(endTime);
 				}
 				

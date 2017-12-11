@@ -24,7 +24,7 @@ public class CcGenerateDetail2 implements Action {
 		String returninfo = FAILURE_AND_CONTINUE;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			log.error("开始创建");
+			//log.error("开始创建");
 			String requestid = request.getRequestid();// 得到requestid
 
 			int nodeid = request.getRequestManager().getNodeid();// 589开始节点

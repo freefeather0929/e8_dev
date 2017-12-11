@@ -31,15 +31,11 @@ public class UpdateNEEMonthTargetDataAction implements Action {
 	
 	@Override
 	public String execute(RequestInfo requestInfo) {
-		
 		this.requestManager = requestInfo.getRequestManager();
 		//requestManager.getRequestid();
 		//requestManager.getBillId();
-		
 		this.requsetName = requestManager.getRequestname();
-		
 		this.updateAllMonthTargetData(requestManager.getBillid());
-		
 		return "1";
 	}
 	
@@ -48,15 +44,9 @@ public class UpdateNEEMonthTargetDataAction implements Action {
 	 * @param billId
 	 */
 	private void updateAllMonthTargetData(int billId){
-		
-		log.error("开始更新 标题 为  " + requsetName + " 流程 的月度考核目标");
-		
 		util_month_1.updateAllNEECheckTargetMonthDTData(billId);
-
 		util_month_2.updateAllNEECheckTargetMonthDTData(billId);
-
 		util_month_3.updateAllNEECheckTargetMonthDTData(billId);
-		
 	}
 	
 }

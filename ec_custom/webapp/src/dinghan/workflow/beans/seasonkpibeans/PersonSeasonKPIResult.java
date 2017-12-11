@@ -29,7 +29,7 @@ public class PersonSeasonKPIResult {
 	private String appSeason;
 	/**
 	 * 考核评价人评价等级
-	 * 0 - 代表等级A ... 4 - 代表等级
+	 * 0 - 代表等级A ... 4 - 代表等级E
 	 */
 	private int measureResult;
 	
