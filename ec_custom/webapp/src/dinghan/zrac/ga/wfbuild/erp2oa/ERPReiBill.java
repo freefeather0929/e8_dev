@@ -19,6 +19,6 @@ public interface ERPReiBill {
 	 * @date    2017年11月7日
 	 * @return  String
 	 */
-	String queryReiBillInfo(Map<String,String> parameters);
+	String queryReiAllBillInfo(Map<String,String> parameters);
 	
 }

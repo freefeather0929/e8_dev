@@ -3,6 +3,9 @@ package dinghan.zrac.ga.wfbuild.erp2oa;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dinghan.common.util.CalendarUtil;
 import dinghan.common.wfbuilder.WorkFlowCreator;
 import dinghan.workflow.kq.util.DepartmentInfoUtil;
@@ -37,8 +40,8 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 	private WorkflowService workflowService = new WorkflowServiceImpl(); //工作流   webservice 内部使用创建流程的调用方式
 	private WorkflowBaseInfo workflowBaseInfo = new WorkflowBaseInfo();  	//工作流基础信息
 	private WorkflowRequestInfo workflowRequestInfo = new WorkflowRequestInfo();		//工作流请求信息
-	
-	private String ReiDocNo = null;
+	private Log log = LogFactory.getLog(ZRPAAppWFBuilder.class.getName());		
+	private String ReiDocNo = null; 
 	
 	private int creatorId;	//流程创建人  -- 对应 付款单中的付款人
 	
@@ -46,7 +49,7 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 	
 	private String _1st_departmentid; //付款人所在一级部门 ID- OA系统
 	
-	private int jobtitle ;//付款人工作岗位id- OA系统
+	private int jobtitle ;//付款人工作岗位id- OA系统  
 	
 	private Map<String,String> parameters = new HashMap<String, String>();
 	
@@ -242,16 +245,17 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 				for(int i=0;i<jsonArray.size();i++){
 					JSONObject job = jsonArray.getJSONObject(i); 
 					this.ReiDocNo = job.get("DocNo").toString();
-					if(hasCreated(this.ReiDocNo) == true){
-						continue;
-					}
+					if(hasCreated(this.ReiDocNo) == false){
+//						continue;
+					
 					//判断此流程是否被创建
-					try {
-						requstID = this.createWorkflow();
-						num ++;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+						try {
+							requstID = this.createWorkflow();
+							num ++;
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}	
 			   }
 			}
 		}
@@ -270,7 +274,6 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 	              +" and h.jobTitle = j.id  "
 	              + " and h.departmentId =d.id ";
 		RecordSet rs = new RecordSet();
-		
 		rs.executeSql(sql);
 		while(rs.next()){
 			this.creatorId = rs.getInt("id");
@@ -304,21 +307,61 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 		this._1st_departmentid =  json.getString("level1_id");
 	}
 	
-	
-	
-	
-	
 	@Override
-	public boolean hasCreated(String erpBillDocNo) { 
-		String sql = "select f.id as id,f.requestId as requestId,w.Lastoperatedate as Lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
+	public boolean hasCreated(String erpBillDocNo) {     
+		String sql = "select f.id as id ,f.requestId as requestId,w.lastoperatedate as lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
 		RecordSet rs = new RecordSet();
-		rs.executeSql(sql);
-		if(rs.getCounts() > 0){
-			if( null == rs.getDate("Lastoperatedate") ){   
-				return true; //有数据但不属于退回的单据
-			}   
-			return false ;   //有数据但属于退回的单据
-		}   
+		rs.executeSql(sql);    
+		if(rs.getCounts() > 0){ 
+			while(rs.next()){
+			if( "".equals(rs.getString("lastoperatedate"))){    
+				return true; //有数据但不属于退回的单据  
+			         }
+			}
+			return false ;   //有数据但属于退回的单据 
+		}
+		return false;//没有数据  
+	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean checkNotCreated(String erpBillDocNo) {
+		// TODO Auto-generated method stub
 		return false;
 	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean checkNotCreatedInLoanCronJobTable(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean deletehadCreatedInLoanCronJobTable(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+
+
 }

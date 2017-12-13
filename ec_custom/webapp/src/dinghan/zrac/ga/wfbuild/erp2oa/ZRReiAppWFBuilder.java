@@ -3,6 +3,9 @@ package dinghan.zrac.ga.wfbuild.erp2oa;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dinghan.common.util.CalendarUtil;
 import dinghan.common.wfbuilder.WorkFlowCreator;
 import dinghan.workflow.kq.util.DepartmentInfoUtil;
@@ -20,7 +23,7 @@ import weaver.workflow.webservices.WorkflowServiceImpl;
 
 /**
  * 中车报销单申请流程构建者
- * @author hsf
+ * @author hsf 
  * 2017-11-7  
  *
  */
@@ -30,14 +33,14 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 	private static final String WORKFLOW_TYPE_ID = "213";
 	private static final String FORM_NAME = "formtable_main_254";  
 
-	private ERPReiBill ZRReiAppBill = new ZRReiAppBill();  
+	private ZRReiAppBill ZRReiAppBill = new ZRReiAppBill();  
 	
 	private DepartmentInfoUtil departmentUitl = new DepartmentInfoUtil();
 	
 	private WorkflowService workflowService = new WorkflowServiceImpl(); //工作流   webservice 内部使用创建流程的调用方式
 	private WorkflowBaseInfo workflowBaseInfo = new WorkflowBaseInfo();  	//工作流基础信息
 	private WorkflowRequestInfo workflowRequestInfo = new WorkflowRequestInfo();		//工作流请求信息
-	
+	private Log log = LogFactory.getLog(ZRReiAppWFBuilder.class.getName());	
 	private String ReiDocNo = null;
 	
 	private int creatorId;	//流程创建人  -- 对应 报销单中的报销人
@@ -150,7 +153,7 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 			        //状态
 				    wrti[11]=new WorkflowRequestTableField();
 					wrti[11].setFieldName("docstatus");  
-					wrti[11].setFieldValue(json.get("docstatus").toString());
+					wrti[11].setFieldValue(json.get("DocStatus").toString());
 					wrti[11].setView(true);
 					wrti[11].setEdit(true);	
 					
@@ -176,51 +179,86 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 					for (int i = 0; i < detailrows1; i++) {
 						JSONObject object = (JSONObject) jsonArr_reiBillDetail1.get(i);
 						// 每行明细对应的字段
-						wrti = new WorkflowRequestTableField[6]; // 字段信息
+						wrti = new WorkflowRequestTableField[10]; // 字段信息
 						
-						//事由
+						//行号
 						wrti[0] = new WorkflowRequestTableField();
-						wrti[0].setFieldName("reason");
-						wrti[0].setFieldValue(object.getString("Reason"));
+						wrti[0].setFieldName("linenumber");
+						wrti[0].setFieldValue(object.getString("LineNum"));
 						wrti[0].setView(true);// 字段是否可见
 						wrti[0].setEdit(true);// 字段是否可编辑
+						
+						
+						//事由
+						wrti[1] = new WorkflowRequestTableField();
+						wrti[1].setFieldName("reason");
+						wrti[1].setFieldValue(object.getString("Reason"));
+						wrti[1].setView(true);// 字段是否可见
+						wrti[1].setEdit(true);// 字段是否可编辑
 
 						//费用项目
-						wrti[1] = new WorkflowRequestTableField();
-						wrti[1].setFieldName("expenseitem");
-						wrti[1].setFieldValue(object.getString("ExpenseItem"));
-						wrti[1].setView(true);// 字段是否可见
-						wrti[1].setEdit(true);// 字段是否可编辑						
+						wrti[2] = new WorkflowRequestTableField();
+						wrti[2].setFieldName("expenseitem");
+						wrti[2].setFieldValue(object.getString("ExpenseItem"));
+						wrti[2].setView(true);// 字段是否可见
+						wrti[2].setEdit(true);// 字段是否可编辑						
 						
 						
 						//列支部门
-						wrti[2] = new WorkflowRequestTableField();
-						wrti[2].setFieldName("expensepaydept");
-						wrti[2].setFieldValue(object.getString("ExpensePayDept"));
-						wrti[2].setView(true);// 字段是否可见
-						wrti[2].setEdit(true);// 字段是否可编辑	
-						
-						//列支人员
 						wrti[3] = new WorkflowRequestTableField();
-						wrti[3].setFieldName("expensepayby");
-						wrti[3].setFieldValue(object.getString("ExpensePayBy"));
+						wrti[3].setFieldName("expensepaydept");
+						wrti[3].setFieldValue(object.getString("ExpensePayDept"));
 						wrti[3].setView(true);// 字段是否可见
 						wrti[3].setEdit(true);// 字段是否可编辑	
 						
+						//列支人员
+						wrti[4] = new WorkflowRequestTableField();
+						wrti[4].setFieldName("expensepayby");
+						wrti[4].setFieldValue(object.getString("ExpensePayBy"));
+						wrti[4].setView(true);// 字段是否可见
+						wrti[4].setEdit(true);// 字段是否可编辑	
+						
 
 						//项目
-						wrti[4] = new WorkflowRequestTableField();
-						wrti[4].setFieldName("project");
-						wrti[4].setFieldValue(object.getString("Project"));
-						wrti[4].setView(true);// 字段是否可见
-						wrti[4].setEdit(true);// 字段是否可编辑							
-						
-						//报销金额
 						wrti[5] = new WorkflowRequestTableField();
-						wrti[5].setFieldName("reimburesemoney");
-						wrti[5].setFieldValue(object.getString("ReimburseMoney"));
+						wrti[5].setFieldName("project");
+						wrti[5].setFieldValue(object.getString("Project"));
 						wrti[5].setView(true);// 字段是否可见
 						wrti[5].setEdit(true);// 字段是否可编辑							
+
+						
+						
+						//税率
+						wrti[6] = new WorkflowRequestTableField();
+						wrti[6].setFieldName("taxrate");
+						wrti[6].setFieldValue(object.getString("TaxRate"));
+						wrti[6].setView(true);// 字段是否可见
+						wrti[6].setEdit(true);// 字段是否可编辑	
+						
+						//未税金额
+						wrti[7] = new WorkflowRequestTableField();
+						wrti[7].setFieldName("nontaxamo");
+						wrti[7].setFieldValue(object.getString("NonTaxMoney"));
+						wrti[7].setView(true);// 字段是否可见
+						wrti[7].setEdit(true);// 字段是否可编辑	
+						
+
+						//税额
+						wrti[8] = new WorkflowRequestTableField();
+						wrti[8].setFieldName("taxamo");
+						wrti[8].setFieldValue(object.getString("TotalTax"));
+						wrti[8].setView(true);// 字段是否可见
+						wrti[8].setEdit(true);// 字段是否可编辑							
+	 											
+						
+						
+						
+						//报销金额
+						wrti[9] = new WorkflowRequestTableField();
+						wrti[9].setFieldName("reimburesemoney");
+						wrti[9].setFieldValue(object.getString("ReimburseMoney"));
+						wrti[9].setView(true);// 字段是否可见
+						wrti[9].setEdit(true);// 字段是否可编辑							
 						
 
 						wrtri[i] = new WorkflowRequestTableRecord();
@@ -253,33 +291,9 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 						//冲销金额
 						wrti[1] = new WorkflowRequestTableField();
 						wrti[1].setFieldName("hadpayamo");
-						wrti[1].setFieldValue(object.getString("LoanBalanceMoney"));
+						wrti[1].setFieldValue(object.getString("ApplyMoney"));
 						wrti[1].setView(true);// 字段是否可见
 						wrti[1].setEdit(true);// 字段是否可编辑						
-						
-						
-						//税率
-						wrti[2] = new WorkflowRequestTableField();
-						wrti[2].setFieldName("taxrate");
-						wrti[2].setFieldValue(object.getString("TaxRate"));
-						wrti[2].setView(true);// 字段是否可见
-						wrti[2].setEdit(true);// 字段是否可编辑	
-						
-						//未税金额
-						wrti[3] = new WorkflowRequestTableField();
-						wrti[3].setFieldName("nontaxamo");
-						wrti[3].setFieldValue(object.getString("NonTaxMoney"));
-						wrti[3].setView(true);// 字段是否可见
-						wrti[3].setEdit(true);// 字段是否可编辑	
-						
-
-						//税额
-						wrti[4] = new WorkflowRequestTableField();
-						wrti[4].setFieldName("taxamo");
-						wrti[4].setFieldValue(object.getString("TotalTax"));
-						wrti[4].setView(true);// 字段是否可见
-						wrti[4].setEdit(true);// 字段是否可编辑							
-	 											
  
 						wrtri[i] = new WorkflowRequestTableRecord();
 						wrtri[i].setWorkflowRequestTableFields(wrti);
@@ -295,7 +309,7 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 			       this.workflowBaseInfo.setWorkflowId(WORKFLOW_TYPE_ID);		//workflowid 流程接口演示流程2016==38
 			       this.workflowRequestInfo.setCreatorId(this.creatorId+"");		//创建人id
 			       this.workflowRequestInfo.setRequestLevel("0");	//0 正常，1重要，2紧急
-			       this.workflowRequestInfo.setRequestName(WORKFLOW_NAME + json.getString("ReiPerson") + "-" + CalendarUtil.getCurDate());	//流程标题
+			       this.workflowRequestInfo.setRequestName(WORKFLOW_NAME + json.getString("ReimBurseBy") + "-" + CalendarUtil.getCurDate());	//流程标题
 			       this.workflowRequestInfo.setWorkflowMainTableInfo(wmi);	//添加主字段数据
 			       this.workflowRequestInfo.setWorkflowBaseInfo(workflowBaseInfo);
 			       requestId = this.workflowService.doCreateWorkflowRequest(this.workflowRequestInfo, this.creatorId); 
@@ -316,7 +330,7 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 		int num = 0;
 		String requstID;
 		if(!parameters.isEmpty()){
-			String respones = ZRReiAppBill.queryReiBillInfo(parameters);
+			String respones = ZRReiAppBill.queryReiAllBillInfo(parameters);
 			JSONObject json = JSONObject.fromObject(respones);
 			JSONArray jsonArray =json.getJSONArray("list");
 			
@@ -363,17 +377,65 @@ public class ZRReiAppWFBuilder extends WorkFlowCreator{
 			departmentUitl.getDepartmentContruction(this.creatorId)
 		);
 		this._1st_departmentid =  json.getString("level1_id");
-	}
+	}   
 	
 	@Override
-	public boolean hasCreated(String erpBillDocNo) { 
-		String sql = "select id,requestId from " + FORM_NAME + " where reibillno = '" + erpBillDocNo + "'";
+	public boolean hasCreated(String erpBillDocNo) {     
+		String sql = "select f.id as id ,f.requestId as requestId,w.lastoperatedate as lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
 		RecordSet rs = new RecordSet();
-		rs.executeSql(sql);
-		if(rs.getCounts() > 0){
-			return true;
-		}   
+		rs.executeSql(sql);    
+		if(rs.getCounts() > 0){ 
+			while(rs.next()){
+			if( "".equals(rs.getString("lastoperatedate"))){    
+				return true; //有数据但不属于退回的单据  
+			         }
+			}
+			return false ;   //有数据但属于退回的单据 
+		}
+		return false;//没有数据  
+	}
+
+
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean checkNotCreated(String erpBillDocNo) {
+		// TODO Auto-generated method stub
 		return false;
 	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean checkNotCreatedInLoanCronJobTable(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean deletehadCreatedInLoanCronJobTable(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+
 	
 }

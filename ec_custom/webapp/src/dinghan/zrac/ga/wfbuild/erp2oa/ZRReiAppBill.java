@@ -6,31 +6,36 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import dinghan.common.outsys.midware.InnerMidware;
+import com.alibaba.fastjson.JSONObject;
+
+import dinghan.common.outsys.midware.InnerMidwareGetIP;
 import dinghan.common.util.HttpUtils;
+import weaver.common.StringUtil;
 
 /**
- * @title 中车报销申请单
+ * @title 中车费用报销申请单
  * @author hsf 
  * @date  2017年11月7日  
  */
 public class ZRReiAppBill   implements ERPReiBill {     
   
 	private Log log = LogFactory.getLog(ZRReiAppBill.class.getName());
-	
-	private String url = InnerMidware.PROTOCOL + "://" 
-			+ InnerMidware.IP + ":"
-				+ InnerMidware.PORT +"/" 
-					+ InnerMidware.PATH_TO_U9 + "/";  
-
+	StringUtil stringUtil =new StringUtil();
+	private String url="";
+	InnerMidwareGetIP innerMidwareGetIP;  
+	CheckInfoFromOA checkInfoFromOA; 	
+//	private String url = InnerMidware.PROTOCOL + "://" 
+//			+ InnerMidware.IP + ":"
+//				+ InnerMidware.PORT +"/" 
+//					+ InnerMidware.PATH_TO_U9 + "/";   
 	private Map<String,String> parameters = new HashMap<String,String>();
 	
 	/**
-	* 获取单个报销单的Servlet名称
+	* 获取单个费用报销单的Servlet名称
 	*/
 	private static final String ERPREIBILLSVLNAME = "ReimburseBillHeadSvl";
 	/**
-	* 获取报销单集合的Servlet名称
+	* 获取费用报销单集合的Servlet名称
 	*/
 	private static final String ERPREIBILL_LIST_SVLNAME = "ReimburseBillHeadListSvl";
 
@@ -39,18 +44,43 @@ public class ZRReiAppBill   implements ERPReiBill {
 	 * @author hsf
 	 * @date   2017年11月7日
 	 * @param  
-	 * @return 
+	 * @return  
 	 */
 	public String queryReiBillInfo(String docNo) {  
+		String result="";  
+		String workCode=""; 
+		String errorMessage="";		
+		innerMidwareGetIP = new InnerMidwareGetIP(); 
+		checkInfoFromOA =new CheckInfoFromOA();
+		innerMidwareGetIP.readProperty();
+		 	url=innerMidwareGetIP.PROTOCOL + "://"
+				+ innerMidwareGetIP.IP +":"
+				  + innerMidwareGetIP.PORT +"/"
+				     + innerMidwareGetIP.PATH_TO_U9 +"/";
 		parameters.clear();
 		String urltobill = url += ERPREIBILLSVLNAME;
-		
-		log.error("获取BillInfo :: url == " + urltobill); 
+	    log.info("url::=============="+urltobill); 
 		parameters.put("DocNo", docNo);
-		return HttpUtils.sendGet(urltobill, parameters);
+		result =HttpUtils.sendGet(urltobill, parameters);
+		JSONObject json =JSONObject.parseObject(result);
+        workCode =json.getString("ReimBurseByCode");  
+        if(stringUtil.isNotNull(workCode)){              
+        	if(workCode.length()>5){ //workCode 存放的是身份证  
+        		checkInfoFromOA.SelectWorkcodeByNationId(workCode);
+        		workCode =checkInfoFromOA.workCode;
+        		errorMessage +=checkInfoFromOA.errorMessage;
+        	} else  if(workCode.length()==4){       
+        		workCode="2"+workCode;
+        	} 
+        }else{ 
+        	errorMessage +="  从中间件获取的工号workCode值为空    ";
+        }
+        log.info("workCode=========="+workCode); 
+        json.put("ReimBurseByCode", workCode);      
+        json.put("errorMessage", errorMessage); 
+        result  =JSONObject.toJSONString(json);
+		return result ; 
 	}
-
-
 
 	/**
 	 * @title   获取费用报销单集合数据
@@ -58,27 +88,28 @@ public class ZRReiAppBill   implements ERPReiBill {
 	 * @date    2017年11月7日
 	 * @return  String
 	 */
-	public String queryReiBillInfo(Map<String,String> parameters) {
-		parameters.clear(); 
+	public String queryReiAllBillInfo(Map<String,String> parameters) {
+		innerMidwareGetIP = new InnerMidwareGetIP(); 
+		innerMidwareGetIP.readProperty();
+		 	url=innerMidwareGetIP.PROTOCOL + "://"
+				+ innerMidwareGetIP.IP +":"
+				  + innerMidwareGetIP.PORT +"/"
+				     + innerMidwareGetIP.PATH_TO_U9 +"/";
 		String urltobillList = url += ERPREIBILL_LIST_SVLNAME; 
 		//url += ERPREIBILL_LIST_SVLNAME; 
 		log.error("获取BillListInfo :: url == " + urltobillList);
 		return HttpUtils.sendGet(urltobillList, parameters);
 	}
 
-
 	public String getUrl() {  
 		return url;
 	}
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
 	public Map<String, String> getParameters() {
 		return parameters;
 	}
-
 	public void setParameters(Map<String, String> parameters) {
 		this.parameters = parameters;
 	}
