@@ -42,7 +42,8 @@ public class ZRLoanAppBill implements ERPBill {
 	public String queryBillInfo(String docNo) {
 		String result="";  
 		String workCode=""; 
-		String errorMessage="";			
+		String errorMessage="";	
+		String isNeedCEO="";		
 		innerMidwareGetIP = new InnerMidwareGetIP(); 
 		checkInfoFromOA =new CheckInfoFromOA();		
 		innerMidwareGetIP = new InnerMidwareGetIP(); 
@@ -70,8 +71,10 @@ public class ZRLoanAppBill implements ERPBill {
         }else{ 
         	errorMessage +="  从中间件获取的工号workCode值为空    ";
         }
+        isNeedCEO=checkInfoFromOA.checkIsOrNotNeedAppByCEOByWorkCode(workCode);           
         json.put("LoanPersonCode", workCode);        
         json.put("errorMessage", errorMessage); 
+        json.put("isNeedCEO",isNeedCEO);          
         result  =JSONObject.toJSONString(json);
 		return result ; 
 	}

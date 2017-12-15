@@ -2,7 +2,6 @@ package dinghan.zrac.ga;
 
 
 public class ConstantUtils {
-     
 	public static final String failurecause_1 ="创建流程失败";
 	public static final String failurecause_1a ="  在OA系统中无法找到U9相应的工号,";
 	public static final String failurecause_1b ="  项目名称不能为空,";
@@ -28,5 +27,11 @@ public class ConstantUtils {
 	public  final String jiangmen2_orgId="1001601093680514";//江门中车(香港)投资控股有限公司
 	public  final String huache_orgId="1001601093680064";//华车(北京)交通装备有限公司
 	public  final String guangzhou_orgId="1001601093679839";//广州中车轨道交通空调装备有限公司
+	
+	public static final String zhangjunqing_id="1515";//张俊清的oa系统ID
+	
+	public static final String isNeedCEO_3="3";//直接发送给CEO
+	public static final String isNeedCEO_2="2";//间接发送给CEO
+	public static final String isNotNeedCEO_0="0";//不需要发送给CEO	
 	
 }

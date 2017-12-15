@@ -49,7 +49,8 @@ public class ZRReiAppBill   implements ERPReiBill {
 	public String queryReiBillInfo(String docNo) {  
 		String result="";  
 		String workCode=""; 
-		String errorMessage="";		
+		String errorMessage="";	
+		String isNeedCEO="";		
 		innerMidwareGetIP = new InnerMidwareGetIP(); 
 		checkInfoFromOA =new CheckInfoFromOA();
 		innerMidwareGetIP.readProperty();
@@ -75,9 +76,11 @@ public class ZRReiAppBill   implements ERPReiBill {
         }else{ 
         	errorMessage +="  从中间件获取的工号workCode值为空    ";
         }
+        isNeedCEO=checkInfoFromOA.checkIsOrNotNeedAppByCEOByWorkCode(workCode);        
         log.info("workCode=========="+workCode); 
         json.put("ReimBurseByCode", workCode);      
-        json.put("errorMessage", errorMessage); 
+        json.put("errorMessage", errorMessage);
+        json.put("isNeedCEO",isNeedCEO);         
         result  =JSONObject.toJSONString(json);
 		return result ; 
 	}

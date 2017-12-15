@@ -32,7 +32,6 @@ public class ZRTraExpReiAppBill   implements ERPTraExpReiBill {
 	* 获取单个差旅费用报销单集合的Servlet名称
 	*/
 	private static final String ERPTRAEXPREIBILL_LIST_SVLNAME = "ReimburseBillHeadListSvl";
-
 	/**   
 	 * @title  获取单个差旅费用报销单据 
 	 * @author hsf
@@ -44,6 +43,7 @@ public class ZRTraExpReiAppBill   implements ERPTraExpReiBill {
 		String result="";  
 		String workCode=""; 
 		String errorMessage="";
+		String isNeedCEO="";
 		innerMidwareGetIP = new InnerMidwareGetIP(); 
 		checkInfoFromOA =new CheckInfoFromOA();
 		innerMidwareGetIP.readProperty();
@@ -69,9 +69,11 @@ public class ZRTraExpReiAppBill   implements ERPTraExpReiBill {
         }else{ 
         	errorMessage +="  从中间件获取的工号workCode值为空    ";
         }
+        isNeedCEO=checkInfoFromOA.checkIsOrNotNeedAppByCEOByWorkCode(workCode);
         log.info("workCode=========="+workCode);   
         json.put("ReimBurseByCode", workCode);      
-        json.put("errorMessage", errorMessage);  
+        json.put("errorMessage", errorMessage); 
+        json.put("isNeedCEO",isNeedCEO);  
         result  =JSONObject.toJSONString(json);
 		return result ; 
 	}
@@ -94,7 +96,6 @@ public class ZRTraExpReiAppBill   implements ERPTraExpReiBill {
 		log.error("获取BillListInfo :: url == " + urltobillList);
 		return HttpUtils.sendGet(urltobillList, parameters);
 	}
-
 
 	public String getUrl() {  
 		return url;

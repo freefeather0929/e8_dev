@@ -3,20 +3,23 @@ package dinghan.zrac.ga.wfbuild.erp2oa;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import dinghan.zrac.ga.ConstantUtils;
 import weaver.conn.RecordSet;
+
 
 /**
  * @title 
  * @author hsf
- * @date  2017年12月11日
+ * @date  2017年12月12日
  * @return 
  */
 public class CheckInfoFromOA {
 	private Log log = LogFactory.getLog(CheckInfoFromOA.class.getName());
 	public String workCode ="";
-	public String errorMessage=""; 
-	/**
-	 * 获取人员ID
+	public String errorMessage="";  
+	public ConstantUtils constantUtils =new ConstantUtils();
+	/**  
+	 * 获取人员ID    
 	 * 
 	 * @param workcode
 	 */
@@ -38,6 +41,61 @@ public class CheckInfoFromOA {
 		}
 	}
 
+	/**
+	 * @title   检测此工号是否需要经过CEO审批
+	 * @author  hsf
+	 * @date    2017年12月12日
+	 * @param   workCode  人员工号
+	 * @return  isNeedCEO  0:不需要CE0审批    2:间接需要CEO审批       3:直接需要CEO审批          
+	 */
+	public String checkIsOrNotNeedAppByCEOByWorkCode(String workCode){
+		String sql =" select * from uf_appByCEOPerInfo where workcode='"+workCode+"'";
+		RecordSet rs =new RecordSet();
+		String isNeedCEO="";
+		String personID="";
+		rs.execute(sql);
+		if(rs.getCounts()>0){
+		while(rs.next()){
+			personID =rs.getString("managerid");
+			if(constantUtils.zhangjunqing_id.equals(personID)){
+			isNeedCEO =constantUtils.isNeedCEO_3;
+			}else{ 
+				isNeedCEO =constantUtils.isNeedCEO_2;	
+			}
+		}
+		}else{
+			isNeedCEO =constantUtils.isNotNeedCEO_0;	 			
+		}
+		return isNeedCEO;
+	}
 	
+	/**
+	 * @title   检测此人员id是否需要经过CEO审批
+	 * @author  hsf
+	 * @date    2017年12月12日
+	 * @param   apppsnid  oa系统的人员ID
+	 * @return  isNeedCEO  0:不需要CE0审批    2:间接需要CEO审批       3:直接需要CEO审批      
+	 */
+	public String checkIsOrNotNeedAppByCEOByAppID(String apppsnid){
+		String sql =" select * from uf_appByCEOPerInfo where personID='"+apppsnid+"'";
+		RecordSet rs =new RecordSet();
+		String isNeedCEO="";
+		String personID="";
+		rs.execute(sql);
+		if(rs.getCounts()>0){ 
+		while(rs.next()){
+			personID =rs.getString("managerid");
+			if(constantUtils.zhangjunqing_id.equals(personID)){
+			isNeedCEO =constantUtils.isNeedCEO_3;
+			}else{  
+				isNeedCEO =constantUtils.isNeedCEO_2;	 
+			}
+		}
+		}else{
+			isNeedCEO =constantUtils.isNotNeedCEO_0;				
+		}
+		log.info("isNeedCEO=============="+isNeedCEO);     
+		return isNeedCEO;  
+	}
 
 }
