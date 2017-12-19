@@ -1,4 +1,3 @@
-<%@page import="net.sf.json.JSONObject"%>
 <%@page import="dinghan.zrac.hr.util.kpiutil.ZRKPIUitl"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 <%@ page import="java.security.*,weaver.general.Util"%>
@@ -9,10 +8,9 @@
 
 <%
 	/*
-	 * 功能：获取重复季度绩效流程requestId
+	 * 功能：获取KPI考核关系
 	 * 编写人：张肖宇
-	 * 编写时间：2017-12-11
-	 * 
+	 * 编写时间：2016-12-14
 	 */
 	try{
 		
@@ -28,8 +26,10 @@
 		
 		ZRKPIUitl util = new ZRKPIUitl();
 		
-		out.print(util.isFillKPI(Integer.parseInt(userId), Integer.parseInt(year), season));
-		
+		out.print(util.getKPIRelationShip(Integer.parseInt(userId), Integer.parseInt(year), season));
+		out.flush();
+		out.close();
+	
 	} catch(Exception e){
 		e.printStackTrace();
 	}

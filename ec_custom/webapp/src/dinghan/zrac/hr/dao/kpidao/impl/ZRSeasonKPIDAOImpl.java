@@ -5,7 +5,7 @@ import dinghan.zrac.hr.entity.kpientity.ZRSeasonKPI;
 import weaver.conn.RecordSet;
 /**
  * 中车季度KPI考核DAO实现类
- * @author zhangxiaoyu/10593 - 2017-12-07
+ * @author zhangxiaoyu/10593 - 2017-12-15
  * 
  * @param <T>
  */
