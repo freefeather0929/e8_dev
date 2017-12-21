@@ -19,7 +19,10 @@ public class KPIExamRelationShipServiceImpl implements KPIExamRelationShipServic
 	@Override
 	public KPIExamRelationShip query(int userId, int year, String season) {
 		KPIExamRelationShip relationShip = kpiExamRelationShipDao.query(userId, year, season);
-		relationShip.setCrossKPIProjectInfoList(crossKPIProjectInfoDao.queryAllByMainId(relationShip.getId()));
+		if(relationShip!=null){
+			relationShip.setCrossKPIProjectInfoList(crossKPIProjectInfoDao.queryAllByMainId(relationShip.getId()));
+		}
+		
 		return relationShip;
 	}
 

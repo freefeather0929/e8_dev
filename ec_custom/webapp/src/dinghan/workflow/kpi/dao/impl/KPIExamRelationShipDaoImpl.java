@@ -28,8 +28,6 @@ public class KPIExamRelationShipDaoImpl implements KPIExamRelationShipDao {
 		sql.append(" and cfgseason = ");
 		sql.append(this.getSeasonIndex(season));
 		
-		log.error("KPIExamRelationShip query sql :: " + sql.toString());
-		
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql.toString());
 		while(rs.next()){

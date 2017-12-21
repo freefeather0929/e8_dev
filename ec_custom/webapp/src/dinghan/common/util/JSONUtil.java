@@ -1,5 +1,8 @@
 package dinghan.common.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class JSONUtil {
 
 	/**
@@ -43,5 +46,22 @@ public class JSONUtil {
             }}
         return sb.toString();     
      }
+	 /**
+	  * 字符串替换
+	  * @param target
+	  * @param pattern
+	  * @param replacer
+	  * @return
+	  */
+	 public static String replaceAll(String target,String pattern, String replacer){
+		 String result = "";
+		 Pattern p = Pattern.compile(pattern);
+		 
+		 Matcher m = p.matcher(target);
+		 
+		 result = m.replaceAll(replacer);
+		 
+		 return result;
+	 }
 	
 }

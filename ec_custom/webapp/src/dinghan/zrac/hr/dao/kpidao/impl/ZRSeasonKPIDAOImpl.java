@@ -75,7 +75,7 @@ public class ZRSeasonKPIDAOImpl implements ZRSeasonKPIDAO {
 	public ZRSeasonKPI queryByUserIdAndSeason(int userId, int year, String season) {
 		ZRSeasonKPI zrSeasonKPI = null;
 		StringBuilder sql = new StringBuilder();
-			sql.append("select top 1 id from");
+			sql.append("select top 1 id from ");
 				sql.append(ZRSeasonKPIFormName);
 					sql.append(" where apppsn = ");
 						sql.append(userId);

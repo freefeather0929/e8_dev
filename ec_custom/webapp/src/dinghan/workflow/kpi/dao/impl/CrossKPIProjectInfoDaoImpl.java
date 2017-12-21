@@ -3,9 +3,6 @@ package dinghan.workflow.kpi.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import dinghan.workflow.kpi.dao.CrossKPIProjectInfoDao;
 import dinghan.workflow.kpi.entity.CrossKPIProjectInfo;
 import weaver.conn.RecordSet;
@@ -16,7 +13,7 @@ import weaver.conn.RecordSet;
  * 
  */
 public class CrossKPIProjectInfoDaoImpl implements CrossKPIProjectInfoDao {
-	private Log log = LogFactory.getLog(CrossKPIProjectInfoDaoImpl.class.getName());
+	//private Log log = LogFactory.getLog(CrossKPIProjectInfoDaoImpl.class.getName());
 	@Override
 	public CrossKPIProjectInfo queryById(int id) {
 		CrossKPIProjectInfo crossKpiProjectInfo = null;
@@ -24,8 +21,6 @@ public class CrossKPIProjectInfoDaoImpl implements CrossKPIProjectInfoDao {
 		String sql = "select id,mainid,d_crossagent,d_crossdept from "
 				+ CrossKPIProjectFormName 
 					+ " where id = " + id;
-		
-		log.error("CrossKPIProjectInfoDaoImpl queryById sql :: " + sql);
 		
 		RecordSet rs = new	RecordSet();	
 		rs.executeSql(sql);
@@ -49,22 +44,18 @@ public class CrossKPIProjectInfoDaoImpl implements CrossKPIProjectInfoDao {
 					+ CrossKPIProjectFormName 
 						+ " where mainid = " + mainid;
 		
-		log.error("CrossKPIProjectInfoDaoImpl queryAllByMainId sql :: " + sql);
-		
 		RecordSet rs = new	RecordSet();	
 		rs.executeSql(sql);
 		
 		if(rs.getColCounts() > 0){
 			crossKPIProjectInfoList = new ArrayList<CrossKPIProjectInfo>();
-		}
-		
-		while(rs.next()){
-			crossKPIProjectInfo = this.queryById(rs.getInt("id"));
-			if(crossKPIProjectInfo != null){
-				crossKPIProjectInfoList.add(crossKPIProjectInfo);
+			while(rs.next()){
+				crossKPIProjectInfo = this.queryById(rs.getInt("id"));
+				if(crossKPIProjectInfo != null){
+					crossKPIProjectInfoList.add(crossKPIProjectInfo);
+				}
 			}
 		}
-		
 		return crossKPIProjectInfoList;
 	}
 
