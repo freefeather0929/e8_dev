@@ -30,7 +30,7 @@
 		
 		ZRTraExpReiAppWFBuilder zRTraExpReiAppWFBuilder = new ZRTraExpReiAppWFBuilder();
 		
-		if(zRTraExpReiAppWFBuilder.hasCreated(docNo)){
+		if(zRTraExpReiAppWFBuilder.hasCreated(docNo)){ 
 			json.append("{'error':'此单号已经创建过申请单，请检查你填写的单号！'}");
 		}else{
 			ZRTraExpReiAppBill zRTraExpReiAppBill = new ZRTraExpReiAppBill();   
@@ -39,10 +39,8 @@
 				//out.println(zRTraExpReiAppBill.getUrl());
 				//parameters.put("DocNo", docNo);   
 		        // json = HttpUtils.sendGet(zRTraExpReiAppBill.getUrl()+"/ReiBillSvl", parameters);
-				  
-				  
 				json.append(zRTraExpReiAppBill.queryTraExpReiBillInfo(docNo));    
-			}
+			}      
 		}
 		
 		out.println(json);

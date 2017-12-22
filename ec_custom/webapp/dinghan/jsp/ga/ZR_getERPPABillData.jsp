@@ -34,7 +34,7 @@
 			json.append("{'error':'此单号已经创建过申请单，请检查你填写的单号！'}");
 		}else{
 			ZRPAAppBill zRPAAppBill = new ZRPAAppBill();   
-			if("".equals(docNo) == false){ 
+			if("".equals(docNo) == false){  
 				//out.println("docNo == " + docNo);
 				//out.println(zRPAAppBill.getUrl());
 				//parameters.put("DocNo", docNo);   

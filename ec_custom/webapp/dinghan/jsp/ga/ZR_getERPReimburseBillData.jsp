@@ -12,7 +12,7 @@
 
 <%
 	/*
-	 * 功能：获取中车ERP报销单数据
+	 * 功能：获取中车ERP费用报销单数据
 	 * 编写人：hsf
 	 * 编写时间：2017-11-7
 	 */
@@ -24,9 +24,9 @@
 		}
 		StringBuilder json = new StringBuilder(); 
 		
-		Map<String,String> parameters = new HashMap<String,String>();
+		Map<String,String> parameters = new HashMap<String,String>(); 
 		
-		String docNo = Util.null2String(request.getParameter("DocNo"));   
+		String docNo = Util.null2String(request.getParameter("DocNo"));    
 		
 		ZRReiAppWFBuilder zrReiAppWFBuilder = new ZRReiAppWFBuilder();
 		
