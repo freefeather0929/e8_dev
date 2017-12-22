@@ -3,6 +3,7 @@ package dinghan.zrac.hr.dao.kpidao.impl;
 import dinghan.zrac.hr.dao.kpidao.ZRSeasonKPIDAO;
 import dinghan.zrac.hr.entity.kpientity.ZRSeasonKPI;
 import weaver.conn.RecordSet;
+
 /**
  * 中车季度KPI考核DAO实现类
  * @author zhangxiaoyu/10593 - 2017-12-15
@@ -19,7 +20,7 @@ public class ZRSeasonKPIDAOImpl implements ZRSeasonKPIDAO {
 		sql.append("select ");
 		sql.append(
 				"id,"
-					+ "requestid,"
+					+ "requestId,"
 						+ "appno,"
 							+ "apppsn,"
 								+ "appdate,"
@@ -49,7 +50,7 @@ public class ZRSeasonKPIDAOImpl implements ZRSeasonKPIDAO {
 		while(rs.next()){
 			zrSeasonKPI = new ZRSeasonKPI();
 			zrSeasonKPI.setId(rs.getInt("id"));
-			zrSeasonKPI.setRequestId(rs.getInt("request"));
+			zrSeasonKPI.setRequestId(rs.getInt("requestId"));
 			zrSeasonKPI.setAppno(rs.getString("appno"));
 			zrSeasonKPI.setAppPsn(rs.getInt("apppsn"));
 			zrSeasonKPI.setAppDate(rs.getString("appdate"));

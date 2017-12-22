@@ -26,9 +26,9 @@
 		//String userId = request.getParameter("userid");
 		String year = Util.null2String(request.getParameter("year"))==""?"-1":request.getParameter("year");
 		String season = request.getParameter("season");
-		String dept1Id = Util.null2String(request.getParameter("dept1id"))==""?"-1":request.getParameter("dept1id");
-		String dept2Id = Util.null2String(request.getParameter("dept2id"))==""?"-1":request.getParameter("dept2id");
-		String dept3Id = Util.null2String(request.getParameter("dept3id"))==""?"-1":request.getParameter("dept3id");
+		String dept1Id = Util.null2String(request.getParameter("dept1id"));
+		String dept2Id = Util.null2String(request.getParameter("dept2id"));
+		String dept3Id = Util.null2String(request.getParameter("dept3id"));
 		
 		ZRKPIUitl util = new ZRKPIUitl();
 		
