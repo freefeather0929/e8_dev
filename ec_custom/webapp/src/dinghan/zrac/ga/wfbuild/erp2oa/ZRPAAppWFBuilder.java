@@ -32,11 +32,8 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 	private static final String WORKFLOW_NAME = "付款申请";
 	private static final String WORKFLOW_TYPE_ID = "216";
 	private static final String FORM_NAME = "formtable_main_258";  
-
 	private ZRPAAppBill zRPAAppBill = new ZRPAAppBill();  
-	
 	private DepartmentInfoUtil departmentUitl = new DepartmentInfoUtil();
-	
 	private WorkflowService workflowService = new WorkflowServiceImpl(); //工作流   webservice 内部使用创建流程的调用方式
 	private WorkflowBaseInfo workflowBaseInfo = new WorkflowBaseInfo();  	//工作流基础信息
 	private WorkflowRequestInfo workflowRequestInfo = new WorkflowRequestInfo();		//工作流请求信息
@@ -64,12 +61,9 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 			JSONArray  jsonArr_reiBillDetail2 ;//用来接收JSON对象里的数组2
 			if(!("0".equals(json.getString("error")))){
 				initCreatorInfoByName(json.get("CreatedBy").toString());	//获取费用付款单中的付款人信息
-				
 				if(this.creatorId != -1){  
-				     
 					//主表字段
 					WorkflowRequestTableField[] wrti1 = new WorkflowRequestTableField[8]; //字段信息
-				  
 			        //单据类型
 				    wrti1[0]=new WorkflowRequestTableField();
 					wrti1[0].setFieldName("billtype");  
@@ -185,15 +179,12 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 						wrtri2[i].setWorkflowRequestTableFields(wrti2);
 					} 
 					
-					
-					
 			        //请款用途
 				    wrti1[7]=new WorkflowRequestTableField();
 					wrti1[7].setFieldName("apppayuses");  
 					wrti1[7].setFieldValue(String.valueOf(json.get("ReqFundUse").toString()));
 					wrti1[7].setView(true);
 					wrti1[7].setEdit(true);			
-					
 					
 					// 添加到主表中
 					   wrtri1[0].setWorkflowRequestTableFields(wrti1);
@@ -306,23 +297,38 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 		);
 		this._1st_departmentid =  json.getString("level1_id");
 	}
-	
-	@Override
-	public boolean hasCreated(String erpBillDocNo) {     
-		String sql = "select f.id as id ,f.requestId as requestId,w.lastoperatedate as lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
-		RecordSet rs = new RecordSet();
-		rs.executeSql(sql);    
-		if(rs.getCounts() > 0){ 
-			while(rs.next()){
-			if( "".equals(rs.getString("lastoperatedate"))){    
-				return true; //有数据但不属于退回的单据  
-			         }
-			}
-			return false ;   //有数据但属于退回的单据 
+
+
+	/**
+	 * @title 判断U9单号是否已在OA中创建
+	 * @param  erpBillDocNo  oaBillDocNo
+	 * @author hsf
+	 * @date  2017年12月23日
+	 * @return boolean
+	 */	
+	@Override 
+	public boolean hasCreated(String erpBillDocNo,String oaBillDocNo) {         
+		String sql = "select f.id as id ,f.requestId as requestId,f.apppronum as apppronum,w.lastoperatedate as lastoperatedate   from " + FORM_NAME + " f ,workflow_requestbase w where f.payappbillnum = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
+		RecordSet rs = new RecordSet();   
+		rs.executeSql(sql);       
+		if(rs.getCounts() > 0){  
+			while(rs.next()){  
+			if( "".equals(rs.getString("lastoperatedate")) ){
+				return true; //已存在数据但不属于退回的单据   
+			         } 
+			 else  {  
+				 if( !("".equals(oaBillDocNo)) ) { 
+					 return false; //已存在数据且是在被退回单据上重新获取U9数据
+				 }
+			  return true ;   //已存在数据且是 另外新建单据获取U9数据操作
+			  }
+			}  
 		}
 		return false;//没有数据  
 	}
-
+	
+	
+	
 	/** 
 	 * @title  
 	 * @author hsf
@@ -361,6 +367,21 @@ public class ZRPAAppWFBuilder extends WorkFlowCreator{
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年12月23日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean hasCreated(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 	
 
 

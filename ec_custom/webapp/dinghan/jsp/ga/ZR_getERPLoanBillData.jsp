@@ -17,8 +17,9 @@
 		StringBuilder json = new StringBuilder();
 		Map<String,String> parameters = new HashMap<String,String>();
 		String docNo = Util.null2String(request.getParameter("DocNo")); 
+		String apppronum =  Util.null2String(request.getParameter("AppproNum")); 		
 		ZRLoanAppWFBuilder zrLoanAppWFBuilder = new ZRLoanAppWFBuilder();
-		if(zrLoanAppWFBuilder.hasCreated(docNo)){
+		if(zrLoanAppWFBuilder.hasCreated(docNo,apppronum)){ 
 			json.append("{'error':'此单号已经创建过申请单，请检查你填写的单号！'}");
 		}else{
 			ZRLoanAppBill zrLoanAppBill = new ZRLoanAppBill();

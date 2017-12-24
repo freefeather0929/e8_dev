@@ -16,12 +16,14 @@ public interface WorkFlowCreate {
 	 * @return int - 新创建工作流的数量
 	 */
 	public int createMultiWorkflow();
-	
 	/** 
 	 * 检验是否已创建工作流
 	 */
-	public boolean hasCreated(String erpBillDocNo); 
-
+	public boolean hasCreated(String erpBillDocNo);   
+	/** 
+	 * 检验是否已创建工作流 
+	 */
+	public boolean hasCreated(String erpBillDocNo,String oaBillDocNo);  
 	/**    
 	 * @title   检测ERP数据是否已经同步到OA系统单据表
 	 * @author  hsf

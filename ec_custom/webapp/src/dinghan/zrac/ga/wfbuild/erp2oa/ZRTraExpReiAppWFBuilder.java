@@ -287,8 +287,6 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 						wrti[14].setView(true);// 字段是否可见
 						wrti[14].setEdit(true);// 字段是否可编辑								
 
-								
-						
 						//报销金额
 						wrti[15] = new WorkflowRequestTableField();
 						wrti[15].setFieldName("reimburesemoney");
@@ -296,7 +294,6 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 						wrti[15].setView(true);// 字段是否可见
 						wrti[15].setEdit(true);// 字段是否可编辑							
 						
-
 						wrtri[i] = new WorkflowRequestTableRecord();
 						wrtri[i].setWorkflowRequestTableFields(wrti);
 					} 
@@ -339,8 +336,6 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 			       
 					WorkflowDetailTableInfo[1] = new WorkflowDetailTableInfo();
 					WorkflowDetailTableInfo[1].setWorkflowRequestTableRecords(wrtri);
-			       
-			       
 			       
 			       //添加工作流id
 			       //WorkflowBaseInfo wbi= new WorkflowBaseInfo();
@@ -416,22 +411,34 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 		this._1st_departmentid =  json.getString("level1_id");
 	}      
 	
-	@Override
-	public boolean hasCreated(String erpBillDocNo) {     
-		String sql = "select f.id as id ,f.requestId as requestId,w.lastoperatedate as lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
-		RecordSet rs = new RecordSet();
-		rs.executeSql(sql);    
-		if(rs.getCounts() > 0){ 
-			while(rs.next()){
-			if( "".equals(rs.getString("lastoperatedate"))){    
-				return true; //有数据但不属于退回的单据  
-			         }
-			}
-			return false ;   //有数据但属于退回的单据 
+
+	/**
+	 * @title 判断U9单号是否已在OA中创建
+	 * @param  erpBillDocNo  oaBillDocNo
+	 * @author hsf
+	 * @date  2017年12月23日
+	 * @return boolean
+	 */	
+	@Override 
+	public boolean hasCreated(String erpBillDocNo,String oaBillDocNo) {         
+		String sql = "select f.id as id ,f.requestId as requestId,f.apppronum as apppronum,w.lastoperatedate as lastoperatedate   from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
+		RecordSet rs = new RecordSet();   
+		rs.executeSql(sql);       
+		if(rs.getCounts() > 0){  
+			while(rs.next()){  
+			if( "".equals(rs.getString("lastoperatedate")) ){
+				return true; //已存在数据但不属于退回的单据   
+			         } 
+			 else  {  
+				 if( !("".equals(oaBillDocNo)) ) {
+					 return false; //已存在数据且是在被退回单据上重新获取U9数据
+				 }
+			  return true ;   //已存在数据且是 另外新建单据获取U9数据操作
+			  }
+			}  
 		}
 		return false;//没有数据  
 	}
-
 
 	/** 
 	 * @title  
@@ -471,7 +478,20 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年12月23日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean hasCreated(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 	
 }

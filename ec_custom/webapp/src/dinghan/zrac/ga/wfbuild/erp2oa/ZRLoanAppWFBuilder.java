@@ -346,36 +346,24 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 		  addCouse(constantUtils.failurecause_1a);
 		}
 	}	
-/**	
-	private void initCreatorInfo(String workcode){
-		this.creatorId = -1;
-		String sql = "select id,deparmentid from Hrmresourse where workcode = '" + workcode + "'";
-		RecordSet rs = new RecordSet();
-		
-		rs.executeSql(sql);
-		while(rs.next()){
-			this.creatorId = rs.getInt("id");
-			this.departmentid = rs.getInt("deparmentid")+"";
-		}
-		JSONObject json = JSONObject.fromObject(
-			departmentUitl.getDepartmentContruction(this.creatorId)
-		);
-		this._1st_departmentid =  json.getString("level1_id");
-	}
-**/
 	
 	@Override
-	public boolean hasCreated(String erpBillDocNo) {     
-		String sql = "select f.id as id ,f.requestId as requestId,w.lastoperatedate as lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
-		RecordSet rs = new RecordSet();
-		rs.executeSql(sql);    
-		if(rs.getCounts() > 0){ 
+	public boolean hasCreated(String erpBillDocNo,String oaBillDocNo) {                                             
+		String sql = "select f.id as id ,f.requestId as requestId,f.approveprocessnumber as approveprocessnumber ,w.lastoperatedate as lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.borrowordernumber = '" + erpBillDocNo + "' and f.requestId = w.requestId "; 
+		RecordSet rs = new RecordSet();  
+		rs.executeSql(sql);     
+		if(rs.getCounts() > 0){   
 			while(rs.next()){
-			if( "".equals(rs.getString("lastoperatedate"))){    
-				return true; //有数据但不属于退回的单据  
+			if( "".equals(rs.getString("lastoperatedate")) ){    
+				return true; //已存在数据但不属于退回的单据  
 			         }
+			 else  {  
+				 if( !("".equals(oaBillDocNo)) ) {
+					 return false; //已存在数据且是在被退回单据上重新获取U9数据
+				 }
+			  return true ;   //已存在数据且是 另外新建单据获取U9数据操作
+			  }
 			}
-			return false ;   //有数据但属于退回的单据 
 		}
 		return false;//没有数据  
 	}
@@ -444,9 +432,6 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 			                   + failurecause+"','"
 			                   + constantUtils.Ishandle_zero
 			                   + "') ";
-			  log.info("this.loanDocNo==============="+this.loanDocNo);   
-			  log.info("org=========================="+this.parameters.get("org"));
-			  log.info("insert_sql==================="+insert_sql);
 			
 		  try {
 			rs.executeSql(insert_sql);
@@ -501,5 +486,22 @@ public class ZRLoanAppWFBuilder extends WorkFlowCreator{
 	public void setParameters(Map<String, String> parameters) {
 		this.parameters = parameters;
 	}
+
+
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年12月23日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean hasCreated(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 	
 }
