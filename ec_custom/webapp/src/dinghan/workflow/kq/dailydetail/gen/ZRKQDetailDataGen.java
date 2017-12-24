@@ -121,17 +121,27 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 		 *  - 3. 进行排序
 		 */
 		for(String record : this.dakaRecordList){
-			if(record == null || "".equals(record) || "02:00:00".compareTo(record)>=0){
-				dakaRecordList.remove(record);
+			//log.error("打卡记录 dakaRecordList :: " + record);
+			if(record == null || "".equals(record.trim()) || "02:00:00".compareTo(record)>=0){
+				//dakaRecordList.remove(record);
+				dakaRecordList.remove(dakaRecordList.indexOf(record));
 			}
 		}
+		
 		Collections.sort(dakaRecordList);
 		this.firstDakaRecord = "";
 		this.lastDakaRecord = "";
 		if(dakaRecordList.size() > 0){
 			this.firstDakaRecord = dakaRecordList.get(0);
 			this.lastDakaRecord = dakaRecordList.get(dakaRecordList.size()-1);
+			if(!"".equals(this.firstDakaRecord) && this.firstDakaRecord.length()<7){
+				this.firstDakaRecord +=":00";
+			}
+			if(!"".equals(this.lastDakaRecord) && this.lastDakaRecord.length()<7){
+				this.lastDakaRecord +=":00";
+			}
 		}
+		
 		//免打卡 、长期驻外类型不进行迟到、早退、旷工计算
 		if(userInfo.getKaoQinType() != UserKQType.ATTENDANCE_FREE && userInfo.getKaoQinType()!=UserKQType.LONG_TREM_LOCAL){	
 			this.countChiDao_ZaoTui_KuangGong(_kqDate,this.firstDakaRecord, this.lastDakaRecord, _userInfo); //计算旷工、迟到、早退
@@ -174,7 +184,7 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 		this.chidaoMinute = 0;		//迟到分钟数归零
 		this.zaotuiMinute = 0;	//早退分钟数归零
 		boolean isNeedAttendance = this.isNeedAttendance(kqDate,userInfo.getName());	//判断当前日期是否需要考勤
-		log.error("isNeedAttendance :: " + isNeedAttendance);
+		//log.error("isNeedAttendance :: " + isNeedAttendance);
 		if(isNeedAttendance){	
 			double restHour = this.stNoonRestHours;
 			String _stStartTime = this.stStartTime;
@@ -185,6 +195,7 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 			String _endTime_forCount = _stEndTime;
 			double cd_or_zt_Minute = 0.0d;
 			double kuanggongHour = 0.0d;
+			
 			if("".equals(firstDakaRecord) || "".equals(lastDakaRecord) || firstDakaRecord.equals(lastDakaRecord)){
 				_startTime_forCount = _stStartTime;
 				_endTime_forCount = _stEndTime;
@@ -218,9 +229,10 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 				//log.error("最后一次打卡：" + lastDakaRecord);
 				//计算迟到
 				if(firstDakaRecord.compareTo(_stStartTime)>0){	
-					log.error("计算迟到：");
+					//log.error("计算迟到：");
 					_startTime_forCount = _stStartTime;
 					_endTime_forCount = firstDakaRecord;
+					
 					if(firstDakaRecord.compareTo(_stNoonStartTime)>0){	
 						 if(firstDakaRecord.compareTo(_stNoonEndTime)<=0){
 							 _endTime_forCount = _stNoonStartTime;
@@ -256,11 +268,11 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 					
 					//log.error("计算早退StartTime :: " + _startTime_forCount);
 					//log.error("计算早退EndTime :: " + _endTime_forCount);
-					cd_or_zt_Minute = countMunuteBetween(_startTime_forCount, _endTime_forCount);
+					cd_or_zt_Minute = countMunuteBetween(_startTime_forCount, _endTime_forCount+":00");
 					//log.error("计算早退的时间::" + cd_or_zt_Minute);
 					if(cd_or_zt_Minute<1) {cd_or_zt_Minute = 1.0d;}
 					if(cd_or_zt_Minute>60){		//早退超过60分钟计算旷工
-						kuanggongHour += countHoursBetween(_startTime_forCount, _endTime_forCount) - restHour;
+						kuanggongHour += countHoursBetween(_startTime_forCount, _endTime_forCount+":00") - restHour;
 					}else{
 						this.zaotuiMinute = (int)cd_or_zt_Minute;
 					}
@@ -440,35 +452,74 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 					StandardWorkTimeInfo standardWorkTimeInfo = stardardWorkTime.queryByID(zrLouDakaAppData.getKqStStartEndTime());
 					switch(zrLouDakaAppData.getForgetTimes()){
 					 	case 0:	// 全天
-					 		this.dakaRecordList.add(standardWorkTimeInfo.getStworkstarttime()+":00");
-					 		this.dakaRecordList.add(standardWorkTimeInfo.getStreststarttime()+":00");
-					 		this.dakaRecordList.add(standardWorkTimeInfo.getStrestendtime()+":00");
-					 		this.dakaRecordList.add(standardWorkTimeInfo.getStworkendtime()+":00");
+					 		/*log.error("补漏打卡转打卡数据 :: Starttime" + standardWorkTimeInfo.getStworkstarttime()+":00");
+							log.error("补漏打卡转打卡数据 :: Streststarttime" + standardWorkTimeInfo.getStreststarttime()+":00");
+							log.error("补漏打卡转打卡数据 :: Strestendtime" + standardWorkTimeInfo.getStrestendtime()+":00");
+							log.error("补漏打卡转打卡数据 :: Endtime" + standardWorkTimeInfo.getStworkendtime()+":00");*/
+							if(!"".equals(standardWorkTimeInfo.getStworkstarttime())){
+								this.dakaRecordList.add(standardWorkTimeInfo.getStworkstarttime()+":00");
+							}
+							if(!"".equals(standardWorkTimeInfo.getStreststarttime())){
+								this.dakaRecordList.add(standardWorkTimeInfo.getStreststarttime()+":00");
+							}
+							if(!"".equals(standardWorkTimeInfo.getStrestendtime())){
+								this.dakaRecordList.add(standardWorkTimeInfo.getStrestendtime()+":00");
+							}
+							if(!"".equals(standardWorkTimeInfo.getStworkendtime())){
+								this.dakaRecordList.add(standardWorkTimeInfo.getStworkendtime()+":00");
+							}
 						break;
 					 	case 1:	// 上午
-					 		this.dakaRecordList.add(standardWorkTimeInfo.getStworkstarttime()+":00");
-					 		this.dakaRecordList.add(standardWorkTimeInfo.getStreststarttime()+":00");
+					 		/*log.error("补漏打卡转打卡数据 :: Starttime" + standardWorkTimeInfo.getStworkstarttime()+":00");
+							log.error("补漏打卡转打卡数据 :: Streststarttime" + standardWorkTimeInfo.getStreststarttime()+":00");*/
+							if(!"".equals(standardWorkTimeInfo.getStworkstarttime())){
+								this.dakaRecordList.add(standardWorkTimeInfo.getStworkstarttime()+":00");
+							}
+							if(!"".equals(standardWorkTimeInfo.getStreststarttime())){
+								this.dakaRecordList.add(standardWorkTimeInfo.getStreststarttime()+":00");
+							}
 							break;
 					 	case 2:	// 下午
-					 		this.dakaRecordList.add(standardWorkTimeInfo.getStrestendtime()+":00");
-					 		this.dakaRecordList.add(standardWorkTimeInfo.getStworkendtime()+":00");
+					 		/*log.error("补漏打卡转打卡数据 :: Strestendtime" + standardWorkTimeInfo.getStrestendtime()+":00");
+							log.error("补漏打卡转打卡数据 :: Endtime" + standardWorkTimeInfo.getStworkendtime()+":00");*/
+							if(!"".equals(standardWorkTimeInfo.getStrestendtime())){
+								this.dakaRecordList.add(standardWorkTimeInfo.getStrestendtime()+":00");
+							}
+							if(!"".equals(standardWorkTimeInfo.getStworkendtime())){
+								this.dakaRecordList.add(standardWorkTimeInfo.getStworkendtime()+":00");
+							}
 							break;
 					 }
 				}else{
 					if(!"".equals(zrLouDakaAppData.getFillTime1st())){
-						this.dakaRecordList.add(zrLouDakaAppData.getFillTime1st()+":00");
+						//log.error("补漏打卡转打卡数据 :: Time1s" + zrLouDakaAppData.getFillTime1st()+":00");
+						if(!"".equals(zrLouDakaAppData.getFillTime1st())){
+							this.dakaRecordList.add(zrLouDakaAppData.getFillTime1st()+":00");
+						}
 						this.wangDaKaTime +=1;
 					}
 					if(!"".equals(zrLouDakaAppData.getFillTime2nd())){
-						this.dakaRecordList.add(zrLouDakaAppData.getFillTime2nd()+":00");
+						//log.error("补漏打卡转打卡数据 :: Time2nd" + zrLouDakaAppData.getFillTime2nd()+":00");
+						if(!"".equals(zrLouDakaAppData.getFillTime2nd())){
+							this.dakaRecordList.add(zrLouDakaAppData.getFillTime2nd()+":00");
+						}
+						//this.dakaRecordList.add(zrLouDakaAppData.getFillTime2nd()+":00");
 						this.wangDaKaTime +=1;
 					}
 					if(!"".equals(zrLouDakaAppData.getFillTime3rd())){
-						this.dakaRecordList.add(zrLouDakaAppData.getFillTime3rd()+":00");
+						//log.error("补漏打卡转打卡数据 :: Time3rd" + zrLouDakaAppData.getFillTime3rd()+":00");
+						if(!"".equals(zrLouDakaAppData.getFillTime3rd())){
+							this.dakaRecordList.add(zrLouDakaAppData.getFillTime3rd()+":00");
+						}
+						//this.dakaRecordList.add(zrLouDakaAppData.getFillTime3rd()+":00");
 						this.wangDaKaTime +=1;
 					}
 					if(!"".equals(zrLouDakaAppData.getFillTime4th())){
-						this.dakaRecordList.add(zrLouDakaAppData.getFillTime4th()+":00");
+						//log.error("补漏打卡转打卡数据 :: Time4th" + zrLouDakaAppData.getFillTime4th()+":00");
+						if(!"".equals(zrLouDakaAppData.getFillTime4th())){
+							this.dakaRecordList.add(zrLouDakaAppData.getFillTime4th()+":00");
+						}
+						//this.dakaRecordList.add(zrLouDakaAppData.getFillTime4th()+":00");
 						this.wangDaKaTime +=1;
 					}
 				}
@@ -489,8 +540,16 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 		if(zrWCCheckDTDataList != null){
 			//log.error("soluteWaiChuDTData 获取外出 公干 记录 数 :: " + zrWCCheckDTDataList.size());
 			for(ZRWaiChuCheckDTData zrWCCheckData : zrWCCheckDTDataList){
-				this.dakaRecordList.add(zrWCCheckData.getStarttimechecked()+":00");
-				this.dakaRecordList.add(zrWCCheckData.getEndtimechecked()+":00");
+				//log.error("外出转打卡数据 :: Starttime" + zrWCCheckData.getStarttimechecked()+":00");
+				//log.error("外出转打卡数据 :: Endtime" + zrWCCheckData.getEndtimechecked()+":00");
+				if(!"".equals(zrWCCheckData.getStarttimechecked())){
+					this.dakaRecordList.add(zrWCCheckData.getStarttimechecked()+":00");
+				}
+				if(!"".equals(zrWCCheckData.getEndtimechecked())){
+					this.dakaRecordList.add(zrWCCheckData.getEndtimechecked()+":00");
+				}
+				//this.dakaRecordList.add(zrWCCheckData.getStarttimechecked()+":00");
+				//this.dakaRecordList.add(zrWCCheckData.getEndtimechecked()+":00");
 			}
 		}
 	}
@@ -509,8 +568,15 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 		if(zrCCCheckDTDataList != null){
 			//log.error("soluteChuChaiDTData 获取 出差 记录 数 :: " + zrCCCheckDTDataList.size());
 			for(ZRChuChaiCheckDTData zrCCCheckData : zrCCCheckDTDataList){
-				this.dakaRecordList.add(zrCCCheckData.getStartTimeChecked()+":00");
-				this.dakaRecordList.add(zrCCCheckData.getEndTimeChecked()+":00");
+				//log.error("出差转打卡数据 :: Starttime" + zrCCCheckData.getStartTimeChecked()+":00");
+				//log.error("出差转打卡数据 :: Endtime" + zrCCCheckData.getEndTimeChecked()+":00");
+				if(!"".equals(zrCCCheckData.getStartTimeChecked())){
+					this.dakaRecordList.add(zrCCCheckData.getStartTimeChecked()+":00");
+				}
+				if(!"".equals(zrCCCheckData.getEndTimeChecked())){
+					this.dakaRecordList.add(zrCCCheckData.getEndTimeChecked()+":00");
+				}
+				
 			}
 		}
 	}
@@ -527,9 +593,11 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 		kqDetailData.setJbztx(0);
 		
 		KQDetailData _kqDetailData = kqDetailData;
+		//log.error("获取加班数据");
 		List<ZRJiaBanCheckDTData> zrJiaBanCheckDTDataList = zrJiaBanCheckDTService.queryByUserIDAndDate(userID, kqDate);
 		
 		if(zrJiaBanCheckDTDataList != null){
+			//log.error("获取加班数据数量 :: " + zrJiaBanCheckDTDataList.size());
 			for(ZRJiaBanCheckDTData zrJiaBanCheckDTData : zrJiaBanCheckDTDataList){
 				if(judgeIsValidJiaBan(zrJiaBanCheckDTData,kqDate) == true){
 					if(zrJiaBanCheckDTData.getWhetherturnoff() == 1){	// 1 - 转调休 ；0 - 不转调休
@@ -539,8 +607,16 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 					}
 				}
 				if(zrJiaBanCheckDTData.getCheckeddate().equals(kqDate)){	//加班日期为当前计算的考勤日期时，核定的起止时间加入打卡时间
-					this.dakaRecordList.add(zrJiaBanCheckDTData.getStarttimechecked()+":00");
-					this.dakaRecordList.add(zrJiaBanCheckDTData.getEndtimechecked()+":00");
+					//log.error("加班转打卡数据 :: Starttime" + zrJiaBanCheckDTData.getStarttimechecked()+":00");
+					//log.error("加班转打卡数据 :: Endtime" + zrJiaBanCheckDTData.getEndtimechecked()+":00");
+					if(!"".equals(zrJiaBanCheckDTData.getStarttimechecked())){
+						this.dakaRecordList.add(zrJiaBanCheckDTData.getStarttimechecked()+":00");
+					}
+					if(!"".equals(zrJiaBanCheckDTData.getEndtimechecked())){
+						this.dakaRecordList.add(zrJiaBanCheckDTData.getEndtimechecked()+":00");
+					}
+					//this.dakaRecordList.add(zrJiaBanCheckDTData.getStarttimechecked()+":00");
+					//this.dakaRecordList.add(zrJiaBanCheckDTData.getEndtimechecked()+":00");
 				}
 			}
 		}
@@ -682,9 +758,17 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 						_kqDetailData.setBrj(_kqDetailData.getBrj() + zrQingJiaData.getLeavehour());
 						break;
 				}
+				//log.error("请假转打卡数据 :: Starttime" + zrQingJiaData.getStarttimechecked()+":00");
+				//log.error("请假转打卡数据 :: Endtime" + zrQingJiaData.getEndtimechecked()+":00");
 				//请假起止时间写入打卡信息
-				this.dakaRecordList.add(zrQingJiaData.getStarttimechecked()+":00");
-				this.dakaRecordList.add(zrQingJiaData.getEndtimechecked()+":00");
+				if(!"".equals(zrQingJiaData.getStarttimechecked())){
+					this.dakaRecordList.add(zrQingJiaData.getStarttimechecked()+":00");
+				}
+				if(!"".equals(zrQingJiaData.getEndtimechecked())){
+					this.dakaRecordList.add(zrQingJiaData.getEndtimechecked()+":00");
+				}
+				//this.dakaRecordList.add(zrQingJiaData.getStarttimechecked()+":00");
+				//this.dakaRecordList.add(zrQingJiaData.getEndtimechecked()+":00");
 			}
 		}
 		return _kqDetailData;

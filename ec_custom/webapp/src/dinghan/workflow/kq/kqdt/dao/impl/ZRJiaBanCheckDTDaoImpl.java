@@ -88,7 +88,7 @@ public class ZRJiaBanCheckDTDaoImpl implements ZRJiaBanCheckDTDao {
 																					+"dakarecord = '"+zrJiaBanCheckDTData.getDakarecord()+"'"
 				 +" where "
 					+"id = " + zrJiaBanCheckDTData.getId();
-		log.error("更新加班核定明细 sql :: " +sql );
+		//log.error("更新加班核定明细 sql :: " +sql );
 		RecordSet rs = new RecordSet();
 		return rs.executeSql(sql);
 	}
@@ -116,7 +116,7 @@ public class ZRJiaBanCheckDTDaoImpl implements ZRJiaBanCheckDTDao {
 				+ " from " + ZRJiaBanCheckDTDataFormName + " "
 					+ " where id = " + zrJiaBanCheckDTDataID;
 		
-		log.error("查询加班核定明细记录 sql ：：" + sql);
+		//log.error("查询加班核定明细记录 sql ：：" + sql);
 		
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
@@ -132,10 +132,10 @@ public class ZRJiaBanCheckDTDaoImpl implements ZRJiaBanCheckDTDao {
 			zrJiaBanCheckDTData.setWhetherturnoff(rs.getInt("whetherturnoff"));
 			zrJiaBanCheckDTData.setStarttimechecked(rs.getString("starttimechecked"));
 			zrJiaBanCheckDTData.setEndtimechecked(rs.getString("endtimechecked"));
-			zrJiaBanCheckDTData.setResthour(rs.getDouble("resthour"));
-			zrJiaBanCheckDTData.setValidhour(rs.getDouble("validhour"));
-			zrJiaBanCheckDTData.setOtcoefficient(rs.getDouble("otcoefficient"));
-			zrJiaBanCheckDTData.setCheckedhour(rs.getDouble("checkedhour"));
+			zrJiaBanCheckDTData.setResthour(rs.getDouble("resthour")>-1?rs.getDouble("resthour"):0);
+			zrJiaBanCheckDTData.setValidhour(rs.getDouble("validhour")>-1?rs.getDouble("validhour"):0);
+			zrJiaBanCheckDTData.setOtcoefficient(rs.getDouble("otcoefficient")>-1?rs.getDouble("otcoefficient"):0);
+			zrJiaBanCheckDTData.setCheckedhour(rs.getDouble("checkedhour")>-1?rs.getDouble("checkedhour"):0);
 			zrJiaBanCheckDTData.setChecked(rs.getInt("checked"));
 			zrJiaBanCheckDTData.setWfenddate(rs.getString("wfenddate"));
 			zrJiaBanCheckDTData.setDakarecord(rs.getString("dakarecord"));
@@ -147,7 +147,7 @@ public class ZRJiaBanCheckDTDaoImpl implements ZRJiaBanCheckDTDao {
 	@Override
 	public List<ZRJiaBanCheckDTData> queryListByMainID(int mainID) {
 		String sql = "select id from " + ZRJiaBanCheckDTDataFormName + " where mainid = " + mainID;
-		log.error("查询所有加班明细 sql :: " + sql);
+		//log.error("查询所有加班明细 sql :: " + sql);
 		List<ZRJiaBanCheckDTData> zrJiaBanCheckDTDataList = null;
 		
 		RecordSet rs = new RecordSet();

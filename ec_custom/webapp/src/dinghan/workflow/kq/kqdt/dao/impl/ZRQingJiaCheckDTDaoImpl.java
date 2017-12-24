@@ -116,7 +116,7 @@ public class ZRQingJiaCheckDTDaoImpl implements ZRQingJiaCheckDTDao {
 			data.setEndtime(rs.getString("endtime"));
 			data.setStarttimechecked(rs.getString("starttimechecked"));
 			data.setEndtimechecked(rs.getString("endtimechecked"));
-			data.setLeavehour(rs.getDouble("leavehour"));
+			data.setLeavehour(rs.getDouble("leavehour")>-1?rs.getDouble("leavehour"):0);
 			data.setWfenddate(rs.getString("wfenddate"));
 			data.setChecked(rs.getInt("checked"));
 			data.setDakaRecord(rs.getString("dakarecord"));
