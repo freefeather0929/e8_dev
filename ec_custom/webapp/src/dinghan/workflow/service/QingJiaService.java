@@ -12,8 +12,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.weaver.formmodel.util.DateHelper;
-
+import dinghan.common.util.CalendarUtil;
 import dinghan.workflow.beans.JiaBan1;
 import weaver.conn.RecordSet;
 
@@ -21,7 +20,6 @@ import weaver.conn.RecordSet;
  * 对请假的数据进行操作
  * -- 目前主要用于计算获取最新的剩余调休假、年休假小时数
  * @author zhangxiaoyu / 10593 - 2017-04-26
- * 
  * 
  */
 public class QingJiaService {
@@ -31,8 +29,8 @@ public class QingJiaService {
 	private JiaBanService jbService = new JiaBanService();
 	private static final String kq_collect_formName = "uf_kqhz";	//考勤汇总表名
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private SimpleDateFormat monthSdf = new SimpleDateFormat("yyyy-MM");
-	
+	//private SimpleDateFormat monthSdf = new SimpleDateFormat("yyyy-MM");
+	private int year;
 	/**
 	 * 事假对应的考勤类型
 	 */
@@ -59,23 +57,16 @@ public class QingJiaService {
 	 * 
 	 */
 	public double countLastTiaoXiuorNianXiuHour(int userId, int leaveType, String appNo, int month) throws ParseException{	
+		String _month = month>=10?(""+month):("0"+month);
+		String curMonthStr = this.year+"-"+_month+"-01";
+		String preMonthStr = CalendarUtil.moveDate(curMonthStr, 0, -1, 0);
 		
-		String curMonthStr = DateHelper.getCurrentYear() + "-" + (month>9?month:"0"+month);	//要计算的月份
-		
-		Calendar calendar = new GregorianCalendar();
-		
-		calendar.setTime(monthSdf.parse(curMonthStr));
-		calendar.add(Calendar.MONTH, -1);
-		
-		String preMonthStr = monthSdf.format(calendar.getTime());
-		
-		log.error("前一个月份 :: " + preMonthStr + " :: type :: " + leaveType);
+		preMonthStr = preMonthStr.substring(0,7);
+		curMonthStr = curMonthStr.substring(0,7);
 		
 		//获取前月剩余调休假
 		String sql = "select sytx,synx from " + kq_collect_formName +" where hzyf = '" + preMonthStr + "'"
 						+ " and xm = " + userId;
-		
-		log.error("执行slq :: " + sql);
 		
 		RecordSet rs = new RecordSet();
 		
@@ -85,9 +76,6 @@ public class QingJiaService {
 		
 		String startDate = curMonthStr + "-01";
 		String endDate = curMonthStr + "-31";
-		
-		log.error("获取的开始日期 :: " + startDate);
-		log.error("获取的结束日期 :: " + endDate);
 		
 		rs.executeSql(sql);
 		
@@ -99,14 +87,12 @@ public class QingJiaService {
 					}else{
 						preMonthSY = rs.getDouble("sytx");
 					}
-					log.error("前月剩余调休 :: " + preMonthSY);
 				}else if(leaveType == NianXiu){
 					if(rs.getString("synx").trim().equals("")){
 						preMonthSY = 0.00;
 					}else{
 						preMonthSY = rs.getDouble("synx");
 					}
-					log.error("前月剩余年休 :: " + preMonthSY);
 				}
 			}
 		}else{
@@ -132,7 +118,97 @@ public class QingJiaService {
 				List<JiaBan1> jiabanList;
 				
 				while(startCalendar.compareTo(endCalendar) < 1){
-					log.error("获取加班日期  :: " + sdf.format(startCalendar.getTime()));
+					if(jiabanMap.containsKey(sdf.format(startCalendar.getTime()))){
+						jiabanList = jiabanMap.get(sdf.format(startCalendar.getTime()));
+						for(JiaBan1 jb : jiabanList){
+							if(jb.getSfztx() == 0 && jb.getHdzt() != 0)
+								addedHourByOverTime += jb.getHdgs();
+						}	
+					}
+					startCalendar.add(Calendar.DATE, 1);
+				}
+			}
+		}
+		usedHourByLeave = this.queryAppTiaoXiuorNianXiuHour(userId, startDate, endDate, appNo, leaveType);
+		return preMonthSY + addedHourByOverTime - usedHourByLeave;
+	}
+	
+	/**
+	 * 计算某月调休或年休剩余小时数，如果计算当前月份并且当前月份并未结束，则计算的是最新的调休假或年休假
+	 * @return
+	 * @param - userId: 用户ID
+	 * @param - leaveType: 请假类别
+	 * @param - appNo: 需要排除计算的流水号
+	 * @param - month: 需要计算的月份
+	 * @throws ParseException 
+	 * 
+	 */
+	public double countLastTiaoXiuorNianXiuHour(int userId, int leaveType, String appNo,int year, int month) throws ParseException{	
+		//Calendar calendar = new GregorianCalendar();
+		String _month = month>=10?(""+month):("0"+month);
+		this.year = year;
+		String curMonthStr = this.year+"-"+_month+"-01";
+		
+		String preMonthStr = CalendarUtil.moveDate(curMonthStr, 0, -1, 0);
+		//calendar.setTime(monthSdf.parse(curMonthStr));
+		//calendar.add(Calendar.MONTH, -1);
+		
+		preMonthStr = preMonthStr.substring(0,7);
+		curMonthStr = curMonthStr.substring(0,7);
+		
+		//获取前月剩余调休假
+		String sql = "select sytx,synx from " + kq_collect_formName +" where hzyf = '" + preMonthStr + "'"
+						+ " and xm = " + userId;
+		
+		RecordSet rs = new RecordSet();
+		
+		double preMonthSY = 0.00;
+		double addedHourByOverTime = 0.00;
+		double usedHourByLeave = 0.00;
+		
+		String startDate = curMonthStr + "-01";
+		String endDate = curMonthStr + "-31";
+		rs.executeSql(sql);
+		
+		if(rs.getCounts() > 0){
+			while(rs.next()){
+				if(leaveType == TiaoXiu){
+					if(rs.getString("sytx").trim().equals("")){
+						preMonthSY = 0.00;
+					}else{
+						preMonthSY = rs.getDouble("sytx");
+					}
+				}else if(leaveType == NianXiu){
+					if(rs.getString("synx").trim().equals("")){
+						preMonthSY = 0.00;
+					}else{
+						preMonthSY = rs.getDouble("synx");
+					}
+				}
+			}
+		}else{
+			preMonthSY = 0.00;
+		}
+		
+		if(leaveType == TiaoXiu){
+			//获取所有在本月内核定后的加班转调休的小时数
+			String workcode = "";
+			sql = "select id,workcode from HrmResource where id = "+ userId;
+			rs.executeSql(sql);
+			
+			while(rs.next()){
+				workcode = rs.getString("workcode");
+			}
+			Map<String,ArrayList<JiaBan1>> jiabanMap = new HashMap<String, ArrayList<JiaBan1>>();
+			jiabanMap = jbService.getAllJiaBanRecordByUserCode(startDate, endDate, workcode);
+			if(!jiabanMap.isEmpty()){
+				Calendar startCalendar = new GregorianCalendar();
+				startCalendar.setTime(sdf.parse(startDate));
+				Calendar endCalendar = new GregorianCalendar();
+				endCalendar.setTime(sdf.parse(endDate));
+				List<JiaBan1> jiabanList;
+				
+				while(startCalendar.compareTo(endCalendar) < 1){
 					if(jiabanMap.containsKey(sdf.format(startCalendar.getTime()))){
 						jiabanList = jiabanMap.get(sdf.format(startCalendar.getTime()));
 						
@@ -147,9 +223,6 @@ public class QingJiaService {
 		}
 		
 		usedHourByLeave = this.queryAppTiaoXiuorNianXiuHour(userId, startDate, endDate, appNo, leaveType);
-		
-		log.error("请假的小时数为 :: " + usedHourByLeave);
-		log.error("加班的小时数为 :: " + addedHourByOverTime);
 		return preMonthSY + addedHourByOverTime - usedHourByLeave;
 	}
 	
@@ -163,7 +236,6 @@ public class QingJiaService {
     public double queryAppTiaoXiuorNianXiuHour(int userID, String startDate, String endDate, String appNo, int leaveType) throws ParseException{
     	
     	double tiaoXiuAppHour = 0.00;
-    	
     	//计算当月申请的调休假小时数
 		String	sql = "SELECT m.appnom, d.mainid, d.rq, d.kssj, d.jssj, d.hdgs, d.qjlb FROM formtable_main_89_dt3 d, formtable_main_89 m"
 					+ " WHERE d.mainid = m.id"
@@ -175,7 +247,6 @@ public class QingJiaService {
 											+ "and rq <= '" +endDate+ "'";
 		
 		RecordSet rs = new RecordSet();
-		
 		rs.executeSql(sql);
 		
 		while(rs.next()){

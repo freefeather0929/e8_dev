@@ -37,7 +37,7 @@ public class CheckOutUtil {
 	 * @param userWorkCode - 员工编号
 	 * @param checkOutDate - 打卡的日期
 	 * @param hasMobile - 是否获取移动考勤的标记
-	 * @return
+	 * @return {checkOutRecordSet}
 	 */
 	public CheckOutRecordSet getPersonalCheckOutSetByDay(String userWorkCode, String checkOutDate, int hasMobile){
 		CheckOutRecordSet checkOutRecordSet = new CheckOutRecordSet();
@@ -105,9 +105,9 @@ public class CheckOutUtil {
 		return forwordDayCheckOutNode;
 	}
 	/**
-	 * 设置 计算前一天 打卡记录 节点 
+	 * 设置 计算前一天 打卡记录 时间 节点 
 	 *  在此节点前的打卡记录算做前一天打卡记录，不算做当天打卡记录
-	 * @param forwordDayCheckOutNode
+	 * @param forwordDayCheckOutNode - 计算前一天的时间节点 (例：05:00:00)
 	 */
 	public void setForwordDayCheckOutNode(String forwordDayCheckOutNode) {
 		this.forwordDayCheckOutNode = forwordDayCheckOutNode;

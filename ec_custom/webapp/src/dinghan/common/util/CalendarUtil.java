@@ -14,7 +14,7 @@ import java.util.GregorianCalendar;
 public class CalendarUtil {
 	/**
 	 * 获取当前日期
-	 * @return
+	 * @return {String} 当前日期 - 格式 yyyy-MM-dd
 	 */
 	public static String getCurDate(){
 		String curdate = null;
@@ -22,7 +22,7 @@ public class CalendarUtil {
 		calendar.setTime(new Date());
 		curdate = calendar.get(GregorianCalendar.YEAR)+"";
 		curdate += "-";
-		curdate += calendar.get(GregorianCalendar.MONTH)+1>9?(calendar.get(GregorianCalendar.MONTH)+1):("0"+calendar.get(GregorianCalendar.MONTH)+1);
+		curdate += calendar.get(GregorianCalendar.MONTH)+1>=10?(calendar.get(GregorianCalendar.MONTH)+1):("0"+(calendar.get(GregorianCalendar.MONTH)+1));
 		curdate += "-";
 		curdate += calendar.get(GregorianCalendar.DAY_OF_MONTH)>9?calendar.get(GregorianCalendar.DAY_OF_MONTH):("0"+calendar.get(GregorianCalendar.DAY_OF_MONTH));
 		return curdate;
@@ -47,8 +47,8 @@ public class CalendarUtil {
 	/**
 	 * 日期加减
 	 * @param curDate - 需要移动的日期
-	 * @param yearAmount - 年
-	 * @param monthAmount - 月
+	 * @param yearAmount - 年份
+	 * @param monthAmount - 月份
 	 * @param dateAmount - 日
 	 * @return 
 	 */

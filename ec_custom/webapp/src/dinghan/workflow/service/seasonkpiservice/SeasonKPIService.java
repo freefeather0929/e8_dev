@@ -75,9 +75,7 @@ public class SeasonKPIService {
 		}else if(seasonStr.equals("二")){
 			tmpSeasonIndex = 1;
 		}
-		
 		return tmpSeasonIndex;
-		
 	}
 			
 	/**
@@ -174,7 +172,7 @@ public class SeasonKPIService {
 					   + " where m.id = d.mainid and m.cfgyear = "+curYear+" and cfgseason = "+seasonIndex
 			   				+ " and cfgdept1 = " + dept1Id;
 		}
-		log.error("kpi获取sql :: " + sql);
+		//log.error("kpi获取sql :: " + sql);
 		recordSet.execute(sql);
 		
         json.append("{'kpicount':'"+recordSet.getCounts()+"','kpis':[");
@@ -184,11 +182,8 @@ public class SeasonKPIService {
             if(i>0){
             	json.append(",");
             }
-            try {
-				json.append("{'target':'"+URLEncoder.encode(recordSet.getString("target"),"utf-8")+"','standard':'"+URLEncoder.encode(recordSet.getString("standard"),"utf-8")+"'}");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
+            //json.append("{'target':'"+URLEncoder.encode(recordSet.getString("target"),"utf-8")+"','standard':'"+URLEncoder.encode(recordSet.getString("standard"),"utf-8")+"'}");
+			json.append("{'target':'"+recordSet.getString("target")+"','standard':'"+recordSet.getString("standard")+"'}");
             i++;
         }
         //String html = "<br>";
@@ -336,7 +331,7 @@ public class SeasonKPIService {
 					   + " where m.id = d.mainid and m.cfgyear = "+year+" and cfgseason = "+_seasonIndex
 			   				+ " and cfgdept1 = " + dept1Id;
 		}
-		log.error("kpi获取sql :: " + sql);
+		//log.error("kpi获取sql :: " + sql);
 		recordSet.execute(sql);
         json.append("'kpicount':'"+recordSet.getCounts()+"','kpis':[");
         int i = 0;
@@ -359,21 +354,15 @@ public class SeasonKPIService {
 	
 	/**
 	 * 获取用户考核关系
-	 * @param - user
-	 * @param - seasonIndex
-	 * @param - curYear
+	 * @param user - {weaver.hrm.User}
+	 * @param seasonStr - 季度 - 第1个季度以 “一” 表示，第4个季度以“四” 表示
+	 * @param curYear - {格式：yyyy}
+	 * @return 用户考核关系的 json 字符串
 	 */
 	public String getExamRelationShip(User user, String seasonStr, int curYear){
-		log.error("季度绩效考核 :: " + seasonStr);
-		//int deptId = user.getUserDepartment();	//用户所在的分公司（分部）;
-		//int tLevel = -1;
-		//int dept1Id = -1;
-		//int dept2Id = -1;
-		//int dept3Id = -1;
+		
 		int curUserId = user.getUID();
-		
 		int _seasonIndex = judgeSeasonIndex(seasonStr);	//获取seasonIndex
-		
 		int _curYear = curYear;
 		
 		RecordSet recordSet = new RecordSet();
@@ -381,83 +370,7 @@ public class SeasonKPIService {
 		
 		String sql = "";
 		json.append("{");
-		/*
-		sql = "select top 1 tlevel from HrmDepartment where id = " + deptId;
 		
-		recordSet.executeSql(sql);
-		
-		while(recordSet.next()){
-			tLevel = recordSet.getInt("tlevel");
-		}
-		
-		//从自定义字段表中查询当前人员的一级部门（field1），二级部门（field0），三级部门（field17）
-		sql = "select top 1 field1,field0,field17 from cus_fielddata where id = "+curUserId;
-		recordSet.executeSql(sql);
-		while(recordSet.next()){
-			dept1Id = recordSet.getInt("field1");
-			dept2Id = recordSet.getInt("field0");
-			dept3Id = recordSet.getInt("field17");
-		}
-		
-		switch(tLevel){
-			case 3 :
-			   sql = "select d.target,d.standard from "+ KpiCfg_DT_FormName +" d,"+kpiKeyFormName+" m"
-					   + " where m.id = d.mainid and m.cfgyear = "+_curYear+" and m.cfgseason = "+_seasonIndex
-			   				+ " and m.cfgdept1 = " + dept1Id + " and m.cfgdept2 = " + dept2Id;
-			   recordSet.executeSql(sql);
-			   if(recordSet.getCounts()==0){
-			       sql = "select d.target,d.standard from "+ KpiCfg_DT_FormName +" d,"+kpiKeyFormName+" m"
-			    		   + " where m.id = d.mainid and m.cfgyear = "+_curYear+" and cfgseason = "+_seasonIndex
-			   	   				+ " and cfgdept1 = " + dept1Id;
-			   }
-			break;
-			
-			case 4 :
-			   sql = "select d.target,d.standard from "+ KpiCfg_DT_FormName +" d,"+kpiKeyFormName+" m"
-					   + " where m.id = d.mainid and m.cfgyear = "+_curYear+" and cfgseason = "+_seasonIndex
-			   				+ " and cfgdept1 = " + dept1Id + " and cfgdept2 = " + dept2Id + " and cfgdept3 = "+dept3Id;
-			   recordSet.executeSql(sql);
-			   if(recordSet.getCounts()==0){
-			       sql = "select d.target,d.standard from "+ KpiCfg_DT_FormName +" d,"+kpiKeyFormName+" m"
-			       		+ " where m.id = d.mainid and m.cfgyear = "+_curYear+" and cfgseason = "+_seasonIndex
-			       			+ " and cfgdept1 = " + dept1Id + " and cfgdept2 = " + dept2Id;
-			       recordSet.executeSql(sql);
-			       if(recordSet.getCounts()==0){
-			           sql = "select d.target,d.standard from "+ KpiCfg_DT_FormName +" d,"+kpiKeyFormName+" m"
-			        		   + " where m.id = d.mainid and m.cfgyear = "+_curYear+" and cfgseason = "+_seasonIndex
-			           				+ " and cfgdept1 = " + dept1Id;
-			       }
-			   }
-			break;
-			
-			default :
-			   sql = "select d.target,d.standard from "+ KpiCfg_DT_FormName +" d,"+kpiKeyFormName+" m"
-					   + " where m.id = d.mainid and m.cfgyear = "+_curYear+" and cfgseason = "+_seasonIndex
-			   				+ " and cfgdept1 = " + dept1Id;
-		}
-		log.error("kpi获取sql :: " + sql);
-		
-		recordSet.execute(sql);
-		
-		
-		//int i = 0;
-		/*
-        json.append("{'kpicount':'"+recordSet.getCounts()+"','kpis':[");
-        
-        while(recordSet.next()){
-            if(i>0){
-            	json.append(",");
-            }
-            try {
-				json.append("{'target':'"+recordSet.getString("target")+"','standard':'"+URLEncoder.encode(recordSet.getString("standard"),"utf-8")+"'}");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-            i++;
-        }
-        //String html = "<br>";
-        json.append("],");
-        */
         //开始获取考核关系
         sql = "select top 1 exampsn,reviewpsn from "+ KpiRelationCfgFormName +" where cfgrempl = " + curUserId + " and cfgyear = " + _curYear + " and cfgseason = "+_seasonIndex;
         recordSet.execute(sql);
@@ -481,42 +394,7 @@ public class SeasonKPIService {
         }else{
         	json.append("'reviewpsn':'"+reviewpsnId+"','reviewpsnname':''");
         }
-        /*
-        //获取跨部门项目负责人
-        sql = "select d.d_crossagent,d.d_crossdept from "+ Cross_KpiRelationCfgFormName +" d,"+KpiRelationCfgFormName+" m" 
-        		+ " where m.id = d.mainid and cfgrempl = " + curUserId + " and cfgyear = " + _curYear + " and cfgseason = "+ _seasonIndex;
-        recordSet.executeSql(sql);
         
-        i=0;
-        
-        json.append(",'cross':[");
-        ArrayList<User> userList = new ArrayList<User>();
-        while(recordSet.next()){
-        	if(i>0){
-        		json.append(",");
-        	}
-        	User agent = User.getUser(recordSet.getInt("d_crossagent"), 0);
-        	if(agent!=null){
-        		userList.add(agent);
-        	}
-        }
-        for(int j=0;j<userList.size();j++){
-            if(j>0){
-            	json.append(",");
-            }
-        	sql = "select top 1 departmentmark from HrmDepartment where id = "+userList.get(j).getUserDepartment();
-        	recordSet.executeSql(sql);
-        	String deptMark = "";
-        	while(recordSet.next()){
-        		deptMark = recordSet.getString("departmentmark");
-        	}
-        	json.append("{'agentid':'"+userList.get(j).getUID()+"',");
-        	json.append("'agendname':'"+userList.get(j).getLastname()+"',");
-        	json.append("'detpid':'"+userList.get(j).getUserDepartment()+"',");
-        	json.append("'detmrak':'"+deptMark+"'}");
-        }
-        json.append("]");
-        */
         json.append("}");
 	
 		return json.toString();
@@ -587,7 +465,7 @@ public class SeasonKPIService {
 				for(PersonSeasonKPIResult result : kpiResultList){
 					result_Level = -1;
 					result_Level = result.getReviewResult();
-					log.error("获取 result_Level :: " + result.getAppPsnName() + " :: " + result_Level);
+					//log.error("获取 result_Level :: " + result.getAppPsnName() + " :: " + result_Level);
 					
 					if(result_Level == -1){
 						result_Level = result.getMeasureResult();
@@ -674,7 +552,7 @@ public class SeasonKPIService {
 		while(rs.next()){
 			tLevel = rs.getInt("tlevel");
 		}
-		log.error("获取到部门等级为   ::  " + tLevel);
+		//log.error("获取到部门等级为   ::  " + tLevel);
 		return tLevel;
 	}
 	

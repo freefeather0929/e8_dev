@@ -45,7 +45,7 @@ import dinghan.workflow.kq.userinfo.entity.UserInfo;
  * 
  */
 public class ZRJiaBanDTCheck implements KQDTCheck<ZRJiaBanCheckDTData> {
-	private Log log = LogFactory.getLog(ZRJiaBanDTCheck.class.getName());
+	//private Log log = LogFactory.getLog(ZRJiaBanDTCheck.class.getName());
 	//加班核定明细Service
 	private ZRJiaBanCheckDTService zrJBCheckDTService = new ZRJiaBanCheckDTServiceImpl(); 
 	//加班申请数据Service
@@ -109,10 +109,7 @@ public class ZRJiaBanDTCheck implements KQDTCheck<ZRJiaBanCheckDTData> {
 					if(endTime_checked.compareTo(preEndTime)>0){
 						endTime_checked = preEndTime;
 					}
-					
-					
 					jiabanCheckData = this.executeCheck(jiabanCheckData,userWorkCode,userID,overTimeDate,startTime_checked,endTime_checked,zrJiaBanAppData.getStStartEndTime());
-					
 				}
 				jiabanCheckData.setChecked(1);	// *** 核定状态赋值
 			}
@@ -318,7 +315,7 @@ public class ZRJiaBanDTCheck implements KQDTCheck<ZRJiaBanCheckDTData> {
 	 * @return
 	 */
 	private List<String> LoadCheckOutTimeSet(int userID, String workCode,String overTimeDate){
-		log.error("开始获取打卡信息：  ");
+		//log.error("开始获取打卡信息：  ");
 		UserInfo userInfo = userInfoDao.queryByCode(userWorkCode);
 		
 		int allowMobileAttend = 1;
@@ -329,7 +326,7 @@ public class ZRJiaBanDTCheck implements KQDTCheck<ZRJiaBanCheckDTData> {
 		checkoutUitl.setForwordDayCheckOutNode("02:00:00");
 		CheckOutRecordSet checkOutSet = checkoutUitl.getPersonalCheckOutSetByDay(workCode, overTimeDate, allowMobileAttend);	//获取打卡记录集合
 		List<CheckOutRecord> checkOutRecordList = checkOutSet.getCheckOutRecordList();
-		log.error("checkOutRecordList :: size - " + checkOutRecordList.size());
+		//log.error("checkOutRecordList :: size - " + checkOutRecordList.size());
 		// **** 获取加班当天出差和外出公干的明细
 		List<ZRWaiChuCheckDTData> waichuCheckDTList = zrWaiChuCheckDTService.queryByUserIDAndDate(userID, overTimeDate);
 		List<ZRChuChaiCheckDTData> chuchaiCheckDTList = zrChuChaiCheckDTService.queryByUserIDAndDate(userID, overTimeDate);

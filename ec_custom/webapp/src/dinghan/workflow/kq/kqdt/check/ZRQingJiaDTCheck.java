@@ -161,6 +161,10 @@ public class ZRQingJiaDTCheck implements KQDTCheck<ZRQingJiaCheckDTData> {
 				 * 事假、调休假 不包含周六日
 				 */
 				if(("星期六".equals(weekDay) || "星期日".equals(weekDay)) && "上班调整".equals(weekDay) == false){
+					/*
+					 * 重构方案：
+					 * 增加一个判断是否需要进行请假核定的方法
+					 */
 					isExecuteCheck = false;
 					switch(leaveType){
 						case ZRLeaveType.SICK_LEAVE:
@@ -457,7 +461,7 @@ public class ZRQingJiaDTCheck implements KQDTCheck<ZRQingJiaCheckDTData> {
 	}
 	
 	/**
-	 * 请假时间为“上班调整时”，调整标准工作时间上班调整 日 的上下班时间
+	 * 请假时间为“上班调整”时，调整标准工作时间上班调整 日 的上下班时间
 	 * @param userId - 用户ID
 	 * @param leaveDate - 请假日期
 	 */

@@ -28,9 +28,9 @@ public interface KQSummaryDataHandle {
 	
 	/**
 	 * 更新多个员工的考勤汇总
-	 * @param userID
-	 * @param startDate
-	 * @param endDate
+	 * @param userID - {Integer[]} - OA用户ID的数组
+	 * @param year - 年份 {格式：yyyy}
+	 * @param month - 月份 {格式：MM}
 	 * @return
 	 */
 	int updateKQSummaryDataForUserArray(Integer[] userID, String year, String month);

@@ -6,7 +6,6 @@
 <%@ page import="javax.servlet.*"%>
 <%@ page import="weaver.hrm.User"%>
 <%@ page import="weaver.hrm.HrmUserVarify"%>
-
 <%
 	/*
 	 * 功能：用于判断当前用户当前年份和季度的季度绩效考核流程是否已经填写过了
@@ -14,17 +13,14 @@
 	 * 编写时间：2016-12-14
 	 */
 	try{
-		
 		User user = HrmUserVarify.getUser(request, response);
 		if(user == null){
 			response.sendRedirect("/login/Login.jsp");
 			return;
 		}
-		
 		int appPsnID = Integer.valueOf(request.getParameter("apppsnid"));
 		
 		User appUser = new User(appPsnID);
-		
 		SeasonKPIService seasonKPIService = new SeasonKPIService();
 		
 		out.print(seasonKPIService.isFilled(appUser));
@@ -34,6 +30,4 @@
 	} catch(Exception e){
 		e.printStackTrace();
 	}
-	
-	
 %>

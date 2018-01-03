@@ -3,8 +3,8 @@ package dinghan.workflow.kq.kqdt.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 
 import dinghan.workflow.kq.kqdt.dao.ZRChuChaiCheckDTDao;
 import dinghan.workflow.kq.kqdt.entity.zrentity.ZRChuChaiCheckDTData;
@@ -17,7 +17,7 @@ import weaver.conn.RecordSet;
  */
 public class ZRChuChaiCheckDTDaoImpl implements ZRChuChaiCheckDTDao {
 
-	private Log log = LogFactory.getLog(ZRChuChaiCheckDTDaoImpl.class.getName());
+	//private Log log = LogFactory.getLog(ZRChuChaiCheckDTDaoImpl.class.getName());
 	
 	@Override
 	public boolean add(ZRChuChaiCheckDTData zrChuChaiCheckDTData) {
@@ -125,7 +125,7 @@ public class ZRChuChaiCheckDTDaoImpl implements ZRChuChaiCheckDTDao {
 				+ "from " + ZRChuChaiCheckDTDao.ZRChuChaiCheckDTDataFormName 
 					+ " where mainid = " + mainID;
 		
-		log.error("查询ZRChuChaiCheckDTData List sql ::" + sql);
+		//log.error("查询ZRChuChaiCheckDTData List sql ::" + sql);
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		if(rs.getCounts()>0){

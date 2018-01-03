@@ -20,8 +20,6 @@ import dinghan.workflow.kq.holiday.dao.impl.HolidaySelectDaoImpl;
 import dinghan.workflow.kq.holiday.entity.HolidayConfig;
 import dinghan.workflow.kq.kqdt.check.KQDTCheck;
 import dinghan.workflow.kq.kqdt.entity.zrentity.ZRChuChaiCheckDTData;
-import dinghan.workflow.kq.kqdt.service.ZRChuChaiCheckDTService;
-import dinghan.workflow.kq.kqdt.service.impl.ZRChuChaiCheckDTServiceImpl;
 import dinghan.workflow.kq.userinfo.UserInfoDao;
 import dinghan.workflow.kq.userinfo.UserInfoDaoImpl;
 import dinghan.workflow.kq.userinfo.entity.UserInfo;
@@ -34,22 +32,16 @@ import weaver.general.Util;
  * 
  */
 public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> {
-	
 	private Log log = LogFactory.getLog(ZRChuChaiCheckDataGen.class.getName());
 	
 	private UserInfoDao userInfodao = new UserInfoDaoImpl();
-	
 	private ZRChuChaiAppDataService zrChuChaiAppDataService = new ZRChuChaiAppDataServiceImpl();
-	
 	private ZRChuChaiTimeSelect zrCCTimeSelect_start = 
 			new ZRChuChaiTimeSelectImpl(ZRChuChaiTimeSelect.ZRChuChaiPreStartTimeFieldName);
-	
 	private ZRChuChaiTimeSelect zrCCTimeSelect_end = 
 			new ZRChuChaiTimeSelectImpl(ZRChuChaiTimeSelect.ZRChuChaiPreEndTimeFieldName);
-	
 	private HolidaySelectDao holidaySelectDao = 
 			new HolidaySelectDaoImpl(new SelectItemInfoImpl());
-	
 	HolidayConfigDao holidayConfigDao = new HolidayConfigDaoImpl();
 	
 	/**
@@ -60,7 +52,6 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 	 * 2. 开始日期 至 结束日期，进行循环，每个日期创建一个核定明细
 	 * 
 	 */
-	
 	@Override
 	public List<ZRChuChaiCheckDTData> createCheckData(int mainid) {
 		
@@ -68,8 +59,6 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 		ZRChuChaiCheckDTData zrChuChaiCheckDTData = null;
 		
 		ZRChuChaiAppData zrChuChaiAppData = zrChuChaiAppDataService.queryByID(mainid);
-		
-		log.error("zrChuChaiAppData :: " + zrChuChaiAppData.getAppNo());
 		
 		String startDate;
 		String endDate;
@@ -81,7 +70,6 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 		String stEndTime = "17:30";
 		
 		UserInfo userInfo = userInfodao.queryByCode(this.getUserWorkCode(zrChuChaiAppData.getAppPsn()));
-		log.error("userInfo :: " + userInfo.getCode());
 		if(userInfo != null){
 			stStartTime = userInfo.getStartWorkTime();
 			stEndTime = userInfo.getEndWorkTime();
@@ -98,7 +86,7 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 																		).getSelectName();
 			endTime = zrCCTimeSelect_end.queryTimeSelectItem(
 										zrChuChaiAppData.getRealEndTime()
-																		).getSelectName();;
+																		).getSelectName();
 			String tmpDate = startDate;
 			//log.error("KQDTCheck.PRE_TO_CHECK :: " + KQDTCheck.PRE_TO_CHECK);
 			while(tmpDate.compareTo(endDate) < 1){
@@ -117,9 +105,9 @@ public class ZRChuChaiCheckDataGen extends KQCheckDataGen<ZRChuChaiCheckDTData> 
 				zrChuChaiCheckDTData.setStartTime(stStartTime);
 				zrChuChaiCheckDTData.setEndTime(stEndTime);
 				
-				if(tmpDate.equals(startDate)){
+				if(tmpDate.equals(startDate)){	//处理第一天的开始时间：取填写的预计开始时间
 					zrChuChaiCheckDTData.setStartTime(startTime);
-				}else if(tmpDate.equals(endDate)){
+				}else if(tmpDate.equals(endDate)){	//处理最后一天的结束时间：取填写的预计结束时间
 					zrChuChaiCheckDTData.setEndTime(endTime);
 				}
 				

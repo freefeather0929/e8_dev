@@ -3,6 +3,9 @@ package dinghan.zrac.ga.wfbuild.erp2oa;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+
 import dinghan.common.util.CalendarUtil;
 import dinghan.common.wfbuilder.WorkFlowCreator;
 import dinghan.workflow.kq.util.DepartmentInfoUtil;
@@ -24,7 +27,7 @@ import weaver.workflow.webservices.WorkflowServiceImpl;
  * 2017-11-19  
  *
  */
-public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
+public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{ 
 	
 	private static final String WORKFLOW_NAME = "差旅费用报销申请";
 	private static final String WORKFLOW_TYPE_ID = "214";
@@ -49,6 +52,7 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 	private int jobtitle ;//报销人工作岗位id- OA系统
 	
 	private Map<String,String> parameters = new HashMap<String, String>();
+	private Log log = LogFactory.getLog(ZRTraExpReiAppWFBuilder.class.getName()); 
 	
 	@Override 
 	public String createWorkflow() { 
@@ -63,10 +67,8 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 				initCreatorInfo(json.get("ReimBurseByCode").toString());	//获取费用报销单中的报销人信息
 				
 				if(this.creatorId != -1){  
-				     
 					//主表字段
 					WorkflowRequestTableField[] wrti = new WorkflowRequestTableField[13]; //字段信息
-				  
 			        //报销组织
 				    wrti[0]=new WorkflowRequestTableField();
 					wrti[0].setFieldName("reiorg");  
@@ -177,16 +179,12 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 						JSONObject object = (JSONObject) jsonArr_reiBillDetail1.get(i);
 						// 每行明细对应的字段
 						wrti = new WorkflowRequestTableField[16]; // 字段信息
-						
-						
-						
 						//行号
 						wrti[0] = new WorkflowRequestTableField();
 						wrti[0].setFieldName("linenumber");
 						wrti[0].setFieldValue(object.getString("LineNum"));
 						wrti[0].setView(true);// 字段是否可见
 						wrti[0].setEdit(true);// 字段是否可编辑
-						
 
 						//出发日期
 						wrti[1] = new WorkflowRequestTableField();
@@ -289,8 +287,6 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 						wrti[14].setView(true);// 字段是否可见
 						wrti[14].setEdit(true);// 字段是否可编辑								
 
-								
-						
 						//报销金额
 						wrti[15] = new WorkflowRequestTableField();
 						wrti[15].setFieldName("reimburesemoney");
@@ -298,7 +294,6 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 						wrti[15].setView(true);// 字段是否可见
 						wrti[15].setEdit(true);// 字段是否可编辑							
 						
-
 						wrtri[i] = new WorkflowRequestTableRecord();
 						wrtri[i].setWorkflowRequestTableFields(wrti);
 					} 
@@ -341,8 +336,6 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 			       
 					WorkflowDetailTableInfo[1] = new WorkflowDetailTableInfo();
 					WorkflowDetailTableInfo[1].setWorkflowRequestTableRecords(wrtri);
-			       
-			       
 			       
 			       //添加工作流id
 			       //WorkflowBaseInfo wbi= new WorkflowBaseInfo();
@@ -406,7 +399,6 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 	              +" and h.jobTitle = j.id  "
 	              + " and h.departmentId =d.id ";
 		RecordSet rs = new RecordSet();
-		
 		rs.executeSql(sql);
 		while(rs.next()){
 			this.creatorId = rs.getInt("id");
@@ -417,22 +409,89 @@ public class ZRTraExpReiAppWFBuilder extends WorkFlowCreator{
 			departmentUitl.getDepartmentContruction(this.creatorId)
 		);
 		this._1st_departmentid =  json.getString("level1_id");
-	}
+	}      
 	
+
+	/**
+	 * @title 判断U9单号是否已在OA中创建
+	 * @param  erpBillDocNo  oaBillDocNo
+	 * @author hsf
+	 * @date  2017年12月23日
+	 * @return boolean
+	 */	
+	@Override 
+	public boolean hasCreated(String erpBillDocNo,String oaBillDocNo) {         
+		String sql = "select f.id as id ,f.requestId as requestId,f.apppronum as apppronum,w.lastoperatedate as lastoperatedate   from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
+		RecordSet rs = new RecordSet();   
+		rs.executeSql(sql);       
+		if(rs.getCounts() > 0){  
+			while(rs.next()){  
+			if( "".equals(rs.getString("lastoperatedate")) ){
+				return true; //已存在数据但不属于退回的单据   
+			         } 
+			 else  {  
+				 if( !("".equals(oaBillDocNo)) ) {
+					 return false; //已存在数据且是在被退回单据上重新获取U9数据
+				 }
+			  return true ;   //已存在数据且是 另外新建单据获取U9数据操作
+			  }
+			}  
+		}
+		return false;//没有数据  
+	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
 	@Override
-	public boolean hasCreated(String erpBillDocNo) { 
-		String sql = "select f.id as id,f.requestId as requestId,w.Lastoperatedate as Lastoperatedate from " + FORM_NAME + " f ,workflow_requestbase w where f.reibillno = '" + erpBillDocNo + "' and f.requestId = w.requestId ";
-		RecordSet rs = new RecordSet();
-		rs.executeSql(sql);
-		if(rs.getCounts() > 0){
-			if( null == rs.getDate("Lastoperatedate") ){   
-				return true; //有数据但不属于退回的单据
-			}   
-			return false ;   //有数据但属于退回的单据
-		}   
+	public boolean checkNotCreated(String erpBillDocNo) {
+		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean checkNotCreatedInLoanCronJobTable(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年11月29日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean deletehadCreatedInLoanCronJobTable(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/** 
+	 * @title  
+	 * @author hsf
+	 * @date   2017年12月23日
+	 * @param  
+	 * @return 
+	 */
+	@Override
+	public boolean hasCreated(String erpBillDocNo) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 	
 }

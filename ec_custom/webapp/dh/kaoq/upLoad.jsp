@@ -1,22 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.security.*,weaver.general.Util,weaver.hrm.settings.RemindSettings,weaver.file.Prop,weaver.rtx.RTXConfig" %>
-<%@ page import="java.lang.reflect.*" %>
-<%@ page import="weaver.file.FileUpload" %>
 <%@ page import="java.util.*" %>
 <%@ page import="weaver.conn.RecordSetDataSource" %>
-<%@page import="net.sf.json.*"%>
 <%@ page import="javax.servlet.*" %>
-<jsp:useBean id="rs" class="weaver.conn.RecordSet" scope="page" />
-<jsp:useBean id="rs1" class="weaver.conn.RecordSet" scope="page" />
 <%@ page import="weaver.hrm.User"%>
 <%@ page import="weaver.hrm.HrmUserVarify"%>
-<%@page import="weaver.formmode.setup.ModeRightInfo"%>
-<jsp:useBean id="dm" class="weaver.docs.docs.DocManager" scope="page"/>
 <jsp:useBean id="toCollect" class="weaver.dh.interfaces.toCollect" scope="page"/>
 <jsp:useBean id="toCollectMon" class="weaver.dh.interfaces.toCollectMon" scope="page"/>
 <jsp:useBean id="toU9" class="weaver.dh.interfaces.toU9" scope="page"/>
-<jsp:useBean id="dc" class="weaver.docs.docs.DocComInfo" scope="page"/>
-<jsp:useBean id="ModeShareManager" class="weaver.formmode.view.ModeShareManager" scope="page" />
 
 <%	
 User user = HrmUserVarify.getUser (request,response) ;

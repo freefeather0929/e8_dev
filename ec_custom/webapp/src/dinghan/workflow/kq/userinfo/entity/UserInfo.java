@@ -39,6 +39,7 @@ public class UserInfo {
 	private int MobileAtten;	// 移动考勤
 	private String Obode;	// 常驻地
 	private int allowovertime; //是否允许加班
+	private int otinweekday; //是否允许工作日加班
 	private String deptOneNameText;	//一级部门名称
 	private String deptTwoNameText;		//二级部门名称
 	private String DeptThreeNameText;		//三级部门名称
@@ -253,6 +254,12 @@ public class UserInfo {
 	}
 	public void setDeptThreeNameText(String deptThreeNameText) {
 		DeptThreeNameText = deptThreeNameText;
+	}
+	public int getOtinweekday() {
+		return otinweekday;
+	}
+	public void setOtinweekday(int otinweekday) {
+		this.otinweekday = otinweekday;
 	}
 	
 	

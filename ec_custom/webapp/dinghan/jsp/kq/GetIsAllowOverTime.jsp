@@ -48,7 +48,8 @@
 			}
 			json.append("',");
 			json.append("'username':'"+userInfo.getNameCN()+"',");
-			json.append("'allow':'"+userInfo.getAllowovertime()+"'");
+			json.append("'allow':'"+userInfo.getAllowovertime()+"',");
+			json.append("'weekdayot':'"+userInfo.getOtinweekday()+"'");
 			json.append("}");
 		}else{
 			json.append("{");

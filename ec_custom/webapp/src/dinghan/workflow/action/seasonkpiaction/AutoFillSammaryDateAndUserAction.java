@@ -3,7 +3,6 @@ package dinghan.workflow.action.seasonkpiaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import dinghan.workflow.action.ChangeReDelStatueAction;
 import weaver.conn.RecordSet;
 import weaver.interfaces.workflow.action.Action;
 import weaver.soa.workflow.request.RequestInfo;
@@ -17,7 +16,7 @@ import weaver.workflow.request.RequestManager;
  */
 public class AutoFillSammaryDateAndUserAction implements Action {
 	private RequestManager requestManager;	
-	private Log log = LogFactory.getLog(ChangeReDelStatueAction.class.getName());
+	private Log log = LogFactory.getLog(AutoFillSammaryDateAndUserAction.class.getName());
 	public String execute(RequestInfo request) {
 		this.requestManager= request.getRequestManager();
 		String requestid = request.getRequestid();
@@ -36,7 +35,7 @@ public class AutoFillSammaryDateAndUserAction implements Action {
 	 * @param userid
 	 */
 	private void FillSammaryDateAndUser(String requestId,int formid,int userid){
-		log.error("开始自动填写总结日期和人员...");
+		//log.error("开始自动填写总结日期和人员...");
 		
 		String sql = "select top 1 id,monthchecked from formtable_main_" + Math.abs(formid) + " where requestId = "+ requestId;
 		RecordSet rs = new RecordSet();
@@ -52,11 +51,11 @@ public class AutoFillSammaryDateAndUserAction implements Action {
 		}
 		String curDate = requestManager.getCurrentDate();
 		//获取当前日期
-		log.error("当前日期："+curDate);
+		//log.error("当前日期："+curDate);
 		
 		if(mmmark == 2){	//只更新第一个月的总结日期和人员ID
 			sql = "update formtable_main_"+ Math.abs(formid) +"_dt3 set d_m1_sumpsn = '"+userid+"', d_m1_sumdate = '" + curDate + "' where mainid = "+mainId;
-			log.error("开始执行更新："+sql);
+			//log.error("开始执行更新："+sql);
 			rs.executeSql(sql);
 		}else{
 			//查看第一个月明细是否已经填写了月度总结日期和人员ID
@@ -64,18 +63,18 @@ public class AutoFillSammaryDateAndUserAction implements Action {
 			sql = "select count(id) from formtable_main_"+ Math.abs(formid) +"_dt3 where ISNULL(d_m1_sumpsn, '') <> ''  and mainid = " + mainId;
 			if(rs.getInt(1) == 0){
 				sql = "update formtable_main_"+ Math.abs(formid) +"_dt4 set d_m2_sumpsn = '"+userid+"', d_m2_sumdate = '" + curDate + "' where mainid = "+mainId;
-				log.error("开始执行更新："+sql);
+				//log.error("开始执行更新："+sql);
 				rs.executeSql(sql);
 			}else{
 				sql = "update formtable_main_"+ Math.abs(formid) +"_dt3 set d_m1_sumpsn = '"+userid+"', d_m1_sumdate = '" + curDate + "' where mainid = "+mainId;
-				log.error("开始执行更新："+sql);
+				//log.error("开始执行更新："+sql);
 				rs.executeSql(sql);
 				sql = "update formtable_main_"+ Math.abs(formid) +"_dt4 set d_m2_sumpsn = '"+userid+"', d_m2_sumdate = '" + curDate + "' where mainid = "+mainId;
-				log.error("开始执行更新："+sql);
+				//log.error("开始执行更新："+sql);
 				rs.executeSql(sql);
 			}
 		}
 		
-		log.error("自动填写总结日期和人员结束。");
+		//log.error("自动填写总结日期和人员结束。");
 	}
 }

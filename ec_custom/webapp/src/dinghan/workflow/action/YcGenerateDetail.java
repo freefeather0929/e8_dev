@@ -22,18 +22,15 @@ public class YcGenerateDetail implements Action {
 	@Override
 	public String execute(RequestInfo request) {
 		String returninfo = FAILURE_AND_CONTINUE;
-		// TODO Auto-generated method stub
 		try {
-			String requestid = request.getRequestid();// 得到requestid
+			String requestid = request.getRequestid();  //得到requestid
 			int requestId = Integer.parseInt(requestid);
-			Abnormal.update(requestId, 1);// 修改考勤异常的核定状态为1，此时异常信息有效
+			Abnormal.update(requestId, 1);  //修改考勤异常的核定状态为1，此时异常信息有效
 			returninfo = Action.SUCCESS;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			log.error("修改异常核定状态出错：" + e);
 		} finally {
 			return returninfo;
 		}
 	}
-
 }

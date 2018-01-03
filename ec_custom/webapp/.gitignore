@@ -84,7 +84,6 @@
 /weaverEditor/
 /weaverplugin/
 /web/
-/WEB-INF/
 /wechat/
 /workflow/
 /workplan/
@@ -158,4 +157,3 @@
 /pool.jsp
 /poolOperation.jsp
 /urltime.jsp
-/monitorX-flag/

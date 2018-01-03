@@ -27,7 +27,6 @@ import com.weaver.formmodel.util.DateHelper;
 public class toCollect extends BaseCronJob {
 	private Log log = LogFactory.getLog(toCollect.class.getName());
 
-
 	private String Sdays;
 	private String Edays;
 	private String type;
@@ -118,13 +117,10 @@ public class toCollect extends BaseCronJob {
 			sqlHrm = "select id,workcode,jobtitle from HrmResource where status in (0,1,2,3,5)";
 		}
 
-		// String hid = Util.null2String(hrm.getString("id"));
-
 		hrm.executeSql(sqlHrm);
 		while (hrm.next()) {
 			String excSql = "";
 			String hid = Util.null2String(hrm.getString("id"));
-
 			// 删掉当天的考勤明细  ***** 应放到考勤明细的DAO层 *******
 
 			String delSql = "delete from uf_kqhzmx where xm = '" + hid + "' and kqrq = '" + this.currentDay + "'";
@@ -148,7 +144,6 @@ public class toCollect extends BaseCronJob {
 				continue;
 			}
 			/* **修改部分结束** 2017-03-05 by zhangxiaoyu */
-
 			getQingjia(hid);	// 请假         *************   应放到请假中间表 DAO
 			getChuChai(hid);	// 出差         *************   应放到出差中间表 DAO
 			getWaiChu(hid);		// 外出         *************   应放到外出中间表 DAO 
@@ -261,7 +256,7 @@ public class toCollect extends BaseCronJob {
 			BigDecimal jbgs = new BigDecimal(Util.null2s(
 					jiaBan_Map.get(hid + "_JBGS"), "0"));// 加班工时
 			
-			log.error("获取加班Map 含有元素 -- "+ jiaBan_Map.size());
+			//log.error("获取加班Map 含有元素 -- "+ jiaBan_Map.size());
 			
 			/*for(int kk = 0; kk<jiaBan_Map.size() ; kk++){
 				log.error("获取到第 "+(kk + 1)+ " 个mapping，值为： "+jiaBan_Map.get);
@@ -1074,8 +1069,8 @@ public class toCollect extends BaseCronJob {
 				String Time = Util.null2String(rskqj.getString("time"));
 				if (before_code.equals(code)) {	// 同一个人
 					String signTimen = Util.null2String(DkMap.get(code + "_E"));
-					log.error("移动打卡时间：" +code + "_E"+ " :: " + signTimen);
-					log.error("考勤机打卡时间："+ code + "_E"+ " :: " + Time);
+					//log.error("移动打卡时间：" +code + "_E"+ " :: " + signTimen);
+					//log.error("考勤机打卡时间："+ code + "_E"+ " :: " + Time);
 					if (Time.compareTo(signTimen) > 0 ) {
 						DkMap.remove(code + "_E");
 						DkMap.put(code + "_E", Time);
