@@ -9,7 +9,7 @@ import java.util.Map;
  * @author zhangxiaoyu / 10593 - 2017-10-24
  * 
  */
-public interface ERPBill {
+public interface ERPBill {  
 	
 	/**
 	 * 获取单个借款单数据
@@ -23,5 +23,5 @@ public interface ERPBill {
 	 * @param parameters {Map<String,String>} - 传入的参数
 	 * @return 返回 数据 格式 为 json 格式的字符串
 	 */
-	String queryAllBillInfo(Map<String,String> parameters);
+	String queryAllBillInfo(Map<String,String> parameters);	
 }

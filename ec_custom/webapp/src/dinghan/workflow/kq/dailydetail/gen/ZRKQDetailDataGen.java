@@ -252,6 +252,8 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 						this.chidaoMinute = (int)cd_or_zt_Minute;
 					}
 				}
+				log.error("lastDakaRecord :: " + lastDakaRecord + " -- _stEndTime" + _stEndTime);
+				
 				//计算早退
 				if(lastDakaRecord.compareTo(_stEndTime)<0){
 					//log.error("计算早退");
@@ -354,8 +356,7 @@ public class ZRKQDetailDataGen implements KQDetailDataGen{
 		
 		return _dakaRecordList;
 	}
-	
-	
+
 	/**
 	 * 处理标准上下班时间
 	 * 	** 注意 ： 不包括弹性制员工上班时间的处理，弹性制员工开始时间仅在计算迟到、早退时进行处理

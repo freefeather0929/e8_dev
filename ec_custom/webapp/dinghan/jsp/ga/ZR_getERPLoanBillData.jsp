@@ -6,41 +6,27 @@
 <%@ page import="java.util.*"%>
 <%@ page import="javax.servlet.*"%>
 <%@ page import="weaver.hrm.User"%>
-<%@ page import="weaver.hrm.HrmUserVarify"%>
-
+<%@ page import="weaver.hrm.HrmUserVarify"%> 
 <%
-	/*
-	 * 功能：获取中车ERP借款单数据
-	 * 编写人：张肖宇
-	 * 编写时间：2017-10-25
-	 */
 	try{
 		User user = HrmUserVarify.getUser(request, response);
 		if(user == null){
 			response.sendRedirect("/login/Login.jsp");
 			return;
-		}
+		} 
 		StringBuilder json = new StringBuilder();
-		
 		Map<String,String> parameters = new HashMap<String,String>();
-		
-		String docNo = Util.null2String(request.getParameter("docno"));
-		
+		String docNo = Util.null2String(request.getParameter("DocNo")); 
+		String apppronum =  Util.null2String(request.getParameter("AppproNum")); 		
 		ZRLoanAppWFBuilder zrLoanAppWFBuilder = new ZRLoanAppWFBuilder();
-		
-		if(zrLoanAppWFBuilder.hasCreated(docNo)){
+		if(zrLoanAppWFBuilder.hasCreated(docNo,apppronum)){ 
 			json.append("{'error':'此单号已经创建过申请单，请检查你填写的单号！'}");
 		}else{
 			ZRLoanAppBill zrLoanAppBill = new ZRLoanAppBill();
 			if("".equals(docNo) == false){
-				//out.println("docNo == " + docNo);
-				//out.println(zrLoanAppBill.getUrl());
-				//parameters.put("DocNo", docNo);
-				//json = HttpUtils.sendGet(zrLoanAppBill.getUrl()+"/LoanBillSvl", parameters);
 				json.append(zrLoanAppBill.queryBillInfo(docNo));
-			}
+			} 
 		}
-		
 		out.println(json);
 		out.flush();
 		out.close();
