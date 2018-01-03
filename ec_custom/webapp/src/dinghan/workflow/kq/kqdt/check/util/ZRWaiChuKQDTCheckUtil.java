@@ -18,7 +18,7 @@ import weaver.conn.RecordSet;
  *
  */
 public class ZRWaiChuKQDTCheckUtil implements KQDTCheckUtil<ZRWaiChuCheckDTData>{
-	private Log log = LogFactory.getLog(ZRChuChaiKQDTCheckUtil.class.getName());
+	//private Log log = LogFactory.getLog(ZRChuChaiKQDTCheckUtil.class.getName());
 	private ZRWaiChuDTCheck kqDTCheck = new ZRWaiChuDTCheck();
 	private ZRWaiChuCheckDTService zrWCCheckDTService = new ZRWaiChuCheckDTServiceImpl();
 	
@@ -38,24 +38,17 @@ public class ZRWaiChuKQDTCheckUtil implements KQDTCheckUtil<ZRWaiChuCheckDTData>
 
 	@Override
 	public void executeCronCheck() {
-		
 		String curDate = CalendarUtil.getCurDate();	//当前日期
 		String preMonthDate = CalendarUtil.moveDate(curDate, 0, -1, 0);	//当前日期前一个月的日期
-		log.error("curDate :: " + curDate);
-		log.error("preMonthDate :: " + preMonthDate);
 		String sql = "select id from " + ZRWaiChuCheckDTDao.ZRWaiChuCheckDTDataFormName + ""
 				+ " where (checked = '0' or checked = '1')"
-				+ "	and checkeddate > '" + preMonthDate +"'"
-						+ " and checkeddate < '" + curDate + "'";
-		log.error("WaiChuKQDTChec sql :: " + sql);
+						+ "	and checkeddate > '" + preMonthDate +"'"
+								+ " and checkeddate < '" + curDate + "'";
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql);
 		while(rs.next()){
 			this.executeCheck(rs.getInt("id"));
 		}
-		
 	}
-
-	
 	
 }

@@ -91,7 +91,10 @@ public class SeasonKPI {
 	//private String kpi_Htmls; 
 	//private int emplKpiTotal; 
 	//private int crossWeightTotal; 
-	//private int monthChecked; 
+	/**
+	 * 月度考核完成标识
+	 */
+	private int monthChecked; 
 	//private int kpi_Total_Exam; 
 	//private double finalGrade; 
 	//private String revPsnAdvice; 
@@ -210,6 +213,12 @@ public class SeasonKPI {
 	}
 	public void setReviewResult(int reviewResult) {
 		this.reviewResult = reviewResult;
+	}
+	public int getMonthChecked() {
+		return monthChecked;
+	}
+	public void setMonthChecked(int monthChecked) {
+		this.monthChecked = monthChecked;
 	}
 	
 	

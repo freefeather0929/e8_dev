@@ -10,7 +10,7 @@ import dinghan.workflow.kpi.entity.KPIExamRelationShip;
  */
 public interface KPIExamRelationShipDao {
 	/**
-	 * 绩效考核关系表明
+	 * 绩效考核关系配置表名
 	 */
 	String KPIExamRelationShipFormName = "uf_relationlistform";
 	

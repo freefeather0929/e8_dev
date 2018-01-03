@@ -354,9 +354,10 @@ public class SeasonKPIService {
 	
 	/**
 	 * 获取用户考核关系
-	 * @param - user
-	 * @param - seasonIndex
-	 * @param - curYear
+	 * @param user - {weaver.hrm.User}
+	 * @param seasonStr - 季度 - 第1个季度以 “一” 表示，第4个季度以“四” 表示
+	 * @param curYear - {格式：yyyy}
+	 * @return 用户考核关系的 json 字符串
 	 */
 	public String getExamRelationShip(User user, String seasonStr, int curYear){
 		

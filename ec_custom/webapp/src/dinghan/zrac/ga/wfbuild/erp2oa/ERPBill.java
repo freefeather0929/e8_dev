@@ -20,7 +20,7 @@ public interface ERPBill {
 	
 	/**
 	 * 获取借款单集合数据
-	 * @param docNo 
+	 * @param parameters {Map<String,String>} - 传入的参数
 	 * @return 返回 数据 格式 为 json 格式的字符串
 	 */
 	String queryAllBillInfo(Map<String,String> parameters);

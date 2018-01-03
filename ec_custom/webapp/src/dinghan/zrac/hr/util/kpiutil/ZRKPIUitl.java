@@ -1,12 +1,16 @@
 package dinghan.zrac.hr.util.kpiutil;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import dinghan.common.util.JSONUtil;
+import dinghan.workflow.beans.seasonkpibeans.PersonSeasonKPIResult;
 import dinghan.workflow.kpi.entity.CrossKPIProjectInfo;
 import dinghan.workflow.kpi.entity.KPIExamRelationShip;
 import dinghan.workflow.kpi.entity.KPITarget;
 import dinghan.workflow.kpi.entity.KPITargetCfg;
+import dinghan.zrac.hr.dao.kpidao.ZRSeasonKPIDAO;
 import dinghan.zrac.hr.entity.kpientity.ZRSeasonKPI;
 import dinghan.zrac.hr.service.kpiservice.ZRKPIExamRelationShipService;
 import dinghan.zrac.hr.service.kpiservice.ZRKPIService;
@@ -15,6 +19,7 @@ import dinghan.zrac.hr.service.kpiservice.impl.ZRKPIExamRelationShipServiceImpl;
 import dinghan.zrac.hr.service.kpiservice.impl.ZRKPIServiceImpl;
 import dinghan.zrac.hr.service.kpiservice.impl.ZRKPITargetCfgServiceImpl;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import weaver.conn.RecordSet;
 import weaver.hrm.User;
@@ -158,6 +163,158 @@ public class ZRKPIUitl {
 	}
 	
 	/**
+	 * 计算某个部门的绩效考核分布
+	 * @param deptId -- 部门的ID
+	 * @param year -- 年份 [yyyy]
+	 * @param season -- "一" 表示第一个季度，"四" 表示第四个季度
+	 * @return
+	 */
+	public String accountLevelDistribution(int deptId,int year,String season){
+		//kpiService.
+		
+		int tLevel = this.getLevel(deptId);
+		int result_Level;
+		List<PersonSeasonKPIResult> kpiResultList = new ArrayList<PersonSeasonKPIResult>();
+		
+		List<PersonSeasonKPIResult> kpiResult_A_List = new ArrayList<PersonSeasonKPIResult>();
+		List<PersonSeasonKPIResult> kpiResult_B_List = new ArrayList<PersonSeasonKPIResult>();
+		List<PersonSeasonKPIResult> kpiResult_C_List = new ArrayList<PersonSeasonKPIResult>();
+		List<PersonSeasonKPIResult> kpiResult_D_List = new ArrayList<PersonSeasonKPIResult>();
+		List<PersonSeasonKPIResult> kpiResult_E_List = new ArrayList<PersonSeasonKPIResult>();
+		List<PersonSeasonKPIResult> kpiResult_Null_List = new ArrayList<PersonSeasonKPIResult>();
+		
+		double percent = 0.00d;
+		JSONObject jsonObj = new JSONObject();
+		JSONObject json_Obj_A = new JSONObject();
+		JSONObject json_Obj_B = new JSONObject();
+		JSONObject json_Obj_C = new JSONObject();
+		JSONObject json_Obj_D = new JSONObject();
+		JSONObject json_Obj_E = new JSONObject();
+		JSONObject json_Obj_Null = new JSONObject();
+		JSONArray json_Array_Null = new JSONArray();
+		
+		String sql = "select f.id,f.requestId,f.measureresult,f.reviewresult,finalresult,f.finalresult,f.apppsn,h.lastname from " + ZRSeasonKPIDAO.ZRSeasonKPIFormName + "f,hrmresource h"
+				+ " where"
+				+ " f.apppsn = h.id"
+				+ " and appyear = '"+ year +"'"
+						+ " and appseason = '"+ season +"'"
+								+ " and ";
+		if(tLevel == 3){	//获取2级部门的分布
+			sql += "appdept2 = " + deptId;
+		}else if(tLevel == 2){ //获取1级部门分布
+			sql += "appdept1 = " + deptId;
+		}
+		/*
+		String sql = "select f.requestId,f.measureresult,f.reviewresult,finalresult,f.finalresult,f.apppsn,h.lastname from"
+				+ " formtable_main_88 f,hrmresource h"
+					+ " where f.apppsn = h.id and appyear = '"+ year +"' and appseason = '"+ season +"' and ";
+		if(tLevel == 3){	//获取2级部门的分布
+			sql += "appdept2 = " + deptId;
+		}else if(tLevel == 2){ //获取1级部门分布
+			sql += "appdept1 = " + deptId;
+		}else{
+			
+		}
+		*/
+		RecordSet rs = new RecordSet();
+		
+		rs.executeSql(sql);
+		
+		while(rs.next()){
+			User user = new User(rs.getInt("apppsn"));
+			PersonSeasonKPIResult pskpiResult = new PersonSeasonKPIResult();
+			pskpiResult.setAppPsnID(user.getUID());
+			pskpiResult.setAppPsnName(user.getLastname());
+			pskpiResult.setAppYear(year);
+			pskpiResult.setAppSeason(season);
+			pskpiResult.setRequestId(rs.getInt("requestId"));
+			pskpiResult.setMeasureResult(rs.getInt("measureresult"));
+			pskpiResult.setReviewResult(rs.getInt("reviewresult"));
+			pskpiResult.setFinalResult(rs.getInt("finalresult"));
+			kpiResultList.add(pskpiResult);
+		}
+		
+		try {
+			
+			if(kpiResultList.size() > 0){
+				for(PersonSeasonKPIResult result : kpiResultList){
+					result_Level = -1;
+					result_Level = result.getReviewResult();
+					//log.error("获取 result_Level :: " + result.getAppPsnName() + " :: " + result_Level);
+					
+					if(result_Level == -1){
+						result_Level = result.getMeasureResult();
+					}
+					
+					switch(result_Level){
+						case 0 :
+							kpiResult_A_List.add(result);
+							break;
+						case 1 :
+							kpiResult_B_List.add(result);
+							break;
+						case 2 :
+							kpiResult_C_List.add(result);
+							break;
+						case 3 :
+							kpiResult_D_List.add(result);
+							break;
+						case 4 :
+							kpiResult_E_List.add(result);
+							break;
+						default:
+							kpiResult_Null_List.add(result);
+					}
+				}
+				
+				percent = (double)kpiResult_A_List.size()/(double)kpiResultList.size();
+				
+				json_Obj_A.put("percent", BigDecimal.valueOf(percent*100).setScale(2, BigDecimal.ROUND_HALF_UP));
+				json_Obj_A.put("info", JSONArray.fromObject(kpiResult_A_List));
+				
+				percent = (double)kpiResult_B_List.size()/(double)kpiResultList.size();
+				
+				json_Obj_B.put("percent", BigDecimal.valueOf(percent*100).setScale(2, BigDecimal.ROUND_HALF_UP));
+				json_Obj_B.put("info", JSONArray.fromObject(kpiResult_B_List));
+				
+				percent = (double)kpiResult_C_List.size()/(double)kpiResultList.size();
+				
+				json_Obj_C.put("percent", BigDecimal.valueOf(percent*100).setScale(2, BigDecimal.ROUND_HALF_UP));
+				json_Obj_C.put("info", JSONArray.fromObject(kpiResult_C_List));
+				
+				percent = (double)kpiResult_D_List.size()/(double)kpiResultList.size();
+				
+				json_Obj_D.put("percent", BigDecimal.valueOf(percent*100).setScale(2, BigDecimal.ROUND_HALF_UP));
+				json_Obj_D.put("info", JSONArray.fromObject(kpiResult_D_List));
+				
+				percent = (double)kpiResult_E_List.size()/(double)kpiResultList.size();
+				
+				json_Obj_E.put("percent", BigDecimal.valueOf(percent*100).setScale(2, BigDecimal.ROUND_HALF_UP));
+				json_Obj_E.put("info", JSONArray.fromObject(kpiResult_E_List));
+				
+				percent = (double)kpiResult_Null_List.size()/(double)kpiResultList.size();
+				
+				json_Obj_Null.put("percent", BigDecimal.valueOf(percent*100).setScale(2, BigDecimal.ROUND_HALF_UP));
+				json_Array_Null = JSONArray.fromObject(kpiResult_Null_List);
+				json_Obj_Null.put("info", json_Array_Null);
+				//System.out.println(json_Obj_Null.toString());
+				
+				jsonObj.put("a", json_Obj_A);
+				jsonObj.put("b", json_Obj_B);
+				jsonObj.put("c", json_Obj_C);
+				jsonObj.put("d", json_Obj_D);
+				jsonObj.put("e", json_Obj_E);
+				jsonObj.put("n", json_Obj_Null);
+			}
+			jsonObj.put("count", kpiResultList.size());
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonObj.toString();
+	}
+	
+	/**
 	 * 获取部门名称
 	 * @param departmentId
 	 * @return
@@ -171,6 +328,23 @@ public class ZRKPIUitl {
     		deptMark = recordSet.getString("departmentmark");
     	}
     	return deptMark;
+	}
+	
+	/**
+	 * 获取部门级别
+	 * -分部的级别是 1； -一级部门级别是2；二级部门级别是3
+	 * @return
+	 */
+	private int getLevel(int deptId){
+		String sql = "select top 1 tlevel from HrmDepartment where id = " + deptId;
+		int tLevel = -1;
+		RecordSet rs = new RecordSet();
+		rs.executeSql(sql);
+		while(rs.next()){
+			tLevel = rs.getInt("tlevel");
+		}
+		//log.error("获取到部门等级为   ::  " + tLevel);
+		return tLevel;
 	}
 	
 	/**

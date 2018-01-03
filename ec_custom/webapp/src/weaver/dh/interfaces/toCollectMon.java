@@ -18,6 +18,7 @@ import weaver.interfaces.schedule.BaseCronJob;
 
 import com.weaver.formmodel.util.DateHelper;
 
+import dinghan.common.util.CalendarUtil;
 import dinghan.workflow.service.QingJiaService;
 
 public class toCollectMon extends BaseCronJob{
@@ -126,6 +127,7 @@ public class toCollectMon extends BaseCronJob{
 			BigDecimal jb_ztx = new BigDecimal(this.null2o(jiaBan_Map.get(hid+"_ztx")));
 			BigDecimal jb_bztx = new BigDecimal(this.null2o(jiaBan_Map.get(hid+"_bztx")));
 			String dstr = toCollectMon+"-01";
+			//log.error("dstr :: " + dstr);
 			String lastDate = getLastDateOfMon(dstr);
 			float ycqts = DateHelper.getDaysBetween(lastDate,dstr,true);
 			if(DateHelper.isWorkDay(DateHelper.parseDate(dstr))){
@@ -236,11 +238,16 @@ public class toCollectMon extends BaseCronJob{
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
+			//calendar.add(Calendar.MONTH, -1);
+			//String curDate = CalendarUtil.getCurDate();
+			int curMonth = Integer.parseInt(dstr.substring(5,7));
+			//int curMonth = calendar.get(Calendar.MONTH) + 1;  
 			
-			int curMonth = calendar.get(Calendar.MONTH) + 1;  //获取前一个月份，传入计算剩余年休、调休方法
-			
-			log.error("当前月份 :: "+ curMonth + 1);
-			
+			//log.error("当前月份 :: "+ curMonth);
+			String preMonthStr = CalendarUtil.moveDate(dstr, 0, -1, 0);
+			//log.error("preMonthStr :: " + preMonthStr);
+			int premonth = Integer.parseInt(preMonthStr.substring(5,7));		//获取前一个月份，传入计算剩余年休、调休方法
+			int preYear = Integer.parseInt(preMonthStr.substring(0,4));
 			QingJiaService qingjiaService = new QingJiaService();
 			double lastMonthTiaoXiu = 0.00;
 			double lastMonthNianXiu = 0.00;
@@ -249,14 +256,16 @@ public class toCollectMon extends BaseCronJob{
 			
 			RecordSet recordSet = new RecordSet();
 			try {
-				lastMonthTiaoXiu = qingjiaService.countLastTiaoXiuorNianXiuHour(Integer.parseInt(hid), QingJiaService.TiaoXiu, "", curMonth);
-				lastMonthNianXiu = qingjiaService.countLastTiaoXiuorNianXiuHour(Integer.parseInt(hid), QingJiaService.NianXiu, "", curMonth);
 				
+				lastMonthTiaoXiu = qingjiaService.countLastTiaoXiuorNianXiuHour(Integer.parseInt(hid), QingJiaService.TiaoXiu, "",preYear, curMonth);
+				lastMonthNianXiu = qingjiaService.countLastTiaoXiuorNianXiuHour(Integer.parseInt(hid), QingJiaService.NianXiu, "",preYear, curMonth);
+				log.error("lastMonthTiaoXiu :: " + lastMonthTiaoXiu + " -- lastMonthNianXiu :: " + lastMonthNianXiu);
+				log.error("curMonth :: " + curMonth);
 				if(curMonth == 12){
 					
 					double syNXHour = 0;
 					int curYear = calendar.get(Calendar.YEAR);
-					int joinYear = Integer.parseInt(join.substring(0, 7));
+					int joinYear = Integer.parseInt(join.substring(0, 4));
 					int yearIn = curYear - joinYear;
 					//double nianXiu_neo = 0;
 					if(yearIn >= 20){

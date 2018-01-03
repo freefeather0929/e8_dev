@@ -1,5 +1,8 @@
 package dinghan.zrac.hr.dao.kpidao.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import dinghan.zrac.hr.dao.kpidao.ZRSeasonKPIDAO;
 import dinghan.zrac.hr.entity.kpientity.ZRSeasonKPI;
 import weaver.conn.RecordSet;
@@ -11,7 +14,7 @@ import weaver.conn.RecordSet;
  * @param <T>
  */
 public class ZRSeasonKPIDAOImpl implements ZRSeasonKPIDAO {
-
+	private Log log = LogFactory.getLog(ZRSeasonKPIDAOImpl.class.getName());
 	@Override
 	public ZRSeasonKPI queryByID(int id) {
 		
@@ -36,14 +39,15 @@ public class ZRSeasonKPIDAOImpl implements ZRSeasonKPIDAO {
 																		+ "selfmeasure,"
 																			+ "measureresult,"
 																				+ "finalresult,"
-																					+ "reviewresult"
+																					+ "reviewresult,"
+																						+ "monthchecked"
 				);
 		
 		sql.append(" from ");
 		sql.append(ZRSeasonKPIFormName);
 		sql.append(" where ");
 		sql.append(" id = " + id);
-		
+		//log.error("ZRSeasonKPI queryByID sql :: " + sql.toString());
 		RecordSet rs = new RecordSet();
 		rs.executeSql(sql.toString());
 		
@@ -67,6 +71,7 @@ public class ZRSeasonKPIDAOImpl implements ZRSeasonKPIDAO {
 			zrSeasonKPI.setMeasureResult(rs.getInt("measureresult"));
 			zrSeasonKPI.setFinalResult(rs.getInt("finalresult"));
 			zrSeasonKPI.setReviewResult(rs.getInt("reviewresult"));
+			zrSeasonKPI.setMonthChecked(rs.getInt("monthchecked"));
 		}
 		
 		return zrSeasonKPI;
